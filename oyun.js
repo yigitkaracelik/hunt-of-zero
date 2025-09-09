@@ -124,7 +124,7 @@ function seviyeyiBaslat() {
     // DEĞİŞİKLİK: Oyunun aktif olduğunu ve duraklatma butonunun görünür olması gerektiğini belirtiyoruz.
     duraklatKonteyneri.classList.remove('gizli');
     
-    // Overlay'in başlangıçta gizli olduğundan emin oluyoruz.
+    // Overlay'in başlangıçta gizli olduğundan emin olundu.
     duraklatOverlay.classList.add('gizli'); 
     
     duraklatildi = false;
