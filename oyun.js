@@ -24,7 +24,36 @@ const sesAcikCheck = document.getElementById('ses-acik');
 const sesSeviye = document.getElementById('ses-seviye');
 const zorlukSecim = document.getElementById('zorluk');
 const kazanmaSesi = document.getElementById('kazanmaSesi');
-
+const zorlukIkonResmi = document.getElementById('zorluk-ikon-resmi');
+// YENİ: Zorluk parametreleri haritası
+const zorlukAyarlari = {
+    kolay: {
+        baslangicZamani: 20, // Saniye
+        zamanAzalmasi: 0.5,  // Her seviyede ne kadar süre azalacağı
+        minZaman: 8,        // Ulaşılacak minimum süre
+        adimArtisOrani: 5,  // Adım sayısı kaç seviyede bir artacak (yüksek = daha yavaş zorlaşır)
+        puanCarpani: 0.8    // Kazanılan puan çarpanı
+    },
+    normal: {
+        baslangicZamani: 15,
+        zamanAzalmasi: 1,
+        minZaman: 4,
+        adimArtisOrani: 3,
+        puanCarpani: 1
+    },
+    zor: {
+        baslangicZamani: 10,
+        zamanAzalmasi: 1,
+        minZaman: 3,
+        adimArtisOrani: 2, // Adım sayısı daha sık artacak (düşük = daha hızlı zorlaşır)
+        puanCarpani: 1.5
+    }
+};
+const zorlukIkonlari = {
+    kolay: 'kolay-mod.png',
+    normal: 'normal-mod.png',
+    zor: 'zor-mod.png'
+};
 // Oyun durumu değişkenleri
 let mevcutSeviye = 1;
 let toplamPuan = 0;
@@ -63,6 +92,10 @@ function ayarlariYukle() {
 // Kullanıcı bir ayarı değiştirdiğinde bunu localStorage'a kaydeden olaylar
 sesAcikCheck.addEventListener('change', () => {
     localStorage.setItem('sesAcik', sesAcikCheck.checked);
+    if (!sesAcikCheck.checked) {
+        zamanlayiciSesi.pause();
+        zamanlayiciSesi.currentTime = 0;
+    }
 });
 
 sesSeviye.addEventListener('input', () => {
@@ -71,6 +104,8 @@ sesSeviye.addEventListener('input', () => {
 
 zorlukSecim.addEventListener('change', () => {
     localStorage.setItem('zorluk', zorlukSecim.value);
+    zorlukIkonResmi.src = zorlukIkonlari[zorlukSecim.value];
+    oyunuSifirlaVeBasaDon();
 });
 document.addEventListener('DOMContentLoaded', ayarlariYukle);
 
@@ -79,16 +114,7 @@ function sesCal(ses) {
     if (ses && sesAcikCheck.checked) {
         ses.volume = parseFloat(sesSeviye.value); // Ses seviyesini ayarla
         ses.currentTime = 0;
-        sesCal(ses);
-    }
-}
-
-// Zorluk katsayısını döndüren fonksiyon
-function zorlukKatsayisi() {
-    switch (zorlukSecim.value) {
-        case "kolay": return 1.5;
-        case "zor": return 0.7;
-        default: return 1;
+        ses.play();
     }
 }
 
@@ -135,23 +161,28 @@ function seviyeyiBaslat() {
         butonDegerleri.push(yeniRakam);
     });
 
-    // Çözülebilir hedef sayı oluştur
-    let geciciHedefSayi = 0;
-    const adimSayisi = 3 + Math.floor(mevcutSeviye / 3);
+// Seçili zorluk ayarlarını al
+const seciliZorluk = zorlukAyarlari[zorlukSecim.value];
+zorlukIkonResmi.src = zorlukIkonlari[zorlukSecim.value];
 
-    for (let i = 0; i < adimSayisi; i++) {
-        const rastgeleIndex = Math.floor(Math.random() * butonDegerleri.length);
-        geciciHedefSayi += butonDegerleri[rastgeleIndex];
-    }
 
-    if (geciciHedefSayi < 10) {
-        geciciHedefSayi += 7;
-    }
-    mevcutHedefSayi = geciciHedefSayi;
+// Çözülebilir hedef sayı oluştur (Zorluğa göre adimSayisi değişiyor)
+let geciciHedefSayi = 0;
+const adimSayisi = 3 + Math.floor(mevcutSeviye / seciliZorluk.adimArtisOrani); // DÜZELTİLDİ
 
-    // Zaman ayarı
-    kalanZaman = (15 - mevcutSeviye) * zorlukKatsayisi();
-    if (kalanZaman < 4) kalanZaman = 4;
+for (let i = 0; i < adimSayisi; i++) {
+    const rastgeleIndex = Math.floor(Math.random() * butonDegerleri.length);
+    geciciHedefSayi += butonDegerleri[rastgeleIndex];
+}
+
+if (geciciHedefSayi < 10) {
+    geciciHedefSayi += 7;
+}
+mevcutHedefSayi = geciciHedefSayi;
+
+// Zaman ayarı (Zorluğa göre zaman mantığı değişiyor)
+kalanZaman = seciliZorluk.baslangicZamani - (mevcutSeviye - 1) * seciliZorluk.zamanAzalmasi; // DEĞİŞTİ
+if (kalanZaman < seciliZorluk.minZaman) kalanZaman = seciliZorluk.minZaman; // DEĞİŞTİ
 
     // Arayüz güncelle
     hedefSayiElementi.textContent = mevcutHedefSayi;
@@ -226,10 +257,12 @@ function oyunuKazan() {
     const kalanSaniye = kalanZaman - gecenSure;
 
     // 2. Yeni puanlama formülünü uygula
-    const seviyePuani = mevcutSeviye * 10;
-    const zamanBonusu = Math.max(0, kalanSaniye) * 5; // Negatif bonus olmasın diye Math.max kullanılır.
-    const kazanilanPuan = Math.round(seviyePuani + zamanBonusu);
+    const seciliZorluk = zorlukAyarlari[zorlukSecim.value];
 
+// 2. Yeni puanlama formülünü uygula (Zorluğa göre puan çarpanı ekleniyor)
+const seviyePuani = mevcutSeviye * 10;
+const zamanBonusu = Math.max(0, kalanSaniye) * 5;
+const kazanilanPuan = Math.round((seviyePuani + zamanBonusu) * seciliZorluk.puanCarpani); // DEĞİŞTİ
     // 3. Toplam puanı güncelle
     toplamPuan += kazanilanPuan;
     puanGosterge.textContent = toplamPuan;
@@ -266,7 +299,28 @@ function oyunuKaybet(sebep) {
     mevcutSeviye = 1;
     toplamPuan = 0;
 }
+// YENİ FONKSİYON: Zorluk değiştiğinde oyunu sıfırlar ve başlangıç ekranına döner.
+function oyunuSifirlaVeBasaDon() {
+    // 1. O an çalışan bir zamanlayıcı varsa durdur
+    clearInterval(zamanlayici);
 
+    // 2. Oyun değişkenlerini başlangıç değerlerine döndür
+    mevcutSeviye = 1;
+    toplamPuan = 0;
+    
+    // 3. Arayüzdeki göstergeleri sıfırla
+    puanGosterge.textContent = toplamPuan;
+    seviyeListesi.innerHTML = ''; // Skor tablosunu temizle
+
+    // 4. Ekranları yönet: Oyun alanını ve skoru gizle, başlangıç ekranını göster
+    oyunAlani.classList.add('gizli');
+    skorTablosu.classList.add('gizli');
+    seviyeSonuMesaji.classList.add('gizli'); // Seviye sonu mesajını da gizle
+    baslangicEkrani.classList.remove('gizli');
+
+    // 5. Ayarlar panelini otomatik olarak kapat
+    ayarlarPaneli.classList.add('gizli');
+}
 // "Sonraki Seviye" veya "Yeniden Başla" butonuna tıklama
 sonrakiSeviyeButonu.addEventListener('click', () => {
     // Önce hangi sesin çalınacağına karar verelim

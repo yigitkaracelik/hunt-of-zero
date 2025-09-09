@@ -235,10 +235,17 @@ body {
 /* ======================================== */
 /*  AYARLAR BÖLÜMÜ STİLLERİ                 */
 /* ======================================== */
+/* İki ikonu bir arada tutan ana kutu */
+#sol-ust-kose {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    display: flex; /* İkonları yan yana dizmek için */
+    gap: 15px;     /* Aralarına boşluk koymak için */
+}
+
+/* Ayarlar butonundan 'position' kaldırıldı, çünkü artık #sol-ust-kose konumlanıyor */
 #ayarlar-butonu{
-    position:absolute;
-    top:30px;
-    left:30px;
     width:50px;
     height:50px;
     padding:0;
@@ -251,6 +258,24 @@ body {
     background-color:#ddd;border:3px solid #000;
     box-shadow:4px 4px 0 #555;border-radius:0;
     transition:transform .05s,box-shadow .05s;
+}
+
+/* YENİ: Zorluk ikonunun stil tanımı */
+#zorluk-gosterge-ikonu {
+    width: 46px;
+    height: 46px;
+    background-color: #ddd;
+    border: 3px solid #000;
+    border-radius: 0;
+    box-shadow: 4px 4px 0 #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#zorluk-ikon-resmi {
+    width: 46px;
+    height: 46px;
 }
 
 #ayarlar-butonu:active{
