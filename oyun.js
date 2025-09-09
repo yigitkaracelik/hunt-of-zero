@@ -121,7 +121,7 @@ function zamanlayiciyiBaslat() {
 
 // Yeni seviyeyi başlat
 function seviyeyiBaslat() {
-    // DEĞİŞİKLİK: Oyunun aktif olduğunu ve duraklatma butonunun görünür olması gerektiğini belirtiyoruz.
+    // DEĞİŞİKLİK: Oyunun aktif olduğunu ve duraklatma butonunun görünür olması gerektiğini belirttik.
     duraklatKonteyneri.classList.remove('gizli');
     
     // Overlay'in başlangıçta gizli olduğundan emin olundu.
