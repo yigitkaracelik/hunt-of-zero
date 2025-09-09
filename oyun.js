@@ -234,7 +234,7 @@ function oyunuKazan() {
 
 // Oyuncu kaybettiğinde
 function oyunuKaybet(sebep) {
-    // DEĞİŞİKLİK: Oyun bittiği için duraklatma butonunu gizliyoruz.
+    // DEĞİŞİKLİK: Oyun bittiği için duraklatma butonunu gizledik.
     duraklatKonteyneri.classList.add('gizli');
 
     zamanlayiciSesi.pause();
