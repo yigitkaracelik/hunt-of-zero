@@ -17,6 +17,7 @@ const baslangicEkrani = document.getElementById('baslangic-ekrani');
 const baslaButonu = document.getElementById('basla-butonu');
 const oyunAlani = document.getElementById('oyun-alani');
 const skorTablosu = document.getElementById('skor-tablosu');
+const hedefSayiDaire = document.getElementById('hedef-sayi-daire');
 
 // Eğer kazanma sesi varsa, tanımlayın (HTML'de yoksa bu satırı kaldırabilirsiniz)
 const kazanmaSesi = document.getElementById('kazanmaSesi');
@@ -46,6 +47,9 @@ function butonlariAktiflestir() {
 
 // Yeni seviyeyi başlat
 function seviyeyiBaslat() {
+    // Önceki seviyeden kalma animasyon sınıfını temizle
+    hedefSayiDaire.classList.remove('kritik-zaman');
+
     butonlariAktiflestir();
     seviyeSonuMesaji.classList.add('gizli');
 
@@ -94,8 +98,19 @@ function seviyeyiBaslat() {
     clearInterval(zamanlayici);
     zamanlayici = setInterval(() => {
         const gecenSure = (Date.now() - baslangicZamani) / 1000;
-        const yuzde = ((kalanZaman - gecenSure) / kalanZaman) * 100;
+        
+        // Yüzdeyi hesapla ve 0-100 arasına sıkıştır (clamp)
+        let yuzde = ((kalanZaman - gecenSure) / kalanZaman) * 100;
+        yuzde = Math.max(0, Math.min(100, yuzde));
+
         zamanCubugu.style.width = yuzde + '%';
+
+        // Kritik eşik kontrolü ile yanıp sönme sınıfını yönet
+        if (yuzde < 10) {
+            hedefSayiDaire.classList.add('kritik-zaman');
+        } else {
+            hedefSayiDaire.classList.remove('kritik-zaman');
+        }
 
         // Ses hızını ayarla
         const maxAralik = 1200;
@@ -112,6 +127,7 @@ function seviyeyiBaslat() {
         if (yuzde < 25) zamanCubugu.style.backgroundColor = 'red';
 
         if (gecenSure >= kalanZaman) {
+            hedefSayiDaire.classList.remove('kritik-zaman');
             oyunuKaybet("Süre doldu!");
         }
     }, 100);
@@ -143,6 +159,9 @@ butonlar.forEach(buton => {
 
 // Oyuncu kazandığında
 function oyunuKazan() {
+    // DÜZELTME: Kazanma anında yanıp sönmeyi durdurur.
+    hedefSayiDaire.classList.remove('kritik-zaman');
+
     if (kazanmaSesi) {
         kazanmaSesi.play();
     }
@@ -150,22 +169,16 @@ function oyunuKazan() {
     clearInterval(zamanlayici);
     butonlariDevreDisiBirak();
 
-    // 1. Önce kalan süreyi saniye cinsinden hesapla
     const gecenSure = (Date.now() - baslangicZamani) / 1000;
     const kalanSaniye = kalanZaman - gecenSure;
-
-    // 2. Yeni puanlama formülünü uygula
+    
     const seviyePuani = mevcutSeviye * 10;
-    const zamanBonusu = Math.max(0, kalanSaniye) * 5; // Negatif bonus olmasın diye Math.max kullanılır.
+    const zamanBonusu = Math.max(0, kalanSaniye) * 5;
     const kazanilanPuan = Math.round(seviyePuani + zamanBonusu);
 
-    // 3. Toplam puanı güncelle
     toplamPuan += kazanilanPuan;
     puanGosterge.textContent = toplamPuan;
 
-    // -----------------------------------------------------------
-    
-    // Skor tablosuna yazdırırken geçen süreyi formatla
     const gecenSureSaniye = gecenSure.toFixed(2);
     const yeniSkorSatiri = document.createElement('li');
     yeniSkorSatiri.innerHTML = `Seviye ${mevcutSeviye}: <strong>${gecenSureSaniye} sn</strong> (+${kazanilanPuan} Puan)`;
@@ -173,7 +186,7 @@ function oyunuKazan() {
 
     mesajMetni.textContent = `Tebrikler! +${kazanilanPuan} puan kazandın.`;
     sonrakiSeviyeButonu.textContent = "Sonraki Seviye";
-    sonrakiSeviyeButonu.disabled = false; // Butonu aktif yap
+    sonrakiSeviyeButonu.disabled = false;
     seviyeSonuMesaji.classList.remove('gizli');
 
     mevcutSeviye++;
@@ -186,9 +199,11 @@ function oyunuKaybet(sebep) {
     clearInterval(zamanlayici);
     butonlariDevreDisiBirak();
 
+    hedefSayiDaire.classList.remove('kritik-zaman');
+
     mesajMetni.textContent = `Kaybettin! Sebep: ${sebep}`;
     sonrakiSeviyeButonu.textContent = "Yeniden Başla";
-    sonrakiSeviyeButonu.disabled = false; // Butonu aktif yap
+    sonrakiSeviyeButonu.disabled = false;
     seviyeSonuMesaji.classList.remove('gizli');
 
     seviyeListesi.innerHTML = '';
@@ -198,21 +213,16 @@ function oyunuKaybet(sebep) {
 
 // "Sonraki Seviye" veya "Yeniden Başla" butonuna tıklama
 sonrakiSeviyeButonu.addEventListener('click', () => {
-    // Önce hangi sesin çalınacağına karar verelim
     if (sonrakiSeviyeButonu.textContent === "Yeniden Başla") {
         baslatmaSesi.play();
     } else {
-        // Eğer butonun üzerinde "Yeniden Başla" yazmıyorsa,
-        // bu "Sonraki Seviye" durumudur. İlgili sesi çalalım.
-        // `sonrakiSeviyeSesi` değişkeninin null olmamasını kontrol edelim.
         if (sonrakiSeviyeSesi) {
             sonrakiSeviyeSesi.play();
         }
     }
     
-    // Ses çalındıktan sonra, her durumda yapılması gereken işlemleri yapalım
     puanGosterge.textContent = toplamPuan;
-    seviyeyiBaslat(); // Bu, yeni seviyeyi başlatan en önemli komuttur.
+    seviyeyiBaslat();
 });
 
 // "Başla" butonuna tıklanınca oyunu başlat
