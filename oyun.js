@@ -17,8 +17,12 @@ const baslangicEkrani = document.getElementById('baslangic-ekrani');
 const baslaButonu = document.getElementById('basla-butonu');
 const oyunAlani = document.getElementById('oyun-alani');
 const skorTablosu = document.getElementById('skor-tablosu');
-
-// Eğer kazanma sesi varsa, tanımlayın (HTML'de yoksa bu satırı kaldırabilirsiniz)
+const ayarlarButonu = document.getElementById('ayarlar-butonu');
+const ayarlarPaneli = document.getElementById('ayarlar-paneli');
+const ayarlarKapat = document.getElementById('ayarlar-kapat');
+const sesAcikCheck = document.getElementById('ses-acik');
+const sesSeviye = document.getElementById('ses-seviye');
+const zorlukSecim = document.getElementById('zorluk');
 const kazanmaSesi = document.getElementById('kazanmaSesi');
 
 // Oyun durumu değişkenleri
@@ -29,6 +33,73 @@ let zamanlayici;
 let kalanZaman;
 let baslangicZamani;
 let sonSesZamani = 0;
+
+// ----------------- AYARLAR MANTIĞI -----------------
+
+// ----------------- AYARLARI YÜKLEME VE KAYDETME -----------------
+
+// Sayfa ilk yüklendiğinde localStorage'dan ayarları çeken fonksiyon
+function ayarlariYukle() {
+    // 1. Kayıtlı "Ses Açık" durumunu al ve uygula
+    const kayitliSesAcik = localStorage.getItem('sesAcik');
+    if (kayitliSesAcik !== null) {
+        // localStorage 'true'/'false' string olarak saklar, bunu boolean'a çeviriyoruz
+        sesAcikCheck.checked = (kayitliSesAcik === 'true');
+    }
+
+    // 2. Kayıtlı "Ses Seviyesi" değerini al ve uygula
+    const kayitliSesSeviye = localStorage.getItem('sesSeviye');
+    if (kayitliSesSeviye !== null) {
+        sesSeviye.value = kayitliSesSeviye;
+    }
+
+    // 3. Kayıtlı "Zorluk" seviyesini al ve uygula
+    const kayitliZorluk = localStorage.getItem('zorluk');
+    if (kayitliZorluk !== null) {
+        zorlukSecim.value = kayitliZorluk;
+    }
+}
+
+// Kullanıcı bir ayarı değiştirdiğinde bunu localStorage'a kaydeden olaylar
+sesAcikCheck.addEventListener('change', () => {
+    localStorage.setItem('sesAcik', sesAcikCheck.checked);
+});
+
+sesSeviye.addEventListener('input', () => {
+    localStorage.setItem('sesSeviye', sesSeviye.value);
+});
+
+zorlukSecim.addEventListener('change', () => {
+    localStorage.setItem('zorluk', zorlukSecim.value);
+});
+document.addEventListener('DOMContentLoaded', ayarlariYukle);
+
+// Ses çalma fonksiyonu (bu fonksiyon tüm sesleri kontrol edecek)
+function sesCal(ses) {
+    if (ses && sesAcikCheck.checked) {
+        ses.volume = parseFloat(sesSeviye.value); // Ses seviyesini ayarla
+        ses.currentTime = 0;
+        sesCal(ses);
+    }
+}
+
+// Zorluk katsayısını döndüren fonksiyon
+function zorlukKatsayisi() {
+    switch (zorlukSecim.value) {
+        case "kolay": return 1.5;
+        case "zor": return 0.7;
+        default: return 1;
+    }
+}
+
+// Ayarlar panelini açma/kapama olayları
+ayarlarButonu.addEventListener('click', () => {
+    ayarlarPaneli.classList.toggle('gizli');
+});
+
+ayarlarKapat.addEventListener('click', () => {
+    ayarlarPaneli.classList.add('gizli');
+});
 
 // Butonları devre dışı bırak
 function butonlariDevreDisiBirak() {
@@ -79,7 +150,7 @@ function seviyeyiBaslat() {
     mevcutHedefSayi = geciciHedefSayi;
 
     // Zaman ayarı
-    kalanZaman = 15 - mevcutSeviye;
+    kalanZaman = (15 - mevcutSeviye) * zorlukKatsayisi();
     if (kalanZaman < 4) kalanZaman = 4;
 
     // Arayüz güncelle
@@ -104,7 +175,7 @@ function seviyeyiBaslat() {
 
         if (Date.now() - sonSesZamani > suAnkiAralik) {
             zamanlayiciSesi.currentTime = 0;
-            zamanlayiciSesi.play();
+            sesCal(zamanlayiciSesi);
             sonSesZamani = Date.now();
         }
 
@@ -127,7 +198,7 @@ butonlar.forEach(buton => {
         hedefSayiElementi.textContent = mevcutHedefSayi;
 
         tiklamaSesi.currentTime = 0;
-        tiklamaSesi.play();
+        sesCal(tiklamaSesi);
 
         if (mevcutHedefSayi === 0) {
             oyunuKazan();
@@ -144,7 +215,7 @@ butonlar.forEach(buton => {
 // Oyuncu kazandığında
 function oyunuKazan() {
     if (kazanmaSesi) {
-        kazanmaSesi.play();
+        sesCal(kazanmaSesi);
     }
     zamanlayiciSesi.pause();
     clearInterval(zamanlayici);
@@ -182,7 +253,7 @@ function oyunuKazan() {
 // Oyuncu kaybettiğinde
 function oyunuKaybet(sebep) {
     zamanlayiciSesi.pause();
-    kaybetmeSesi.play();
+    sesCal(kaybetmeSesi);
     clearInterval(zamanlayici);
     butonlariDevreDisiBirak();
 
@@ -200,13 +271,13 @@ function oyunuKaybet(sebep) {
 sonrakiSeviyeButonu.addEventListener('click', () => {
     // Önce hangi sesin çalınacağına karar verelim
     if (sonrakiSeviyeButonu.textContent === "Yeniden Başla") {
-        baslatmaSesi.play();
+       sesCal(baslatmaSesi);
     } else {
         // Eğer butonun üzerinde "Yeniden Başla" yazmıyorsa,
         // bu "Sonraki Seviye" durumudur. İlgili sesi çalalım.
         // `sonrakiSeviyeSesi` değişkeninin null olmamasını kontrol edelim.
         if (sonrakiSeviyeSesi) {
-            sonrakiSeviyeSesi.play();
+            sesCal(sonrakiSeviyeSesi);
         }
     }
     
