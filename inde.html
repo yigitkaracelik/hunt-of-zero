@@ -13,52 +13,56 @@
 </head>
 <body>
 
-    <!-- Başlangıçta GÖRÜNEN tek ekran -->
-    <div id="baslangic-ekrani">
-        <h2>Sayı Avcısı</h2>
-        <button id="basla-butonu">Başla</button>
-    </div>
+    <!-- Bütün arayüzü saran ve ölçeklenecek ana kapsayıcı -->
+    <div id="oyun-kapsayici">
 
-    <!-- YENİ: En Yüksek Skor için ayrı bir kutu -->
-    <div id="en-yuksek-skor-kutusu" class="gizli">
-        En Yüksek Skor: <span id="yuksek-skor-gosterge">0</span>
-    </div>
+        <!-- Başlangıçta GÖRÜNEN tek ekran -->
+        <div id="baslangic-ekrani">
+            <h2>Sayı Avcısı</h2>
+            <button id="basla-butonu">Başla</button>
+        </div>
 
-    <!-- Leaderboard Alanı -->
-    <div id="leaderboard" class="gizli">
-        <h3>En Hızlı Zamanlar</h3>
-        <ol id="hizli-zamanlar-listesi"></ol>
-    </div>
+        <!-- En Yüksek Skor için ayrı bir kutu -->
+        <div id="en-yuksek-skor-kutusu" class="gizli">
+            En Yüksek Skor: <span id="yuksek-skor-gosterge">0</span>
+        </div>
 
-    <!-- Skor tablosu -->
-    <div id="skor-tablosu" class="gizli">
-        <h3>Seviye Geçmişi</h3>
-        <ol id="seviye-listesi"></ol>
-    </div>
+        <!-- Leaderboard Alanı -->
+        <div id="leaderboard" class="gizli">
+            <h3>En Hızlı Zamanlar</h3>
+            <ol id="hizli-zamanlar-listesi"></ol>
+        </div>
 
-    <!-- Ana oyun alanı -->
-    <div id="oyun-alani" class="gizli">
-        <div id="ust-panel">
-            <span>Seviye: <span id="seviye-gosterge">1</span></span>
-            <span>Puan: <span id="puan-gosterge">0</span></span>
-            <!-- En Yüksek Skor buradan kaldırıldı -->
+        <!-- Skor tablosu -->
+        <div id="skor-tablosu" class="gizli">
+            <h3>Seviye Geçmişi</h3>
+            <ol id="seviye-listesi"></ol>
         </div>
-        <div id="zaman-cubugu-dis">
-            <div id="zaman-cubugu-ic"></div>
+
+        <!-- Ana oyun alanı -->
+        <div id="oyun-alani" class="gizli">
+            <div id="ust-panel">
+                <span>Seviye: <span id="seviye-gosterge">1</span></span>
+                <span>Puan: <span id="puan-gosterge">0</span></span>
+            </div>
+            <div id="zaman-cubugu-dis">
+                <div id="zaman-cubugu-ic"></div>
+            </div>
+            <div id="hedef-sayi-daire">
+                <span id="hedef-sayi">0</span>
+            </div>
+            <div id="buton-kutusu">
+                <button class="islem-butonu" data-deger="1">1</button>
+                <button class="islem-butonu" data-deger="3">3</button>
+                <button class="islem-butonu" data-deger="7">7</button>
+            </div>
+            <div id="seviye-sonu-mesaji" class="gizli">
+                 <p id="mesaj-metni"></p>
+                 <button id="sonraki-seviye-butonu">Yeniden Başla</button>
+            </div>
         </div>
-        <div id="hedef-sayi-daire">
-            <span id="hedef-sayi">0</span>
-        </div>
-        <div id="buton-kutusu">
-            <button class="islem-butonu" data-deger="1">1</button>
-            <button class="islem-butonu" data-deger="3">3</button>
-            <button class="islem-butonu" data-deger="7">7</button>
-        </div>
-        <div id="seviye-sonu-mesaji" class="gizli">
-             <p id="mesaj-metni"></p>
-             <button id="sonraki-seviye-butonu">Yeniden Başla</button>
-        </div>
-    </div>
+
+    </div> <!-- oyun-kapsayici sonu -->
 
     <!-- Ses Dosyaları -->
     <audio id="tiklamaSesi" src="click.mp3"></audio>
