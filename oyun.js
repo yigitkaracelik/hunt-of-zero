@@ -204,7 +204,7 @@ butonlar.forEach(buton => {
 
 // Oyuncu kazandığında
 function oyunuKazan() {
-    // DEĞİŞİKLİK: Oyun bittiği için duraklatma butonunu gizliyoruz.
+    // DEĞİŞİKLİK: Oyun bittiği için duraklatma butonunu gizledik.
     duraklatKonteyneri.classList.add('gizli');
 
     if (kazanmaSesi) kazanmaSesi.play();
