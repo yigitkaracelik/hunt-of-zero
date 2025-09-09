@@ -17,18 +17,55 @@ const baslangicEkrani = document.getElementById('baslangic-ekrani');
 const baslaButonu = document.getElementById('basla-butonu');
 const oyunAlani = document.getElementById('oyun-alani');
 const skorTablosu = document.getElementById('skor-tablosu');
+const yuksekSkorGosterge = document.getElementById('yuksek-skor-gosterge'); // En yüksek skor göstergesi
 
 // Eğer kazanma sesi varsa, tanımlayın (HTML'de yoksa bu satırı kaldırabilirsiniz)
 const kazanmaSesi = document.getElementById('kazanmaSesi');
 
 // Oyun durumu değişkenleri
 let mevcutSeviye = 1;
-let toplamPuan = 0;
+let toplamPuan = 0; // Mevcut oyunun puanı
 let mevcutHedefSayi = 0;
 let zamanlayici;
 let kalanZaman;
 let baslangicZamani;
 let sonSesZamani = 0;
+
+// En yüksek skor ve localStorage anahtarı
+let enYuksekSkor = 0;
+const YUKSEK_SKOR_KEY = 'sayiAvcisiEnYuksekSkor';
+
+// Sayfa yüklendiğinde en yüksek skoru localStorage'dan yükle ve göster
+document.addEventListener('DOMContentLoaded', () => {
+    enYuksekSkoruYukle();
+    // Oyun başladığında veya yeniden başladığında da güncellenmesi için burada çağırıyoruz.
+    // Ancak sadece yükleme anında çağırıp, diğer güncellemeler için oyunuKaybet veya oyunuKazan içinde çağırabiliriz.
+});
+
+
+// En yüksek skoru localStorage'dan yükle
+function enYuksekSkoruYukle() {
+    const storedSkor = localStorage.getItem(YUKSEK_SKOR_KEY);
+    if (storedSkor !== null) {
+        enYuksekSkor = parseInt(storedSkor, 10);
+    }
+    yuksekSkorGosterge.textContent = enYuksekSkor; // Arayüzü güncelle
+}
+
+// En yüksek skoru localStorage'a kaydet
+function enYuksekSkoruKaydet() {
+    localStorage.setItem(YUKSEK_SKOR_KEY, enYuksekSkor.toString());
+}
+
+// En yüksek skoru kontrol et ve güncelle
+function enYuksekSkoruKontrolEtVeGuncelle() {
+    // Burada 'mevcutPuan' yerine 'toplamPuan' kullanmalıyız, çünkü mevcut oyunun toplam puanı budur.
+    if (toplamPuan > enYuksekSkor) {
+        enYuksekSkor = toplamPuan;
+        yuksekSkorGosterge.textContent = enYuksekSkor; // Arayüzü güncelle
+        enYuksekSkoruKaydet(); // LocalStorage'a kaydet
+    }
+}
 
 // Butonları devre dışı bırak
 function butonlariDevreDisiBirak() {
@@ -79,8 +116,8 @@ function seviyeyiBaslat() {
     mevcutHedefSayi = geciciHedefSayi;
 
     // Zaman ayarı
-    kalanZaman = 15 - mevcutSeviye;
-    if (kalanZaman < 4) kalanZaman = 4;
+    kalanZaman = 15 - Math.floor(mevcutSeviye / 2); // Seviye arttıkça daha hızlı olsun
+    if (kalanZaman < 5) kalanZaman = 5; // Minimum 5 saniye
 
     // Arayüz güncelle
     hedefSayiElementi.textContent = mevcutHedefSayi;
@@ -98,8 +135,9 @@ function seviyeyiBaslat() {
         zamanCubugu.style.width = yuzde + '%';
 
         // Ses hızını ayarla
-        const maxAralik = 1200;
-        const minAralik = 400;
+        const maxAralik = 1200; // Başlangıçta yavaş
+        const minAralik = 400;  // Süre azaldıkça hızlanır
+        // Yüzde 100 iken maxAralık, yüzde 0 iken minAralık olsun
         const suAnkiAralik = minAralik + (yuzde / 100) * (maxAralik - minAralik);
 
         if (Date.now() - sonSesZamani > suAnkiAralik) {
@@ -163,7 +201,8 @@ function oyunuKazan() {
     toplamPuan += kazanilanPuan;
     puanGosterge.textContent = toplamPuan;
 
-    // -----------------------------------------------------------
+    // YENİ: En yüksek skoru kontrol et ve güncelle
+    enYuksekSkoruKontrolEtVeGuncelle();
     
     // Skor tablosuna yazdırırken geçen süreyi formatla
     const gecenSureSaniye = gecenSure.toFixed(2);
@@ -186,14 +225,19 @@ function oyunuKaybet(sebep) {
     clearInterval(zamanlayici);
     butonlariDevreDisiBirak();
 
-    mesajMetni.textContent = `Kaybettin! Sebep: ${sebep}`;
+    mesajMetni.textContent = `Kaybettin! Sebep: ${sebep}. Puanın: ${toplamPuan}`; // Kaybedince puanı da göster
     sonrakiSeviyeButonu.textContent = "Yeniden Başla";
     sonrakiSeviyeButonu.disabled = false; // Butonu aktif yap
     seviyeSonuMesaji.classList.remove('gizli');
 
+    // YENİ: Oyunu kaybedince en yüksek skoru kontrol et ve güncelle
+    enYuksekSkoruKontrolEtVeGuncelle(); // Kaybederken de kontrol edelim
+
+    // Oyunu kaybedince skor tablosunu temizle ve puanı sıfırla
     seviyeListesi.innerHTML = '';
     mevcutSeviye = 1;
     toplamPuan = 0;
+    puanGosterge.textContent = toplamPuan; // Puanı arayüzde de sıfırla
 }
 
 // "Sonraki Seviye" veya "Yeniden Başla" butonuna tıklama
@@ -202,15 +246,11 @@ sonrakiSeviyeButonu.addEventListener('click', () => {
     if (sonrakiSeviyeButonu.textContent === "Yeniden Başla") {
         baslatmaSesi.play();
     } else {
-        // Eğer butonun üzerinde "Yeniden Başla" yazmıyorsa,
-        // bu "Sonraki Seviye" durumudur. İlgili sesi çalalım.
-        // `sonrakiSeviyeSesi` değişkeninin null olmamasını kontrol edelim.
         if (sonrakiSeviyeSesi) {
             sonrakiSeviyeSesi.play();
         }
     }
     
-    // Ses çalındıktan sonra, her durumda yapılması gereken işlemleri yapalım
     puanGosterge.textContent = toplamPuan;
     seviyeyiBaslat(); // Bu, yeni seviyeyi başlatan en önemli komuttur.
 });
@@ -222,3 +262,6 @@ baslaButonu.addEventListener('click', () => {
     skorTablosu.classList.remove('gizli');
     seviyeyiBaslat();
 });
+
+// Sayfa yüklendiğinde en yüksek skoru yükle ve göster
+document.addEventListener('DOMContentLoaded', enYuksekSkoruYukle);

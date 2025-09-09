@@ -232,3 +232,15 @@ body {
     box-shadow: 0 0 0 #555;
     transform: translate(6px, 6px);
 }
+
+/* Mevcut stil.css dosyanızın sonuna ekleyebilirsiniz */
+#ust-panel span {
+    margin: 0 15px; /* Span'ler arasında biraz boşluk bırakır */
+    font-size: 1.1em;
+}
+
+/* En Yüksek Skor göstergesine özel stil (opsiyonel) */
+#yuksek-skor-gosterge {
+    color: #ffffff;
+    font-weight: bold;
+}
