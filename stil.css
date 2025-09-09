@@ -214,27 +214,282 @@ body {
     box-shadow: 0 0 0 #555;
     transform: translate(6px, 6px);
 }
-
-#seviye-sonu-mesaji {
-    font-size: 12px;
-    margin-top: 20px;
-    text-align: center;
+/* ======================================== */
+/*  AYARLAR BÖLÜMÜ STİLLERİ                 */
+/* ======================================== */
+/* İki ikonu bir arada tutan ana kutu */
+#sol-ust-kose {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    display: flex; /* İkonları yan yana dizmek için */
+    gap: 15px;     /* Aralarına boşluk koymak için */
 }
 
-#sonraki-seviye-butonu {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 12px;
-    padding: 12px 18px;
-    margin-top: 15px;
-    cursor: pointer;
+/* Ayarlar butonundan 'position' kaldırıldı, çünkü artık #sol-ust-kose konumlanıyor */
+#ayarlar-butonu{
+    width:50px;
+    height:50px;
+    padding:0;
+    font-size:24px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Press Start 2P',cursive;
+    cursor:pointer;
+    background-color:#ddd;border:3px solid #000;
+    box-shadow:4px 4px 0 #555;border-radius:0;
+    transition:transform .05s,box-shadow .05s;
+}
+
+/* YENİ: Zorluk ikonunun stil tanımı */
+#zorluk-gosterge-ikonu {
+    width: 46px;
+    height: 46px;
     background-color: #ddd;
     border: 3px solid #000;
     border-radius: 0;
-    box-shadow: 4px 4px 0px #555;
-    transition: transform 0.05s, box-shadow 0.05s;
+    box-shadow: 4px 4px 0 #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-#sonraki-seviye-butonu:active {
-    box-shadow: 0 0 0 #555;
-    transform: translate(4px, 4px);
+#zorluk-ikon-resmi {
+    width: 46px;
+    height: 46px;
+}
+
+#ayarlar-butonu:active{
+    box-shadow:0 0 0 #555;
+    transform:translate(4px,4px);
+}
+
+#ayarlar-paneli{
+    position:absolute;
+    top:90px;
+    left:30px;
+    width:200px;
+    background:rgba(255,255,255,.9);
+    border:3px solid #000;padding:40px 15px 15px 15px;
+    box-shadow:6px 6px 0 #333;
+    font-size:12px;
+    border-radius:0;
+}
+
+#ayarlar-paneli label {
+    text-shadow: none;
+}
+
+#ayarlar-paneli h3 {
+    position: absolute; /* Konumlandırmayı aktif et */
+    top: 0px;          /* Panelin üstünden 15px aşağıda */
+    left: 0;            /* Panelin sol kenarına yasla */
+    right: 0;           /* Panelin sağ kenarına yasla */
+    text-shadow: none;
+    text-align: center; /* BU SATIRI EKLE */
+    margin-bottom: 20px; /* Başlıkla diğerleri arasına boşluk koyalım */
+}
+
+#ayarlar-paneli button{
+    font-family:'Press Start 2P',cursive;
+    font-size:12px;margin-top:15px;
+    padding:8px;
+    cursor:pointer;
+    background-color:#ddd;
+    border:3px solid #000;
+    border-radius:0;
+    box-shadow:4px 4px 0 #555;
+}
+
+#ayarlar-paneli button:active{
+    box-shadow:0 0 0 #555;
+    transform:translate(4px,4px);
+}
+#ayarlar-butonu img {
+    width: 32px;
+    height: 32px;
+}
+
+/* ======================================================== */
+/*  AYARLAR PANELİ - PİKSEL FORM ELEMANLARI STİLLERİ       */
+/* ======================================================== */
+
+/* 1. GÜNCELLENMİŞ PİKSEL CHECKBOX */
+
+/* a) Tarayıcının varsayılan checkbox stilini gizle */
+#ayarlar-paneli input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #a2ff9a;
+    margin: 0;
+    margin-left: 0px; /* Metinle arasına boşluk koy */
+
+    /* b) Kutunun yeni, daha küçük boyutu */
+    width: 20px;
+    height: 20px;
+    border: 3px solid #000;
+    border-radius: 0;
+    position: relative;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+/* c) Checkbox işaretlendiğinde arkaplanı yeşil yap */
+#ayarlar-paneli input[type="checkbox"]:checked {
+    background-color: #a2ff9a;
+}
+
+/* d) Çarpı işaretinin birinci çubuğu (/) */
+#ayarlar-paneli input[type="checkbox"]:checked::before {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 5px;
+    width: 4px;
+    height: 12px;
+    background-color: #000;
+    transform: rotate(45deg);
+}
+
+/* e) Çarpı işaretinin ikinci çubuğu (\) */
+#ayarlar-paneli input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 5px;
+    width: 4px;
+    height: 12px;
+    background-color: #000;
+    transform: rotate(-45deg);
+    /* Önceki tik kodunu sildik, yerine bunu koyduk */
+    border: none; /* Önceki tik'ten kalan border'ı sıfırla */
+}
+
+
+
+/* 2. PİKSEL RANGE SLIDER (SES DÜZEYİ ÇUBUĞU) */
+
+/* a) Tarayıcının varsayılan slider stilini genel olarak sıfırla */
+#ayarlar-paneli input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%; /* Panelin genişliğine yayılsın */
+    height: 20px; /* Dokunma alanını belirler */
+    background: transparent; /* Varsayılan arkaplanı kaldır */
+    cursor: pointer;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+/* b) Slider'ın "çubuğunu" (track) tasarla */
+#ayarlar-paneli input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 14px;
+    background: #ddd;
+    border: 3px solid #000;
+    border-radius: 0; /* Keskin köşe */
+}
+
+#ayarlar-paneli input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 14px;
+    background: #ddd;
+    border: 3px solid #000;
+    border-radius: 0; /* Keskin köşe */
+}
+
+/* c) Slider'ın "kaydırma topunu" (thumb) tasarla */
+#ayarlar-paneli input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    background: #a2ff9a; /* İsteğin üzerine yeşil renk */
+    border: 3px solid #000;
+    border-radius: 0; /* Keskin KÖŞELİ KARE */
+    margin-top: -8px; /* Çubuğun üzerine ortalamak için */
+}
+
+#ayarlar-paneli input[type="range"]::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    background: #a2ff9a; /* İsteğin üzerine yeşil renk */
+    border: 3px solid #000;
+    border-radius: 0; /* Keskin KÖŞELİ KARE */
+}
+/* 3. PİKSEL SELECT (ZORLUK MENÜSÜ) */
+.select-wrapper {
+    display: inline-block; /* Metinle yanyana durması için */
+    position: relative;
+}
+
+#ayarlar-paneli select {
+    -webkit-appearance: none;
+    appearance: none;
+    
+    /* Pikselli kutu stili */
+    background-color: #a2ff9a;
+    border: 3px solid #000;
+    border-radius: 0;
+    padding: 5px 25px 5px 8px; /* Sağ tarafa ok için boşluk bırak */
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    cursor: pointer;
+}
+
+/* Özel pikselli ok ikonu */
+.select-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    margin-top: -3px; /* Dikeyde ortalamak için */
+    
+    /* Pikselli üçgen çizimi */
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 8px 6px 0 6px;
+    border-color: #000 transparent transparent transparent;
+    pointer-events: none; /* Ok'un tıklamayı engellememesi için */
+}
+/* Kapat butonu içindeki ikonun boyutunu ayarlar */
+#ayarlar-kapat img {
+    width: 18px;
+    height: 18px;
+}
+/* 4. GÜNCELLENMİŞ KAPAT BUTONU (SAĞ ÜST X) */
+#ayarlar-kapat {
+    position: absolute; /* Bu, konumlandırmayı sağlar */
+    top: -10px;          /* Panelin üstünden 10px aşağıda */
+    right: 5px;         /* Panelin sağından 10px içeride */
+
+    /* Küçük kare buton */
+    width: 25px;
+    height: 25px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Önceki stiller */
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: transparent; /* Arkaplanı şeffaf yap */
+    border: none; /* Kenarlığı kaldır */
+    box-shadow: none;
+    margin-top: 0;
+}
+
+#ayarlar-kapat:active {
+    background-color: rgba(0,0,0,0.1); /* Sadece hafif bir basma efekti */
+    transform: none;
+    box-shadow: none;
+}
+/* Ses Düzeyi etiketi ile üstündeki arasına boşluk ekler */
+#ayarlar-paneli label[for="ses-seviye"] {
+    display: block; /* Margin'in doğru çalışması için */
+    margin-top: 15px;
 }
