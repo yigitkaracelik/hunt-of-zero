@@ -1,17 +1,14 @@
 /* Genel Sayfa Stilleri ve Arkaplan */
-/* NOKTA ATIŞI: body stilini bununla değiştir */
 body {
     display: flex;
+    flex-direction: column; /* EKLENDİ: Elementleri dikeyde (alt alta) hizalar */
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-    /* YENİ FONTU UYGULA */
     font-family: 'Press Start 2P', cursive;
-    background-image: url('arkaplan.jpg'); /* Arka planın pikselli olması çok yakışır */
+    background-image: url('arkaplan.jpg');
     background-size: cover;
-    
-    /* ÖNEMLİ: Tarayıcının pikselli resimleri bulandırmasını engeller */
     image-rendering: pixelated; 
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
@@ -19,19 +16,16 @@ body {
 
 /* TÜM ELEMENTLERDE GEÇERLİ OLACAK PIXEL KURALLARI */
 * {
-    /* Yazıların daha keskin görünmesini sağlar */
     text-shadow: 1px 1px 0px #333; 
 }
 
 /* Ana Oyun Alanı */
-/* NOKTA ATIŞI: #oyun-alani stilini bununla değiştir */
 #oyun-alani {
-    width: 380px; /* Font büyüdüğü için biraz genişletelim */
+    position: relative;
+    width: 380px;
     padding: 25px;
     border: 4px solid #000;
     background-color: rgba(255, 255, 255, 0.5);
-    
-    /* PİXEL GÖLGESİ VE KESKİN KÖŞELER */
     border-radius: 0; 
     box-shadow: 8px 8px 0px #000;
 }
@@ -54,7 +48,6 @@ body {
 #skor-tablosu h3 {
     margin-top: 0;
     text-align: center;
-    
     padding-bottom: 10px;
 }
 
@@ -71,18 +64,15 @@ body {
 }
 
 /* Hedef Sayı Dairesi */
-/* NOKTA ATIŞI: #hedef-sayi-daire stilini bununla değiştir */
 #hedef-sayi-daire {
     width: 160px;
     height: 160px;
     border: 5px solid #000;
-    background-color: #a2ff9a; /* İçini hafif yeşil yapalım */
+    background-color: #a2ff9a;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 20px auto;
-    
-    /* Daireyi kare yap */
     border-radius: 0;
 }
 
@@ -98,14 +88,11 @@ body {
     margin-top: 20px;
 }
 
-/* NOKTA ATIŞI: .islem-butonu ve ilgili stilleri bunlarla değiştir */
 .islem-butonu {
-    /* NOKTA ATIŞI: BUTON İÇİNDEKİ SAYILARI PİXELLEŞTİRMEK İÇİN BU SATIRI EKLE */
     font-family: 'Press Start 2P', cursive;
-
     width: 80px;
     height: 80px;
-    font-size: 24px; /* Bu fontla bu boyut idealdir */
+    font-size: 24px;
     cursor: pointer;
     background-color: #ddd;
     border: 4px solid #000;
@@ -114,31 +101,25 @@ body {
     transition: transform 0.05s, box-shadow 0.05s;
 }
 
-/* BUTONA BASILDIĞINDAKİ EFEKT */
 .islem-butonu:active {
     box-shadow: 0px 0px 0px #555;
     transform: translate(6px, 6px);
 }
 
 /* Zaman Çubuğu */
-/* NOKTA ATIŞI: Zaman çubuğu stillerini bunlarla değiştir */
 #zaman-cubugu-dis {
     width: 100%;
     height: 25px;
     background-color: #ddd;
     border: 3px solid #000;
     margin-bottom: 20px;
-    
-    /* Keskin köşe */
     border-radius: 0; 
 }
 
 #zaman-cubugu-ic {
     height: 100%;
     width: 100%;
-    background-color: #e53935; /* Kırmızı renk daha dikkat çekici */
-    
-    /* Keskin köşe ve geçiş efektini kaldır */
+    background-color: #e53935;
     border-radius: 0;
     transition: none; 
 }
@@ -151,9 +132,9 @@ body {
     font-weight: bold;
 }
 
-/* Başlangıçta gizli olacak elementler için */
+/* Gizli elementler */
 .gizli {
-    display: none;
+    display: none !important;
 }
 
 /* Butona basma animasyonu */
@@ -164,45 +145,35 @@ body {
 .tiklandi {
     animation: buton-basma 0.2s ease-out;
 }
-/* NOKTA ATIŞI: Bu kuralı güncelle veya ekle */
+
 #seviye-sonu-mesaji {
     font-size: 12px;
-    margin-top: 20px; /* Üstten boşluğu biraz artıralım */
-    
-    /* BUTONU VE YAZIYI ORTALAMAK İÇİN BU SATIRI EKLE */
+    margin-top: 20px;
     text-align: center; 
 }
-/* NOKTA ATIŞI: Bu kuralları ekle veya mevcut olanları bunlarla değiştir */
+
 #sonraki-seviye-butonu {
-    /* Pixel fontunu kullan */
     font-family: 'Press Start 2P', cursive;
     font-size: 12px;
-    padding: 12px 18px; /* Butonun iç boşluğu */
-    margin-top: 15px; /* Üstündeki yazıdan boşluk */
+    padding: 12px 18px;
+    margin-top: 15px;
     cursor: pointer;
-    
-    /* Pixel Art Görünümü */
     background-color: #ddd;
     border: 3px solid #000;
-    border-radius: 0; /* Keskin köşeler */
-    box-shadow: 4px 4px 0px #555; /* Sert gölge */
-    
-    /* Basılma animasyonu için hazırlık */
+    border-radius: 0;
+    box-shadow: 4px 4px 0px #555;
     transition: transform 0.05s, box-shadow 0.05s;
 }
 
-/* Butona basıldığında içeri göçme efekti */
 #sonraki-seviye-butonu:active {
     box-shadow: 0 0 0 #555;
     transform: translate(4px, 4px);
 }
-/* NOKTA ATIŞI: BU STİLLERİ DOSYANIN SONUNA EKLE */
 
-/* Başlangıç Ekranının Kendisi */
+/* Başlangıç Ekranı */
 #baslangic-ekrani {
-    /* Oyun alanıyla aynı görünüme sahip olsun */
     width: 380px;
-    padding: 50px 25px; /* Dikey boşluğu artıralım */
+    padding: 50px 25px;
     border: 4px solid #000;
     background-color: rgba(255, 255, 255, 0.5);
     text-align: center;
@@ -211,17 +182,16 @@ body {
 }
 
 #baslangic-ekrani h2 {
-    font-size: 24px; /* Başlık font boyutu (8'in katı) */
-    margin-bottom: 30px; /* Butonla arasına boşluk */
+    font-size: 24px;
+    margin-bottom: 30px;
 }
 
-/* Başla Butonu */
 #basla-butonu {
     font-family: 'Press Start 2P', cursive;
-    font-size: 16px; /* Daha büyük ve dikkat çekici (8'in katı) */
+    font-size: 16px;
     padding: 15px 30px;
     cursor: pointer;
-    background-color: #a2ff9a; /* Dikkat çekici yeşil renk */
+    background-color: #a2ff9a;
     border: 3px solid #000;
     border-radius: 0;
     box-shadow: 6px 6px 0px #555;
@@ -231,4 +201,58 @@ body {
 #basla-butonu:active {
     box-shadow: 0 0 0 #555;
     transform: translate(6px, 6px);
+}
+
+/* Duraklatma Stilleri */
+#duraklat-konteyneri {
+    text-align: center;
+    margin-top: 25px; /* Oyun alanı ile arasında boşluk bırakır */
+}
+
+#duraklat-butonu {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px;
+    padding: 12px 18px;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 3px solid #000;
+    border-radius: 0;
+    box-shadow: 4px 4px 0px #555;
+    transition: transform 0.05s, box-shadow 0.05s, background-color 0.2s;
+}
+
+#duraklat-butonu:active {
+    box-shadow: 0 0 0 #555;
+    transform: translate(4px, 4px);
+}
+
+#duraklat-butonu:disabled {
+    background-color: #999;
+    box-shadow: 4px 4px 0px #333;
+    cursor: not-allowed;
+    color: #ccc;
+}
+
+/* *** YENİ STİLLER BURADA *** */
+#duraklat-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+#duraklat-overlay p {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #333;
+    padding: 40px 60px;
+    border: 4px solid #000;
+    box-shadow: 8px 8px 0px rgba(0,0,0,0.8);
+    font-size: 24px;
+    border-radius: 0;
 }

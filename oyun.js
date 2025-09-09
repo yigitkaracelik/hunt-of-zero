@@ -11,15 +11,17 @@ const seviyeListesi = document.getElementById('seviye-listesi');
 const tiklamaSesi = document.getElementById('tiklamaSesi');
 const kaybetmeSesi = document.getElementById('kaybetmeSesi');
 const baslatmaSesi = document.getElementById('baslatmaSesi');
-const sonrakiSeviyeSesi = document.getElementById('sonrakiSeviyeSesi');
 const zamanlayiciSesi = document.getElementById('zamanlayiciSesi');
 const baslangicEkrani = document.getElementById('baslangic-ekrani');
 const baslaButonu = document.getElementById('basla-butonu');
 const oyunAlani = document.getElementById('oyun-alani');
 const skorTablosu = document.getElementById('skor-tablosu');
-
-// Eğer kazanma sesi varsa, tanımlayın (HTML'de yoksa bu satırı kaldırabilirsiniz)
+const duraklatButonu = document.getElementById('duraklat-butonu');
+const duraklatOverlay = document.getElementById('duraklat-overlay');
 const kazanmaSesi = document.getElementById('kazanmaSesi');
+// YENİ EKLENDİ: Duraklatma butonunun konteynerini de yönetmek için seçiyoruz.
+const duraklatKonteyneri = document.getElementById('duraklat-konteyneri');
+const sonrakiSeviyeSesi = document.getElementById('sonrakiSeviyeSesi'); 
 
 // Oyun durumu değişkenleri
 let mevcutSeviye = 1;
@@ -29,6 +31,11 @@ let zamanlayici;
 let kalanZaman;
 let baslangicZamani;
 let sonSesZamani = 0;
+
+// Duraklatma ile ilgili değişkenler
+let duraklatildi = false;
+let duraklamaBaslangicZamani;
+let duraklatmaKilitli = false; // Spam engelleme için kilit
 
 // Butonları devre dışı bırak
 function butonlariDevreDisiBirak() {
@@ -44,8 +51,87 @@ function butonlariAktiflestir() {
     });
 }
 
+// Oyunu Duraklat / Devam Ettir Fonksiyonu
+function duraklatDevamEt() {
+    // Kilit aktifse veya oyun alanı görünür değilse fonksiyondan çık
+    if (duraklatmaKilitli || oyunAlani.classList.contains('gizli')) return;
+
+    duraklatildi = !duraklatildi;
+
+    if (duraklatildi) {
+        // Oyunu duraklat
+        duraklamaBaslangicZamani = Date.now();
+        clearInterval(zamanlayici);
+        zamanlayiciSesi.pause();
+        butonlariDevreDisiBirak();
+        duraklatOverlay.classList.remove('gizli');
+        duraklatButonu.textContent = "Devam Et";
+    } else {
+        // Oyuna devam et
+        const gecenDuraklamaSuresi = Date.now() - duraklamaBaslangicZamani;
+        baslangicZamani += gecenDuraklamaSuresi;
+        
+        butonlariAktiflestir();
+        duraklatOverlay.classList.add('gizli');
+        duraklatButonu.textContent = "Duraklat";
+        
+        // Zamanlayıcıyı kaldığı yerden başlat
+        zamanlayiciyiBaslat();
+
+        // Spam engelleme kilidini başlat
+        duraklatmaKilitli = true;
+        duraklatButonu.disabled = true;
+        setTimeout(() => {
+            duraklatmaKilitli = false;
+            if (!duraklatildi) {
+                duraklatButonu.disabled = false;
+            }
+        }, 1000); // 1 saniye sonra kilidi aç
+    }
+}
+
+// Zamanlayıcıyı başlatan fonksiyon
+function zamanlayiciyiBaslat() {
+    clearInterval(zamanlayici);
+    zamanlayici = setInterval(() => {
+        if (duraklatildi) return;
+
+        const gecenSure = (Date.now() - baslangicZamani) / 1000;
+        const yuzde = ((kalanZaman - gecenSure) / kalanZaman) * 100;
+        zamanCubugu.style.width = yuzde + '%';
+
+        const maxAralik = 1200;
+        const minAralik = 400;
+        const suAnkiAralik = minAralik + (yuzde / 100) * (maxAralik - minAralik);
+
+        if (Date.now() - sonSesZamani > suAnkiAralik) {
+            zamanlayiciSesi.currentTime = 0;
+            zamanlayiciSesi.play();
+            sonSesZamani = Date.now();
+        }
+
+        if (yuzde < 50) zamanCubugu.style.backgroundColor = 'orange';
+        if (yuzde < 25) zamanCubugu.style.backgroundColor = 'red';
+
+        if (gecenSure >= kalanZaman) {
+            oyunuKaybet("Süre doldu!");
+        }
+    }, 100);
+}
+
 // Yeni seviyeyi başlat
 function seviyeyiBaslat() {
+    // DEĞİŞİKLİK: Oyunun aktif olduğunu ve duraklatma butonunun görünür olması gerektiğini belirtiyoruz.
+    duraklatKonteyneri.classList.remove('gizli');
+    
+    // Overlay'in başlangıçta gizli olduğundan emin oluyoruz.
+    duraklatOverlay.classList.add('gizli'); 
+    
+    duraklatildi = false;
+    duraklatmaKilitli = false;
+    duraklatButonu.disabled = false;
+    duraklatButonu.textContent = "Duraklat";
+    
     butonlariAktiflestir();
     seviyeSonuMesaji.classList.add('gizli');
 
@@ -85,47 +171,22 @@ function seviyeyiBaslat() {
     // Arayüz güncelle
     hedefSayiElementi.textContent = mevcutHedefSayi;
     seviyeGosterge.textContent = mevcutSeviye;
-
     zamanCubugu.style.width = '100%';
     zamanCubugu.style.backgroundColor = '#4CAF50';
-
     baslangicZamani = Date.now();
-
-    clearInterval(zamanlayici);
-    zamanlayici = setInterval(() => {
-        const gecenSure = (Date.now() - baslangicZamani) / 1000;
-        const yuzde = ((kalanZaman - gecenSure) / kalanZaman) * 100;
-        zamanCubugu.style.width = yuzde + '%';
-
-        // Ses hızını ayarla
-        const maxAralik = 1200;
-        const minAralik = 400;
-        const suAnkiAralik = minAralik + (yuzde / 100) * (maxAralik - minAralik);
-
-        if (Date.now() - sonSesZamani > suAnkiAralik) {
-            zamanlayiciSesi.currentTime = 0;
-            zamanlayiciSesi.play();
-            sonSesZamani = Date.now();
-        }
-
-        if (yuzde < 50) zamanCubugu.style.backgroundColor = 'orange';
-        if (yuzde < 25) zamanCubugu.style.backgroundColor = 'red';
-
-        if (gecenSure >= kalanZaman) {
-            oyunuKaybet("Süre doldu!");
-        }
-    }, 100);
+    
+    zamanlayiciyiBaslat();
 }
 
 // Butonlara tıklama olayları ekle
 butonlar.forEach(buton => {
     buton.addEventListener('click', () => {
-        buton.classList.add('tiklandi');
+        if (duraklatildi) return;
 
+        buton.classList.add('tiklandi');
         const cikarilacakDeger = parseInt(buton.dataset.deger);
         mevcutHedefSayi -= cikarilacakDeger;
         hedefSayiElementi.textContent = mevcutHedefSayi;
-
         tiklamaSesi.currentTime = 0;
         tiklamaSesi.play();
 
@@ -143,29 +204,22 @@ butonlar.forEach(buton => {
 
 // Oyuncu kazandığında
 function oyunuKazan() {
-    if (kazanmaSesi) {
-        kazanmaSesi.play();
-    }
+    // DEĞİŞİKLİK: Oyun bittiği için duraklatma butonunu gizliyoruz.
+    duraklatKonteyneri.classList.add('gizli');
+
+    if (kazanmaSesi) kazanmaSesi.play();
     zamanlayiciSesi.pause();
     clearInterval(zamanlayici);
     butonlariDevreDisiBirak();
 
-    // 1. Önce kalan süreyi saniye cinsinden hesapla
     const gecenSure = (Date.now() - baslangicZamani) / 1000;
     const kalanSaniye = kalanZaman - gecenSure;
-
-    // 2. Yeni puanlama formülünü uygula
     const seviyePuani = mevcutSeviye * 10;
-    const zamanBonusu = Math.max(0, kalanSaniye) * 5; // Negatif bonus olmasın diye Math.max kullanılır.
+    const zamanBonusu = Math.max(0, kalanSaniye) * 5;
     const kazanilanPuan = Math.round(seviyePuani + zamanBonusu);
-
-    // 3. Toplam puanı güncelle
     toplamPuan += kazanilanPuan;
     puanGosterge.textContent = toplamPuan;
-
-    // -----------------------------------------------------------
     
-    // Skor tablosuna yazdırırken geçen süreyi formatla
     const gecenSureSaniye = gecenSure.toFixed(2);
     const yeniSkorSatiri = document.createElement('li');
     yeniSkorSatiri.innerHTML = `Seviye ${mevcutSeviye}: <strong>${gecenSureSaniye} sn</strong> (+${kazanilanPuan} Puan)`;
@@ -173,14 +227,16 @@ function oyunuKazan() {
 
     mesajMetni.textContent = `Tebrikler! +${kazanilanPuan} puan kazandın.`;
     sonrakiSeviyeButonu.textContent = "Sonraki Seviye";
-    sonrakiSeviyeButonu.disabled = false; // Butonu aktif yap
+    sonrakiSeviyeButonu.disabled = false;
     seviyeSonuMesaji.classList.remove('gizli');
-
     mevcutSeviye++;
 }
 
 // Oyuncu kaybettiğinde
 function oyunuKaybet(sebep) {
+    // DEĞİŞİKLİK: Oyun bittiği için duraklatma butonunu gizliyoruz.
+    duraklatKonteyneri.classList.add('gizli');
+
     zamanlayiciSesi.pause();
     kaybetmeSesi.play();
     clearInterval(zamanlayici);
@@ -188,9 +244,8 @@ function oyunuKaybet(sebep) {
 
     mesajMetni.textContent = `Kaybettin! Sebep: ${sebep}`;
     sonrakiSeviyeButonu.textContent = "Yeniden Başla";
-    sonrakiSeviyeButonu.disabled = false; // Butonu aktif yap
+    sonrakiSeviyeButonu.disabled = false;
     seviyeSonuMesaji.classList.remove('gizli');
-
     seviyeListesi.innerHTML = '';
     mevcutSeviye = 1;
     toplamPuan = 0;
@@ -198,21 +253,15 @@ function oyunuKaybet(sebep) {
 
 // "Sonraki Seviye" veya "Yeniden Başla" butonuna tıklama
 sonrakiSeviyeButonu.addEventListener('click', () => {
-    // Önce hangi sesin çalınacağına karar verelim
     if (sonrakiSeviyeButonu.textContent === "Yeniden Başla") {
         baslatmaSesi.play();
     } else {
-        // Eğer butonun üzerinde "Yeniden Başla" yazmıyorsa,
-        // bu "Sonraki Seviye" durumudur. İlgili sesi çalalım.
-        // `sonrakiSeviyeSesi` değişkeninin null olmamasını kontrol edelim.
         if (sonrakiSeviyeSesi) {
             sonrakiSeviyeSesi.play();
         }
     }
-    
-    // Ses çalındıktan sonra, her durumda yapılması gereken işlemleri yapalım
     puanGosterge.textContent = toplamPuan;
-    seviyeyiBaslat(); // Bu, yeni seviyeyi başlatan en önemli komuttur.
+    seviyeyiBaslat();
 });
 
 // "Başla" butonuna tıklanınca oyunu başlat
@@ -221,4 +270,12 @@ baslaButonu.addEventListener('click', () => {
     oyunAlani.classList.remove('gizli');
     skorTablosu.classList.remove('gizli');
     seviyeyiBaslat();
+});
+
+// Olay dinleyicileri
+duraklatButonu.addEventListener('click', duraklatDevamEt);
+window.addEventListener('keydown', (e) => {
+    if (seviyeSonuMesaji.classList.contains('gizli') && e.key.toLowerCase() === 'p') {
+        duraklatDevamEt();
+    }
 });
