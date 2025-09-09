@@ -19,7 +19,7 @@ const skorTablosu = document.getElementById('skor-tablosu');
 const duraklatButonu = document.getElementById('duraklat-butonu');
 const duraklatOverlay = document.getElementById('duraklat-overlay');
 const kazanmaSesi = document.getElementById('kazanmaSesi');
-// YENİ EKLENDİ: Duraklatma butonunun konteynerini de yönetmek için seçiyoruz.
+// YENİ EKLENDİ: Duraklatma butonunun konteynerini de yönetmek için seçtik.
 const duraklatKonteyneri = document.getElementById('duraklat-konteyneri');
 const sonrakiSeviyeSesi = document.getElementById('sonrakiSeviyeSesi'); 
 
