@@ -111,7 +111,7 @@ body {
     border: 4px solid #000;
     border-radius: 0;
     box-shadow: 6px 6px 0px #555;
-    transition: transform 0.05s, box-shadow 0.05s;
+    transition: transform 0.05s, box-shadow 0.05s, background-color 0.1s;
 }
 
 /* BUTONA BASILDIĞINDAKİ EFEKT */
@@ -158,7 +158,11 @@ body {
 
 /* Butona basma animasyonu */
 @keyframes buton-basma {
-    50% { transform: scale(0.9); }
+    /* Animasyonun ortasında buton hem büyüsün hem de rengi değişsin */
+    50% { 
+        transform: scale(1.1);
+        background-color: #a2ff9a; /* Vurgu için dikkat çekici altın sarısı renk */
+    }
 }
 
 .tiklandi {
@@ -231,4 +235,13 @@ body {
 #basla-butonu:active {
     box-shadow: 0 0 0 #555;
     transform: translate(6px, 6px);
+}
+/* ======================================== */
+/*  YENİ: KLAVYE VURGU STİLİ                */
+/* ======================================== */
+
+/* Klavye ile basıldığında butonu vurgulayan stil */
+.klavye-vurgu {
+    background-color: #a2ff9a; /* Vurgu için dikkat çekici bir renk (altın sarısı) */
+    transform: scale(1.05);    /* Butonu hafifçe büyüterek geri bildirim ver */
 }
