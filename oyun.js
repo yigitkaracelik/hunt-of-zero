@@ -60,7 +60,6 @@ let kalanZaman;
 let baslangicZamani;
 let sonSesZamani = 0;
 
-let enYuksekSkor = 0;
 const YUKSEK_SKOR_KEY = 'sayiAvcisiEnYuksekSkor';
 // Duraklatma ile ilgili değişkenler
 let duraklatildi = false;
@@ -72,7 +71,6 @@ let duraklatmaKilitli = false; // Spam engelleme icin kilit
 
 // En yüksek skor ve localStorage anahtarı
 let enYuksekSkor = 0;
-const YUKSEK_SKOR_KEY = 'sayiAvcisiEnYuksekSkor';
 
 // Yeni seviyeyi başlat
 // (Bu fonksiyonun tekrarı aşağıda var, bu tanımı kaldırıldı)

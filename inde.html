@@ -64,26 +64,20 @@
                  <p id="mesaj-metni"></p>
                  <button id="sonraki-seviye-butonu">Yeniden Başla</button>
             </div>
+
+            <!-- DÜZELTME: Duraklat overlay'i, kaplaması istenen oyun alanının içine taşındı. -->
+            <div id="duraklat-overlay" class="gizli">
+                <p>DURAKLATILDI</p>
+            </div>
+        </div> <!-- oyun-alani sonu -->
+
+        <!-- DÜZELTME: Duraklatma butonu, ölçeklenmesi için ana kapsayıcının içine alındı. -->
+        <div id="duraklat-konteyneri" class="gizli">
+            <button id="duraklat-butonu">Duraklat</button>
         </div>
 
     </div> <!-- oyun-kapsayici sonu -->
-        
-        <div id="seviye-sonu-mesaji" class="gizli">
-             <p id="mesaj-metni"></p>
-             <button id="sonraki-seviye-butonu">Yeniden Başla</button>
-        </div>
-        
-        <div id="duraklat-overlay" class="gizli">
-            <p>DURAKLATILDI</p>
-        </div>
-    </div>
-
-    <!-- Duraklatma butonu oyun alanının dışında ve başlangıçta gizli -->
-    <!-- DEĞİŞİKLİK: "gizli" sınıfı eklendi -->
-    <div id="duraklat-konteyneri" class="gizli">
-        <button id="duraklat-butonu">Duraklat</button>
-    </div>
-
+    
     <!-- Ses Dosyaları -->
     <audio id="tiklamaSesi" src="click.mp3"></audio>
     <audio id="kaybetmeSesi" src="kaybetme.mp3"></audio>
