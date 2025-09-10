@@ -183,6 +183,10 @@ body {
 
 .gizli { display: none; }
 
+/* Gizli elementler */
+.gizli {
+    display: none !important;
+}
 #baslangic-ekrani {
     width: 380px;
     padding: 50px 25px;
@@ -198,6 +202,33 @@ body {
     margin-bottom: 30px;
 }
 
+.tiklandi {
+    animation: buton-basma 0.2s ease-out;
+}
+
+#seviye-sonu-mesaji {
+    font-size: 12px;
+    margin-top: 20px;
+    text-align: center; 
+}
+
+#sonraki-seviye-butonu {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px;
+    padding: 12px 18px;
+    margin-top: 15px;
+    cursor: pointer;
+    background-color: #ddd;
+    border: 3px solid #000;
+    border-radius: 0;
+    box-shadow: 4px 4px 0px #555;
+    transition: transform 0.05s, box-shadow 0.05s;
+}
+
+#sonraki-seviye-butonu:active {
+    box-shadow: 0 0 0 #555;
+    transform: translate(6px, 6px);
+}
 #basla-butonu {
     font-family: 'Press Start 2P', cursive;
     font-size: 16px;
@@ -213,6 +244,30 @@ body {
 #basla-butonu:active {
     box-shadow: 0 0 0 #555;
     transform: translate(6px, 6px);
+}
+
+/* Başlangıç Ekranı */
+#baslangic-ekrani {
+    width: 380px;
+    padding: 50px 25px;
+    border: 4px solid #000;
+    background-color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    border-radius: 0; 
+    box-shadow: 8px 8px 0px rgba(0,0,0,0.8);
+}
+
+#baslangic-ekrani h2 {
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+
+#basla-butonu {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 16px;
+    padding: 15px 30px;
+    cursor: pointer;
+    background-color: #a2ff9a;
 }
 
 #seviye-sonu-mesaji {
