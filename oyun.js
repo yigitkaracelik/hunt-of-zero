@@ -16,7 +16,6 @@ const baslangicEkrani = document.getElementById('baslangic-ekrani');
 const baslaButonu = document.getElementById('basla-butonu');
 const oyunAlani = document.getElementById('oyun-alani');
 const skorTablosu = document.getElementById('skor-tablosu');
-const skorTablosu = document.getElementById('skor-tablosu');
 
 // Hem pause/resume hem de develop özelliklerinden gelen değişkenler birleştirildi
 const duraklatButonu = document.getElementById('duraklat-butonu');
@@ -26,7 +25,6 @@ const enYuksekSkorKutusu = document.getElementById('en-yuksek-skor-kutusu'); // 
 const leaderboard = document.getElementById('leaderboard');
 const hizliZamanlarListesi = document.getElementById('hizli-zamanlar-listesi');
 
-const kazanmaSesi = document.getElementById('kazanmaSesi');
 const kazanmaSesi = document.getElementById('kazanmaSesi');
 // YENİ EKLENDİ: Duraklatma butonunun konteynerini de yönetmek için seçtik.
 const duraklatKonteyneri = document.getElementById('duraklat-konteyneri');
