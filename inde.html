@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sayı Avcısı</title>
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.png" type="image/png">
+    <!-- Meta Açıklaması -->
+    <meta name="description" content="Sayı Avcısı oyunu ile hızlı düşün ve doğru sayıları toplayarak hedefe ulaş! Zeka ve hız oyununda rekorlarını kır.">
     <!-- Pixel Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,6 +67,22 @@
         </div>
 
     </div> <!-- oyun-kapsayici sonu -->
+        
+        <div id="seviye-sonu-mesaji" class="gizli">
+             <p id="mesaj-metni"></p>
+             <button id="sonraki-seviye-butonu">Yeniden Başla</button>
+        </div>
+        
+        <div id="duraklat-overlay" class="gizli">
+            <p>DURAKLATILDI</p>
+        </div>
+    </div>
+
+    <!-- Duraklatma butonu oyun alanının dışında ve başlangıçta gizli -->
+    <!-- DEĞİŞİKLİK: "gizli" sınıfı eklendi -->
+    <div id="duraklat-konteyneri" class="gizli">
+        <button id="duraklat-butonu">Duraklat</button>
+    </div>
 
     <!-- Ses Dosyaları -->
     <audio id="tiklamaSesi" src="click.mp3"></audio>
