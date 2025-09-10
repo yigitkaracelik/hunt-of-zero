@@ -329,6 +329,8 @@ body {
 /* Animasyonu uygulayacak sınıf */
 .kritik-zaman {
     animation: yanip-sonme 0.5s infinite;
+}
+
 /* Duraklatma Stilleri */
 #duraklat-konteyneri {
     text-align: center;

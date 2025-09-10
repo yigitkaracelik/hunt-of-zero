@@ -46,23 +46,14 @@ let duraklamaBaslangicZamani;
 let duraklatmaKilitli = false; // Spam engelleme icin kilit
 
 // Butonları devre dışı bırak
-function butonlariDevreDisiBirak() {
-    butonlar.forEach(buton => {
-        buton.disabled = true;
-    });
-}
+// (Bu fonksiyonun tekrarı aşağıda var, bu tanımı kaldırıldı)
 
 // En yüksek skor ve localStorage anahtarı
 let enYuksekSkor = 0;
 const YUKSEK_SKOR_KEY = 'sayiAvcisiEnYuksekSkor';
 
 // Yeni seviyeyi başlat
-function seviyeyiBaslat() {
-    // Önceki seviyeden kalma animasyon sınıfını temizle
-    hedefSayiDaire.classList.remove('kritik-zaman');
-
-    butonlariAktiflestir();
-    seviyeSonuMesaji.classList.add('gizli');
+// (Bu fonksiyonun tekrarı aşağıda var, bu tanımı kaldırıldı)
 // Leaderboard için en hızlı zamanlar ve localStorage anahtarı
 let enHizliZamanlar = [];
 const HIZLI_ZAMANLAR_KEY = 'sayiAvcisiEnHizliZamanlar';
@@ -297,18 +288,9 @@ function oyunuKazan() {
     puanGosterge.textContent = toplamPuan;
 
     const gecenSureSaniye = gecenSure.toFixed(2);
-    // feature/pause-resume branch'inden gelen okunabilir kod yapısı
-    const seviyePuani = mevcutSeviye * 10;
-    const zamanBonusu = Math.max(0, kalanSaniye) * 5;
-    const kazanilanPuan = Math.round(seviyePuani + zamanBonusu);
-    toplamPuan += kazanilanPuan;
-    puanGosterge.textContent = toplamPuan;
 
 // develop branch'inden gelen kritik fonksiyon çağrısı
 enYuksekSkoruKontrolEtVeGuncelle();
-
-// feature/pause-resume branch'inden gelen ek değişken
-const gecenSureSaniye = gecenSure.toFixed(2);
     const yeniSkorSatiri = document.createElement('li');
     yeniSkorSatiri.innerHTML = `Seviye ${mevcutSeviye}: <strong>${gecenSure.toFixed(2)} sn</strong> (+${kazanilanPuan} Puan)`;
     seviyeListesi.appendChild(yeniSkorSatiri);
@@ -354,10 +336,6 @@ sonrakiSeviyeButonu.addEventListener('click', () => {
         if (sonrakiSeviyeSesi) {
             sonrakiSeviyeSesi.play();
         }
-    }
-    
-    } else if (sonrakiSeviyeSesi) {
-        sonrakiSeviyeSesi.play();
     }
     puanGosterge.textContent = toplamPuan;
     seviyeyiBaslat();
