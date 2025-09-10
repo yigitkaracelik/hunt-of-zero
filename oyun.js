@@ -87,6 +87,7 @@ function ayarlariYukle() {
     if (kayitliZorluk !== null) {
         zorlukSecim.value = kayitliZorluk;
     }
+    sesCubugunuGuncelle(sesSeviye);
 }
 
 // Kullanıcı bir ayarı değiştirdiğinde bunu localStorage'a kaydeden olaylar
@@ -100,6 +101,7 @@ sesAcikCheck.addEventListener('change', () => {
 
 sesSeviye.addEventListener('input', () => {
     localStorage.setItem('sesSeviye', sesSeviye.value);
+    sesCubugunuGuncelle(sesSeviye);
 });
 
 zorlukSecim.addEventListener('change', () => {
@@ -370,3 +372,18 @@ baslaButonu.addEventListener('click', () => {
     enYuksekSkorKutusu.classList.remove('gizli'); // En yüksek skor kutusunu görünür yap
     seviyeyiBaslat();
 });
+// YENİ FONKSİYON: Kurukafa ses çubuğunun dolgusunu günceller
+function sesCubugunuGuncelle(slider) {
+    const min = slider.min;
+    const max = slider.max;
+    const value = slider.value;
+    
+    // Slider'ın yüzde kaç dolu olduğunu hesapla
+    const yuzde = ((value - min) / (max - min)) * 100;
+    
+    // Arkaplanı dinamik olarak ayarla: Belirli bir yüzdeye kadar dolgu, sonrası boş
+    const dolguRengi = '#39ff14'; // Parlak yeşil renk
+    const bosRenk = 'rgba(0, 0, 0, 0.4)'; // Hafif şeffaf koyu renk
+    
+    slider.style.background = `linear-gradient(to right, ${dolguRengi} ${yuzde}%, ${bosRenk} ${yuzde}%)`;
+}

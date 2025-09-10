@@ -1,33 +1,51 @@
 /* Genel Sayfa Stilleri ve Arkaplan */
+/* NOKTA ATIŞI: body stilini bununla değiştir */
 body {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    /* YENİ FONTU UYGULA */
     font-family: 'Press Start 2P', cursive;
-    background-image: url('arkaplan.jpg');
+    background-image: url('arkaplan.jpg'); /* Arka planın pikselli olması çok yakışır */
     background-size: cover;
-    background-position: center;
-    image-rendering: pixelated;
+    
+    /* ÖNEMLİ: Tarayıcının pikselli resimleri bulandırmasını engeller */
+    image-rendering: pixelated; 
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
 }
 
+/* TÜM ELEMENTLERDE GEÇERLİ OLACAK PIXEL KURALLARI */
 * {
-    box-sizing: border-box;
+    /* Yazıların daha keskin görünmesini sağlar */
+    text-shadow: 1px 1px 0px #333; 
 }
 
 /* Ana Oyun Alanı */
+/* NOKTA ATIŞI: #oyun-alani stilini bununla değiştir */
 #oyun-alani {
-    width: 380px;
-    padding: 25px;
-    border: 4px solid #000;
-    background-color: rgba(255, 255, 255, 0.85);
-    border-radius: 0;
-    box-shadow: 8px 8px 0px rgba(0,0,0,0.7);
-    text-shadow: none;
-}
+    /* Eski arkaplan, kenarlık ve gölgeleri tamamen kaldırıyoruz */
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
 
-/* En Yüksek Skor Kutusu (Orta-Üst) */
+    /* Parşömen görselini arkaplan olarak ayarlıyoruz */
+    background-image: url('parchment-bg.png'); /* GÖRSELİN ADINI KONTROL EDİN */
+    background-size: contain; /* Görselin tamamının görünmesini sağlar */
+    background-repeat: no-repeat;
+    background-position: center;
+
+    /* GÖRSELİNİZİN BOYUTLARINA GÖRE AYARLAYIN! */
+    /* Görselin en-boy oranını korumak için sabit boyutlar veriyoruz */
+    width: 550px;
+    height: 750px;
+
+    /* İçindeki elementleri mutlak konumlandırabilmek için bu şart! */
+    position: relative;
+    /* En Yüksek Skor Kutusu (Orta-Üst) */
 #en-yuksek-skor-kutusu {
     position: absolute;
     top: 20px;
@@ -42,8 +60,7 @@ body {
     font-size: 14px;
     text-shadow: none;
 }
-
-/* GÜNCELLENDİ: Leaderboard konumu düzeltildi */
+}
 #leaderboard {
     position: absolute;
     /* Skor tablosunun sağa olan uzaklığı (20px) + genişliği (yaklaşık 200px) + aradaki boşluk (10px) */
@@ -77,143 +94,312 @@ body {
     padding: 4px 0;
 }
 
+
 /* Skor Tablosu */
 #skor-tablosu {
     position: absolute;
-    right: 20px;
-    top: 20px;
-    width: 200px; /* Sabit bir genişlik verelim */
-    background-color: rgba(255, 255, 255, 0.9);
-    border: 3px solid #000;
-    border-radius: 15px;
+    right: 30px;
+    top: 30px;
+    width: 250px;
+    max-height: 500px;
+    overflow-y: auto;
+    background: transparent;
+    border: 2px solid #333;
+    border-radius: 10px;
     padding: 15px;
-    box-shadow: 6px 6px 0px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+#skor-tablosu h3 {
+    margin-top: 0;
     text-align: center;
-    z-index: 8;
+    
+    padding-bottom: 10px;
 }
 
-#seviye-gecmisi-baslik {
-    font-size: 14px;
-    font-weight: bold;
-    text-shadow: none;
-    margin-bottom: 10px; /* Başlık ile liste arasına boşluk */
-}
-
-/* GÜNCELLENDİ: Seviye listesi artık görünüyor */
 #seviye-listesi {
     list-style-type: none;
-    padding: 0;
-    margin: 0;
-    font-size: 12px;
-    text-align: left;
-    text-shadow: none;
+    padding-left: 0;
 }
 
 #seviye-listesi li {
+    padding: 8px;
     margin-bottom: 5px;
-}
-
-
-/* --- Oyun Alanı İçindeki Elementler --- */
-
-#ust-panel {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-    font-weight: bold;
+    border-radius: 5px;
     font-size: 14px;
 }
 
+/* Hedef Sayı Dairesi */
+/* NOKTA ATIŞI: #hedef-sayi-daire stilini bununla değiştir */
 #hedef-sayi-daire {
-    width: 150px;
-    height: 150px;
-    border: 5px solid #000;
-    background-color: #a2ff9a;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px auto;
-    border-radius: 0;
+    position: absolute;
+    top: 51%; /* Parşömenin ortasına konumlandırın */
+    left: 52%;
+    transform: translate(-50%, -50%);
+    
+    /* Arkaplan, kenarlık gibi tüm stilleri sıfırlıyoruz */
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    width: auto;
+    height: auto;
 }
 
 #hedef-sayi {
-    font-size: 48px;
+    font-size: 60px; /* Sayıyı devasa yapıyoruz */
+    color: #3a2a1d; /* Mürekkep rengi */
     font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
+/* Butonlar */
 #buton-kutusu {
+    position: absolute;
+    bottom: 32%; /* Parşömen altındaki kutucukların üzerine */
+    left: 52%;
+    transform: translateX(-50%);
+    width: 55%; /* Kutucukların olduğu alanın genişliği */
     display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
+    gap: 32px;
+    justify-content: center;
 }
 
+/* NOKTA ATIŞI: .islem-butonu ve ilgili stilleri bunlarla değiştir */
+/* Butonlar (Artık sadece sayılar) */
 .islem-butonu {
-    font-family: 'Press Start 2P', cursive;
-    width: 70px;
-    height: 70px;
-    font-size: 22px;
+    /* Tüm görsel stilleri sıfırlıyoruz */
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    
+    /* Yeni metin stilleri */
+    font-size: 30px;
+    font-weight: bold;
+    color: #3a2a1d;
     cursor: pointer;
-    background-color: #f0f0f0;
-    border: 3px solid #000;
-    border-radius: 0;
-    box-shadow: 5px 5px 0px #555;
-    transition: transform 0.05s, box-shadow 0.05s;
+    transition: transform 0.1s, color 0.1s;
 }
 
+/* BUTONA BASILDIĞINDAKİ EFEKT */
+.islem-butonu:hover {
+    color: #7a6a5d; /* Üzerine gelince renk değiştir */
+}
 .islem-butonu:active {
-    box-shadow: 0px 0px 0px #555;
-    transform: translate(5px, 5px);
+    /* Tıklama efekti */
+    transform: translateY(3px);
+    color: #a02c2c; /* Parşömendeki kan rengi gibi */
 }
 
+/* Zaman Çubuğu */
+/* NOKTA ATIŞI: Zaman çubuğu stillerini bunlarla değiştir */
 #zaman-cubugu-dis {
-    width: 100%;
-    height: 25px;
-    background-color: #ddd;
-    border: 3px solid #000;
-    margin-bottom: 20px;
-    border-radius: 0;
-}
-
-#zaman-cubugu-ic {
-    height: 100%;
-    width: 100%;
-    background-color: #4CAF50;
+    position: absolute;
+    top: 36%; /* Başlığın hemen altına konumlandırın */
+    left: 52%;
+    transform: translateX(-50%);
+    width: 30%; /* Genişliği ayarlayın */
+    height: 15px;
+    background-color: rgba(0, 0, 0, 0.4); /* Koyu bir zemin */
+    border: 2px solid #3a2a1d; /* Mürekkep rengi çerçeve */
     transition: width 0.1s linear, background-color 0.5s;
 }
 
-.gizli { display: none; }
 
+#zaman-cubugu-ic {
+    height: 100%;
+    width: 100%; /* Başlangıçta tam dolu */
+    
+    /* Temaya uygun "kum" efekti için Gradient */
+    background: linear-gradient(to right, #ab8d3b, #b49e73);
+    
+    /* Genişlik değişirken animasyonlu olmasını sağlar */
+    transition: width 0.1s linear, background-color 0.5s; 
+}
+#zaman-cubugu-ic.az-kaldi {
+    /* Uyarı rengi */
+    background: linear-gradient(to right, #e53935, #ff7043);
+    
+    /* Uyarı animasyonunu çalıştırır */
+    animation: pulse 1s infinite;
+}
+
+/* Üst Panel */
+#ust-panel {
+    /* Artık parşömen üzerindeki başlık alanına yerleşecek */
+    position: absolute;
+    top: 31%; /* Parşömen üzerindeki konumunu ayarlayın */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20%; /* Başlık alanının genişliğine göre ayarlayın */
+    display: flex;
+    justify-content: space-between; /* Seviye ve Puanı iki yana yaslar */
+    align-items: center;
+    font-size: 11px;
+    color: #3a2a1d; /* Mürekkep rengi */
+    text-shadow: none;
+}
+#ust-panel .etiket {
+    display: inline;
+}
+/* Başlangıçta gizli olacak elementler için */
+.gizli {
+    display: none;
+}
+
+/* Butona basma animasyonu */
+@keyframes buton-basma {
+    50% { transform: scale(0.9); }
+}
+
+.tiklandi {
+    animation: buton-basma 0.2s ease-out;
+}
+/* NOKTA ATIŞI: Bu kuralı güncelle veya ekle */
+#seviye-sonu-mesaji {
+    font-size: 12px;
+    margin-top: 20px; /* Üstten boşluğu biraz artıralım */
+    
+    /* BUTONU VE YAZIYI ORTALAMAK İÇİN BU SATIRI EKLE */
+    text-align: center; 
+}
+/* NOKTA ATIŞI: Bu kuralları ekle veya mevcut olanları bunlarla değiştir */
+#sonraki-seviye-butonu {
+    /* --- Görünüm Ayarları --- */
+    background: transparent; /* Arkaplanı kaldır */
+    border: none;            /* Kenarlığı kaldır */
+    box-shadow: none;        /* Gölgeyi kaldır */
+    
+    /* --- Metin ve Font Ayarları --- */
+    font-family: 'MedievalPixelFont', 'Press Start 2P', cursive; /* Temaya uygun font */
+    font-size: 10px;         /* Yazının daha okunaklı olması için boyut */
+    font-weight: bold;       /* Kalın yazı */
+    color: #3a2a1d;          /* Mürekkep rengi */
+    
+    /* --- Konum ve Etkileşim Ayarları --- */
+    position: absolute;
+    top: 57%; /* Parşömen üzerindeki konumunu ayarlayın */
+    left: 52%;
+    transform: translateX(-50%);
+    width: 20%; /* Başlık alanının genişliğine göre ayarlayın */
+    display: flex;
+    justify-content: normal; /* Seviye ve Puanı iki yana yaslar */
+    font-size: 11px;
+    color: #3a2a1d; /* Mürekkep rengi */
+    text-shadow: none;
+}
+
+/* Üzerine gelince renk değiştirme efekti */
+#sonraki-seviye-butonu:hover {
+    color: #7a6a5d;
+}
+
+/* Tıklayınca aşağı inme ve renk değiştirme efekti */
+#sonraki-seviye-butonu:active {
+     /* Hafifçe aşağı insin */
+    color: #a02c2c;          /* Kan kırmızısı gibi bir renk */
+}
+
+
+
+/* NOKTA ATIŞI: BU STİLLERİ DOSYANIN SONUNA EKLE */
+
+/* Başlangıç Ekranının Kendisi */
+/* ======================================== */
+/*  YENİ BAŞLANGIÇ EKRANI STİLLERİ         */
+/* ======================================== */
+
+/* Başlangıç Ekranının Kendisi */
 #baslangic-ekrani {
-    width: 380px;
-    padding: 50px 25px;
-    border: 4px solid #000;
-    background-color: rgba(255, 255, 255, 0.85);
-    text-align: center;
-    border-radius: 0;
-    box-shadow: 8px 8px 0px rgba(0,0,0,0.7);
+    /* Eski arkaplan, kenarlık ve gölgeleri tamamen kaldırıyoruz */
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+
+    /* YENİ: Parşömen görselini arkaplan olarak ayarlıyoruz */
+    background-image: url('menu-arkaplan.png'); /* <-- DOSYA ADINIZ FARKLIYSA BURAYI DEĞİŞTİRİN */
+    background-size: contain; /* Görselin tamamının görünmesini ve bozulmamasını sağlar */
+    background-repeat: no-repeat;
+    background-position: center;
+
+    /* ÖNEMLİ: Kendi görselinizin boyutlarına göre bu değerleri ayarlayın! */
+    /* Görselin en-boy oranını korumak için sabit boyutlar veriyoruz */
+    width: 400px;  /* Görselinizin genişliğiyle orantılı bir değer girin */
+    height: 600px; /* Görselinizin yüksekliğiyle orantılı bir değer girin */
+
+    /* İçindeki başlık ve butonu mutlak konumlandırabilmek için bu ŞART! */
+    position: relative;
+    
+    /* ÖNEMLİ: Başlangıçta görünür olması için display:flex ekliyoruz */
+    /* gizli class'ı kaldırıldığında bu kural geçerli olacaktır. */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
-#baslangic-ekrani h2 {
-    font-size: 24px;
-    margin-bottom: 30px;
+#baslangic-ekrani.gizli {
+    display: none; /* Gizlendiğinde tamamen kaybolması için */
 }
 
+/* Başlık ("Sayı Avcısı") */
+/* Başlık Kutusu - FLEXBOX İLE MÜKEMMEL ORTALAMA */
+.baslik-kutusu {
+    /* Eski h2'den gelen konumlandırma stilleri */
+    position: absolute;
+    top: 34%;
+    left: 49%;
+    transform: translateX(-50%);
+    
+    /* YENİ: Flexbox komutları */
+    display: flex;
+    flex-direction: column; /* Elemanları alt alta (dikey) dizer */
+    align-items: center;   /* Dikey dizilimdeki elemanları yatayda ortalar (BU EN ÖNEMLİSİ) */
+
+    /* Eski h2'den gelen metin stilleri */
+    font-size: 15px;
+    color: #3a2a1d;
+}
+
+/* Her bir metin satırı arasındaki boşluğu ayarlamak için */
+.baslik-kutusu span {
+    line-height: 1.2; 
+}
+
+/* Başla Butonu */
 #basla-butonu {
+    position: absolute; /* Konumunu ana kutuya göre ayarlıyoruz */
+    top: 51%;           /* Parşömenin ortasındaki boşluğa denk getirin (değeri değiştirerek deneyin) */
+    left: 49%;
+    transform: translateX(-50%); /* Yatayda tam ortalamak için */
+
+    /* Butonun kendi tüm görsel stillerini sıfırlıyoruz */
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    
+    /* Sadece metnin kendisi buton olacak */
     font-family: 'Press Start 2P', cursive;
-    font-size: 16px;
-    padding: 15px 30px;
+    font-size: 18px;    /* Yazı boyutunu ayarlayın */
+    color: #3a2a1d;     /* Mürekkep rengi */
+    padding: 15px 30px; /* Tıklama alanını büyütmek için */
     cursor: pointer;
-    background-color: #a2ff9a;
-    border: 3px solid #000;
-    border-radius: 0;
-    box-shadow: 6px 6px 0px #555;
-    transition: transform 0.05s, box-shadow 0.05s;
+    transition: color 0.2s, transform 0.1s; /* Yumuşak geçiş efekti */ 
 }
 
-#basla-butonu:active {
-    box-shadow: 0 0 0 #555;
-    transform: translate(6px, 6px);
+/* Butonun üzerine gelince */
+#basla-butonu:hover {
+    color: #7a6a5d; /* Rengi biraz açılsın */
 }
+
+/* Butona tıklanınca */
+#basla-butonu:active {
+    color: #a02c2c; /* Tıklama anında renk değiştirsin */
+    transform: translate(-50%, 2px); /* Hafifçe aşağı insin */
+}
+
+
+
 /* ======================================== */
 /*  AYARLAR BÖLÜMÜ STİLLERİ                 */
 /* ======================================== */
@@ -265,16 +451,33 @@ body {
     transform:translate(4px,4px);
 }
 
-#ayarlar-paneli{
-    position:absolute;
-    top:90px;
-    left:30px;
-    width:200px;
-    background:rgba(255,255,255,.9);
-    border:3px solid #000;padding:40px 15px 15px 15px;
-    box-shadow:6px 6px 0 #333;
-    font-size:12px;
-    border-radius:0;
+/* YENİ KODUNUZ */
+#ayarlar-paneli {
+    position: absolute;
+    top: 90px;
+    left: 30px;
+
+    /* 1. Boyutları görselinize uygun hale getirin */
+    width: 280px;  /* Genişliği biraz artıralım */
+    height: 220px; /* Yüksekliği görselin oranına göre ayarlayalım */
+
+    /* 2. Arkaplanı, kenarlığı ve gölgeyi sıfırlayıp yeni görseli ekleyin */
+    background-color: transparent; /* Eski renk kalksın */
+    background-image: url('ayarlar-arkaplan.png'); /* YENİ GÖRSELİNİZ */
+    background-size: 100% 100%; /* Görselin kutuya tam sığmasını sağlar */
+    background-repeat: no-repeat;
+    border: none;      /* Çerçeveyi kaldırın, çünkü görselin kendi çerçevesi var */
+    box-shadow: none;  /* Gölgeyi kaldırın */
+
+    /* 3. İçeriği (yazı ve ayarları) görselin içine ortalayın */
+    /* Padding değerlerini görselinize göre ayarlamanız gerekebilir */
+    padding: 60px 40px 40px 40px; 
+    
+    font-size: 12px;
+    border-radius: 0;
+    
+    /* İçeriklerin kutuya sığması için ekliyoruz */
+    box-sizing: border-box; 
 }
 
 #ayarlar-paneli label {
@@ -283,7 +486,7 @@ body {
 
 #ayarlar-paneli h3 {
     position: absolute; /* Konumlandırmayı aktif et */
-    top: 0px;          /* Panelin üstünden 15px aşağıda */
+    top: 17px;          /* Panelin üstünden 15px aşağıda */
     left: 0;            /* Panelin sol kenarına yasla */
     right: 0;           /* Panelin sağ kenarına yasla */
     text-shadow: none;
@@ -307,8 +510,8 @@ body {
     transform:translate(4px,4px);
 }
 #ayarlar-butonu img {
-    width: 32px;
-    height: 32px;
+    width: 50px;
+    height: 50px;
 }
 
 /* ======================================================== */
@@ -369,54 +572,79 @@ body {
 
 
 /* 2. PİKSEL RANGE SLIDER (SES DÜZEYİ ÇUBUĞU) */
+/* ======================================== */
+/*  YENİ TASARIM: KURKAFA SES SLIDER'I      */
+/* ======================================== */
 
-/* a) Tarayıcının varsayılan slider stilini genel olarak sıfırla */
-#ayarlar-paneli input[type="range"] {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%; /* Panelin genişliğine yayılsın */
-    height: 20px; /* Dokunma alanını belirler */
-    background: transparent; /* Varsayılan arkaplanı kaldır */
-    cursor: pointer;
+/* 1. Arkaplan görselini taşıyan ana kutu */
+.ses-slider-kutusu {
+    position: relative; /* İçindeki input'u konumlandırmak için gerekli */
+    width: 40px; /* Panelin genişliğine yayılsın */
+    height: 40px; /* Görselin yüksekliğine göre ayarlayın */
+    background-image: url('ses-cubugu-arkaplan.png'); /* ARKA PLAN GÖRSELİ */
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-top: 5px;
     margin-bottom: 10px;
 }
 
-/* b) Slider'ın "çubuğunu" (track) tasarla */
+/* 2. Görünmez hale getirilmiş ve arkaplanın üzerine yerleştirilmiş asıl slider */
+#ayarlar-paneli input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 85%; /* Arkaplandaki çubuk alanına sığacak şekilde ayarlayın */
+    height: 100%; /* Kutunun yüksekliği ile aynı */
+    background: transparent; /* Kendi arkaplanı tamamen şeffaf olmalı */
+    cursor: pointer;
+    outline: none; /* Tıklama çerçevesini kaldır */
+}
+
+/* 3. Slider'ın DOLGU ve BOŞLUK kısmını oluşturan "track" (iz) */
+/* Webkit tarayıcıları için (Chrome, Safari) */
 #ayarlar-paneli input[type="range"]::-webkit-slider-runnable-track {
     width: 100%;
-    height: 14px;
-    background: #ddd;
-    border: 3px solid #000;
-    border-radius: 0; /* Keskin köşe */
+    height: 15px; /* Dolgu görselinin yüksekliği */
+    background: transparent; /* JavaScript ile dinamik olarak doldurulacak */
+    border: none;
+    border-radius: 5px;
 }
 
+/* Firefox tarayıcıları için */
 #ayarlar-paneli input[type="range"]::-moz-range-track {
     width: 100%;
-    height: 14px;
-    background: #ddd;
-    border: 3px solid #000;
-    border-radius: 0; /* Keskin köşe */
+    height: 15px;
+    background: transparent;
+    border: none;
+    border-radius: 5px;
 }
 
-/* c) Slider'ın "kaydırma topunu" (thumb) tasarla */
+/* 4. Sürüklenen KURUKAFA kısmı (thumb) */
+/* Webkit tarayıcıları için */
 #ayarlar-paneli input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 24px;
-    height: 24px;
-    background: #a2ff9a; /* İsteğin üzerine yeşil renk */
-    border: 3px solid #000;
-    border-radius: 0; /* Keskin KÖŞELİ KARE */
-    margin-top: -8px; /* Çubuğun üzerine ortalamak için */
+    border: none;
+    height: 38px; /* Kurukafa görselinin yüksekliği */
+    width: 32px;  /* Kurukafa görselinin genişliği */
+    background-image: url('kafatasi-thumb.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-top: -11px; /* Dikeyde ortalamak için (track'in yüksekliğine göre ayarlayın) */
 }
 
+/* Firefox tarayıcıları için */
 #ayarlar-paneli input[type="range"]::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
-    background: #a2ff9a; /* İsteğin üzerine yeşil renk */
-    border: 3px solid #000;
-    border-radius: 0; /* Keskin KÖŞELİ KARE */
+    border: none;
+    height: 38px;
+    width: 32px;
+    background-image: url('kafatasi-thumb.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 /* 3. PİKSEL SELECT (ZORLUK MENÜSÜ) */
 .select-wrapper {
@@ -492,4 +720,13 @@ body {
 #ayarlar-paneli label[for="ses-seviye"] {
     display: block; /* Margin'in doğru çalışması için */
     margin-top: 15px;
+}
+#seviye-kutusu, #puan-kutusu {
+    display: flex; /* "Seviye:" yazısıyla sayıyı yan yana tutar */
+    align-items: center;
+    gap: 10px; /* Yazı ve sayı arasına boşluk koyar */
+    
+    font-size: 16px; /* Fontu okunaklı bir boyuta getirelim */
+    color: #3a2a1d;
+    text-shadow: 1px 1px 1px #d3c0a4; /* Daha okunaklı bir gölge */
 }
