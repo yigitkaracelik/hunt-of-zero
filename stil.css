@@ -12,11 +12,13 @@ body {
     image-rendering: pixelated; 
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
+    background-position: center;
+    image-rendering: pixelated;
 }
 
-/* TÜM ELEMENTLERDE GEÇERLİ OLACAK PIXEL KURALLARI */
 * {
     text-shadow: 1px 1px 0px #333; 
+    box-sizing: border-box;
 }
 
 /* Ana Oyun Alanı */
@@ -28,45 +30,117 @@ body {
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 0; 
     box-shadow: 8px 8px 0px #000;
+    width: 380px;
+    padding: 25px;
+    border: 4px solid #000;
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 0;
+    box-shadow: 8px 8px 0px rgba(0,0,0,0.7);
+    text-shadow: none;
+}
+
+/* En Yüksek Skor Kutusu (Orta-Üst) */
+#en-yuksek-skor-kutusu {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.9);
+    color: rgb(0, 0, 0);
+    padding: 8px 18px;
+    border: 3px solid #000000;
+    border-radius: 10px;
+    z-index: 100;
+    font-size: 14px;
+    text-shadow: none;
+}
+
+/* GÜNCELLENDİ: Leaderboard konumu düzeltildi */
+#leaderboard {
+    position: absolute;
+    /* Skor tablosunun sağa olan uzaklığı (20px) + genişliği (yaklaşık 200px) + aradaki boşluk (10px) */
+    right: 230px; 
+    top: 20px;
+    width: 260px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 3px solid #000;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 6px 6px 0px rgba(0,0,0,0.5);
+    z-index: 9;
+}
+
+#leaderboard h3 {
+    margin: 0 0 15px 0;
+    text-align: center;
+    font-size: 16px;
+    text-shadow: none;
+}
+
+#hizli-zamanlar-listesi {
+    list-style-type: decimal;
+    padding-left: 35px;
+    margin: 0;
+    text-shadow: none;
+    font-size: 14px;
+}
+
+#hizli-zamanlar-listesi li {
+    padding: 4px 0;
 }
 
 /* Skor Tablosu */
 #skor-tablosu {
     position: absolute;
-    right: 30px;
-    top: 30px;
-    width: 250px;
-    max-height: 500px;
-    overflow-y: auto;
-    background-color: rgba(255, 255, 255, 0.8);
-    border: 2px solid #333;
-    border-radius: 10px;
+    right: 20px;
+    top: 20px;
+    width: 200px; /* Sabit bir genişlik verelim */
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 3px solid #000;
+    border-radius: 15px;
     padding: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-#skor-tablosu h3 {
-    margin-top: 0;
+    box-shadow: 6px 6px 0px rgba(0,0,0,0.5);
     text-align: center;
     padding-bottom: 10px;
+    z-index: 8;
 }
 
+#seviye-gecmisi-baslik {
+    font-size: 14px;
+    font-weight: bold;
+    text-shadow: none;
+    margin-bottom: 10px; /* Başlık ile liste arasına boşluk */
+}
+
+/* GÜNCELLENDİ: Seviye listesi artık görünüyor */
 #seviye-listesi {
     list-style-type: none;
-    padding-left: 0;
+    padding: 0;
+    margin: 0;
+    font-size: 12px;
+    text-align: left;
+    text-shadow: none;
 }
 
 #seviye-listesi li {
-    padding: 8px;
     margin-bottom: 5px;
-    border-radius: 5px;
+}
+
+
+/* --- Oyun Alanı İçindeki Elementler --- */
+
+#ust-panel {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    font-weight: bold;
     font-size: 14px;
 }
 
 /* Hedef Sayı Dairesi */
 #hedef-sayi-daire {
-    width: 160px;
-    height: 160px;
+    width: 150px;
+    height: 150px;
     border: 5px solid #000;
     background-color: #a2ff9a;
     display: flex;
@@ -81,7 +155,6 @@ body {
     font-weight: bold;
 }
 
-/* Butonlar */
 #buton-kutusu {
     display: flex;
     justify-content: space-around;
@@ -93,17 +166,20 @@ body {
     width: 80px;
     height: 80px;
     font-size: 24px;
+    width: 70px;
+    height: 70px;
+    font-size: 22px;
     cursor: pointer;
-    background-color: #ddd;
-    border: 4px solid #000;
+    background-color: #f0f0f0;
+    border: 3px solid #000;
     border-radius: 0;
-    box-shadow: 6px 6px 0px #555;
+    box-shadow: 5px 5px 0px #555;
     transition: transform 0.05s, box-shadow 0.05s;
 }
 
 .islem-butonu:active {
     box-shadow: 0px 0px 0px #555;
-    transform: translate(6px, 6px);
+    transform: translate(5px, 5px);
 }
 
 /* Zaman Çubuğu */
@@ -114,6 +190,7 @@ body {
     border: 3px solid #000;
     margin-bottom: 20px;
     border-radius: 0; 
+    border-radius: 0;
 }
 
 #zaman-cubugu-ic {
@@ -122,24 +199,28 @@ body {
     background-color: #e53935;
     border-radius: 0;
     transition: none; 
+    background-color: #4CAF50;
+    transition: width 0.1s linear, background-color 0.5s;
 }
 
-/* Üst Panel */
-#ust-panel {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-weight: bold;
-}
+.gizli { display: none; }
 
 /* Gizli elementler */
 .gizli {
     display: none !important;
+#baslangic-ekrani {
+    width: 380px;
+    padding: 50px 25px;
+    border: 4px solid #000;
+    background-color: rgba(255, 255, 255, 0.85);
+    text-align: center;
+    border-radius: 0;
+    box-shadow: 8px 8px 0px rgba(0,0,0,0.7);
 }
 
-/* Butona basma animasyonu */
-@keyframes buton-basma {
-    50% { transform: scale(0.9); }
+#baslangic-ekrani h2 {
+    font-size: 24px;
+    margin-bottom: 30px;
 }
 
 .tiklandi {
@@ -166,8 +247,21 @@ body {
 }
 
 #sonraki-seviye-butonu:active {
+#basla-butonu {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 16px;
+    padding: 15px 30px;
+    cursor: pointer;
+    background-color: #a2ff9a;
+    border: 3px solid #000;
+    border-radius: 0;
+    box-shadow: 6px 6px 0px #555;
+    transition: transform 0.05s, box-shadow 0.05s;
+}
+
+#basla-butonu:active {
     box-shadow: 0 0 0 #555;
-    transform: translate(4px, 4px);
+    transform: translate(6px, 6px);
 }
 
 /* Başlangıç Ekranı */
@@ -192,13 +286,26 @@ body {
     padding: 15px 30px;
     cursor: pointer;
     background-color: #a2ff9a;
+#seviye-sonu-mesaji {
+    font-size: 12px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+#sonraki-seviye-butonu {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px;
+    padding: 12px 18px;
+    margin-top: 15px;
+    cursor: pointer;
+    background-color: #ddd;
     border: 3px solid #000;
     border-radius: 0;
-    box-shadow: 6px 6px 0px #555;
+    box-shadow: 4px 4px 0px #555;
     transition: transform 0.05s, box-shadow 0.05s;
 }
 
-#basla-butonu:active {
+#sonraki-seviye-butonu:active {
     box-shadow: 0 0 0 #555;
     transform: translate(6px, 6px);
 }
@@ -255,4 +362,5 @@ body {
     box-shadow: 8px 8px 0px rgba(0,0,0,0.8);
     font-size: 24px;
     border-radius: 0;
+    transform: translate(4px, 4px);
 }
