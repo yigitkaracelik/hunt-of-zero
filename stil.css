@@ -1,7 +1,7 @@
 /* Genel Sayfa Stilleri ve Arkaplan */
 body {
     display: flex;
-    flex-direction: column; /* EKLENDİ: Elementleri dikeyde (alt alta) hizalar */
+    flex-direction: column; 
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -32,23 +32,13 @@ body {
     transform-origin: center center;
 }
 
-/* ------------------------------------------------------------------ */
-/* --- SENİN ORİJİNAL CSS KODUN BAŞLIYOR --- */
-/* ------------------------------------------------------------------ */
-
 /* Ana Oyun Alanı */
 #oyun-alani {
-    position: absolute; /* Kapsayıcıya göre konumlanması için eklendi */
-    left: 50%;         /* Kapsayıcıya göre konumlanması için eklendi */
-    top: 50%;          /* Kapsayıcıya göre konumlanması için eklendi */
-    transform: translate(-50%, -50%); /* Kendi merkezine göre ortalar */
-    position: relative;
-    width: 380px;
-    padding: 25px;
-    border: 4px solid #000;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 0; 
-    box-shadow: 8px 8px 0px #000;
+    position: absolute; 
+    left: 50%;         
+    top: 50%;          
+    transform: translate(-50%, -50%); 
+    /* position: relative;  - Bu satır gereksizdi, üstteki absolute ile çakışıyordu. Kaldırıldı. */
     width: 380px;
     padding: 25px;
     border: 4px solid #000;
@@ -74,10 +64,10 @@ body {
     text-shadow: none;
 }
 
-/* Leaderboard konumu (DEĞİŞTİRİLDİ) */
+/* Leaderboard konumu */
 #leaderboard {
     position: absolute;
-    right: 240px; /* Sağa, skor tablosunun soluna taşındı */
+    right: 240px; 
     top: 20px;
     width: 260px;
     background-color: rgba(255, 255, 255, 0.9);
@@ -107,10 +97,10 @@ body {
     padding: 4px 0;
 }
 
-/* Skor Tablosu (DEĞİŞTİRİLDİ) */
+/* Skor Tablosu */
 #skor-tablosu {
     position: absolute;
-    right: 0px; /* Ekranın en sağına taşındı */
+    right: 0px; 
     top: 20px;
     width: 200px;
     background-color: rgba(255, 255, 255, 0.9);
@@ -178,9 +168,6 @@ body {
 
 .islem-butonu {
     font-family: 'Press Start 2P', cursive;
-    width: 80px;
-    height: 80px;
-    font-size: 24px;
     width: 70px;
     height: 70px;
     font-size: 22px;
@@ -205,25 +192,20 @@ body {
     border: 3px solid #000;
     margin-bottom: 20px;
     border-radius: 0; 
-    border-radius: 0;
 }
 
 #zaman-cubugu-ic {
     height: 100%;
     width: 100%;
-    background-color: #e53935;
     border-radius: 0;
-    transition: none; 
     background-color: #4CAF50;
     transition: width 0.1s linear, background-color 0.5s;
 }
 
-.gizli { display: none; }
-
-/* Gizli elementler */
-.gizli {
+.gizli { 
     display: none !important;
 }
+
 #baslangic-ekrani {
     position: absolute;
     left: 50%;
@@ -253,89 +235,38 @@ body {
     text-align: center; 
 }
 
-#sonraki-seviye-butonu {
+#sonraki-seviye-butonu, #basla-butonu {
     font-family: 'Press Start 2P', cursive;
+    cursor: pointer;
+    border: 3px solid #000;
+    border-radius: 0;
+    transition: transform 0.05s, box-shadow 0.05s;
+}
+
+#sonraki-seviye-butonu {
     font-size: 12px;
     padding: 12px 18px;
     margin-top: 15px;
-    cursor: pointer;
     background-color: #ddd;
-    border: 3px solid #000;
-    border-radius: 0;
     box-shadow: 4px 4px 0px #555;
-    transition: transform 0.05s, box-shadow 0.05s;
 }
 
 #sonraki-seviye-butonu:active {
     box-shadow: 0 0 0 #555;
-    transform: translate(6px, 6px);
+    transform: translate(4px, 4px);
 }
+
 #basla-butonu {
-    font-family: 'Press Start 2P', cursive;
     font-size: 16px;
     padding: 15px 30px;
-    cursor: pointer;
     background-color: #a2ff9a;
-    border: 3px solid #000;
-    border-radius: 0;
     box-shadow: 6px 6px 0px #555;
-    transition: transform 0.05s, box-shadow 0.05s;
 }
 
 #basla-butonu:active {
     box-shadow: 0 0 0 #555;
     transform: translate(6px, 6px);
 }
-
-/* Başlangıç Ekranı */
-#baslangic-ekrani {
-    width: 380px;
-    padding: 50px 25px;
-    border: 4px solid #000;
-    background-color: rgba(255, 255, 255, 0.5);
-    text-align: center;
-    border-radius: 0; 
-    box-shadow: 8px 8px 0px rgba(0,0,0,0.8);
-}
-
-#baslangic-ekrani h2 {
-    font-size: 24px;
-    margin-bottom: 30px;
-}
-
-#basla-butonu {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 16px;
-    padding: 15px 30px;
-    cursor: pointer;
-    background-color: #a2ff9a;
-}
-
-#seviye-sonu-mesaji {
-    font-size: 12px;
-    margin-top: 20px;
-    text-align: center;
-}
-
-#sonraki-seviye-butonu {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 12px;
-    padding: 12px 18px;
-    margin-top: 15px;
-    cursor: pointer;
-    background-color: #ddd;
-    border: 3px solid #000;
-    border-radius: 0;
-    box-shadow: 4px 4px 0px #555;
-    transition: transform 0.05s, box-shadow 0.05s;
-}
-
-#sonraki-seviye-butonu:active {
-    box-shadow: 0 0 0 #555;
-    transform: translate(6px, 6px);
-}
-
-/* YENİ EKLENEN STİLLER: KRİTİK ZAMAN ANİMASYONU */
 
 /* Yanıp sönme animasyonunun tanımı */
 @keyframes yanip-sonme {
@@ -350,10 +281,15 @@ body {
     animation: yanip-sonme 0.5s infinite;
 }
 
-/* Duraklatma Stilleri */
+/* --- DÜZENLENMİŞ DURAKLATMA STİLLERİ --- */
+
+/* Butonun yeni konumu */
 #duraklat-konteyneri {
+    position: absolute;
+    top: 75%; /* Oyun alanının altına konumlandırır */
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
-    margin-top: 25px; /* Oyun alanı ile arasında boşluk bırakır */
 }
 
 #duraklat-butonu {
@@ -380,9 +316,9 @@ body {
     color: #ccc;
 }
 
-/* *** YENİ STİLLER BURADA *** */
+/* Sadece oyun alanını kaplayan overlay */
 #duraklat-overlay {
-    position: absolute;
+    position: absolute; /* Parent'ı olan #oyun-alani'na göre konumlanır */
     top: 0;
     left: 0;
     width: 100%;
@@ -391,7 +327,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 10;
+    z-index: 10; /* Diğer oyun elemanlarının üzerinde görünmesi için */
 }
 
 #duraklat-overlay p {
@@ -402,5 +338,4 @@ body {
     box-shadow: 8px 8px 0px rgba(0,0,0,0.8);
     font-size: 24px;
     border-radius: 0;
-    transform: translate(4px, 4px);
 }
