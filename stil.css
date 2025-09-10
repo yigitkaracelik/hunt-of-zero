@@ -316,6 +316,19 @@ body {
     transform: translate(6px, 6px);
 }
 
+/* YENİ EKLENEN STİLLER: KRİTİK ZAMAN ANİMASYONU */
+
+/* Yanıp sönme animasyonunun tanımı */
+@keyframes yanip-sonme {
+    50% {
+        background-color: #ff6b6b; /* Uyarı için kırmızı bir ton */
+        transform: scale(1.05);   /* Hafif bir büyüme efekti */
+    }
+}
+
+/* Animasyonu uygulayacak sınıf */
+.kritik-zaman {
+    animation: yanip-sonme 0.5s infinite;
 /* Duraklatma Stilleri */
 #duraklat-konteyneri {
     text-align: center;

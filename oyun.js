@@ -16,6 +16,7 @@ const baslangicEkrani = document.getElementById('baslangic-ekrani');
 const baslaButonu = document.getElementById('basla-butonu');
 const oyunAlani = document.getElementById('oyun-alani');
 const skorTablosu = document.getElementById('skor-tablosu');
+const hedefSayiDaire = document.getElementById('hedef-sayi-daire');
 
 // Hem pause/resume hem de develop özelliklerinden gelen değişkenler birleştirildi
 const duraklatButonu = document.getElementById('duraklat-butonu');
@@ -55,6 +56,13 @@ function butonlariDevreDisiBirak() {
 let enYuksekSkor = 0;
 const YUKSEK_SKOR_KEY = 'sayiAvcisiEnYuksekSkor';
 
+// Yeni seviyeyi başlat
+function seviyeyiBaslat() {
+    // Önceki seviyeden kalma animasyon sınıfını temizle
+    hedefSayiDaire.classList.remove('kritik-zaman');
+
+    butonlariAktiflestir();
+    seviyeSonuMesaji.classList.add('gizli');
 // Leaderboard için en hızlı zamanlar ve localStorage anahtarı
 let enHizliZamanlar = [];
 const HIZLI_ZAMANLAR_KEY = 'sayiAvcisiEnHizliZamanlar';
@@ -135,9 +143,21 @@ function zamanlayiciyiBaslat() {
         if (duraklatildi) return;
 
         const gecenSure = (Date.now() - baslangicZamani) / 1000;
-        const yuzde = ((kalanZaman - gecenSure) / kalanZaman) * 100;
+        
+        // Yüzdeyi hesapla ve 0-100 arasına sıkıştır (clamp)
+        let yuzde = ((kalanZaman - gecenSure) / kalanZaman) * 100;
+        yuzde = Math.max(0, Math.min(100, yuzde));
+
         zamanCubugu.style.width = yuzde + '%';
 
+        // Kritik eşik kontrolü ile yanıp sönme sınıfını yönet
+        if (yuzde < 10) {
+            hedefSayiDaire.classList.add('kritik-zaman');
+        } else {
+            hedefSayiDaire.classList.remove('kritik-zaman');
+        }
+
+        // Ses hızını ayarla
         const maxAralik = 1200;
         const minAralik = 400;
         const suAnkiAralik = minAralik + (yuzde / 100) * (maxAralik - minAralik);
@@ -152,6 +172,7 @@ function zamanlayiciyiBaslat() {
         if (yuzde < 25) zamanCubugu.style.backgroundColor = 'red';
 
         if (gecenSure >= kalanZaman) {
+            hedefSayiDaire.classList.remove('kritik-zaman');
             oyunuKaybet("Süre doldu!");
         }
     }, 100);
@@ -251,6 +272,12 @@ butonlar.forEach(buton => {
 
 // Oyunu kazanma
 function oyunuKazan() {
+    // DÜZELTME: Kazanma anında yanıp sönmeyi durdurur.
+    hedefSayiDaire.classList.remove('kritik-zaman');
+
+    if (kazanmaSesi) {
+        kazanmaSesi.play();
+    }
     // DEĞİŞİKLİK: Oyun bittiği için duraklatma butonunu gizledik.
     duraklatKonteyneri.classList.add('gizli');
 
@@ -261,6 +288,15 @@ function oyunuKazan() {
 
     const gecenSure = (Date.now() - baslangicZamani) / 1000;
     const kalanSaniye = kalanZaman - gecenSure;
+    
+    const seviyePuani = mevcutSeviye * 10;
+    const zamanBonusu = Math.max(0, kalanSaniye) * 5;
+    const kazanilanPuan = Math.round(seviyePuani + zamanBonusu);
+
+    toplamPuan += kazanilanPuan;
+    puanGosterge.textContent = toplamPuan;
+
+    const gecenSureSaniye = gecenSure.toFixed(2);
     // feature/pause-resume branch'inden gelen okunabilir kod yapısı
     const seviyePuani = mevcutSeviye * 10;
     const zamanBonusu = Math.max(0, kalanSaniye) * 5;
@@ -298,6 +334,7 @@ function oyunuKaybet(sebep) {
     clearInterval(zamanlayici);
     butonlariDevreDisiBirak();
 
+    hedefSayiDaire.classList.remove('kritik-zaman');
     mesajMetni.textContent = `Kaybettin! Sebep: ${sebep}. Puanın: ${toplamPuan}`;
     sonrakiSeviyeButonu.textContent = "Yeniden Başla";
     sonrakiSeviyeButonu.disabled = false;
@@ -313,6 +350,12 @@ function oyunuKaybet(sebep) {
 sonrakiSeviyeButonu.addEventListener('click', () => {
     if (sonrakiSeviyeButonu.textContent === "Yeniden Başla") {
         baslatmaSesi.play();
+    } else {
+        if (sonrakiSeviyeSesi) {
+            sonrakiSeviyeSesi.play();
+        }
+    }
+    
     } else if (sonrakiSeviyeSesi) {
         sonrakiSeviyeSesi.play();
     }
