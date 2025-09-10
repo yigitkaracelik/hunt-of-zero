@@ -368,10 +368,60 @@ baslaButonu.addEventListener('click', () => {
     seviyeyiBaslat();
 });
 
+// =================================================================
+// 5. KLAVYE KONTROLLERİ
+// =================================================================
+
+document.addEventListener('keydown', (event) => {
+    // --- YENİ: Boşluk Tuşu Kontrolü ---
+    if (event.key === ' ') {
+        // Boşluk tuşunun varsayılan tarayıcı eylemini (örn: sayfayı kaydırma) engelle
+        event.preventDefault();
+
+        // 1. Başlangıç ekranı aktifse "Başla" butonuna tıkla
+        if (!baslangicEkrani.classList.contains('gizli')) {
+            baslaButonu.click();
+            return; // İşlem yapıldı, fonksiyonu sonlandır
+        }
+        
+        // 2. Seviye sonu mesajı aktifse "Sonraki Seviye" / "Yeniden Başla" butonuna tıkla
+        if (!seviyeSonuMesaji.classList.contains('gizli') && !sonrakiSeviyeButonu.disabled) {
+            sonrakiSeviyeButonu.click();
+            return; // İşlem yapıldı, fonksiyonu sonlandır
+        }
+    }
+
+    // --- Mevcut Rakam Tuşları Kontrolü ---
+    const basilanTus = event.key;
+    if (basilanTus >= '1' && basilanTus <= '9') {
+        // Oyun alanı aktif değilse veya seviye sonu mesajı varsa rakam tuşlarını devre dışı bırak
+        if (oyunAlani.classList.contains('gizli') || !seviyeSonuMesaji.classList.contains('gizli')) {
+            return;
+        }
+
+        let eslesenButon = null;
+        for (const buton of butonlar) {
+            if (buton.dataset.deger === basilanTus) {
+                eslesenButon = buton;
+                break;
+            }
+        }
+
+        if (eslesenButon && !eslesenButon.disabled) {
+            eslesenButon.click();
+            eslesenButon.classList.add('klavye-vurgu');
+            setTimeout(() => {
+                eslesenButon.classList.remove('klavye-vurgu');
+            }, 200);
+        }
+    }
+})
+
 // Olay dinleyicileri
 duraklatButonu.addEventListener('click', duraklatDevamEt);
 window.addEventListener('keydown', (e) => {
     if (seviyeSonuMesaji.classList.contains('gizli') && e.key.toLowerCase() === 'p') {
         duraklatDevamEt();
+
     }
 });
