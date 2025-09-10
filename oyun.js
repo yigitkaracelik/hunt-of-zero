@@ -390,7 +390,7 @@ document.addEventListener('keydown', (event) => {
             return; // İşlem yapıldı, fonksiyonu sonlandır
         }
     }
-});
+
     // --- Mevcut Rakam Tuşları Kontrolü ---
     const basilanTus = event.key;
     if (basilanTus >= '1' && basilanTus <= '9') {
@@ -414,8 +414,8 @@ document.addEventListener('keydown', (event) => {
                 eslesenButon.classList.remove('klavye-vurgu');
             }, 200);
         }
-    
-
+    }
+})
 
 // Olay dinleyicileri
 duraklatButonu.addEventListener('click', duraklatDevamEt);
@@ -424,6 +424,4 @@ window.addEventListener('keydown', (e) => {
         duraklatDevamEt();
 
     }
-    })
-}
-    
+});
