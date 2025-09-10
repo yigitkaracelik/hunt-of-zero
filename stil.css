@@ -14,6 +14,7 @@ body {
     image-rendering: crisp-edges;
     background-position: center;
     image-rendering: pixelated;
+    overflow: hidden;
 }
 
 * {
@@ -21,8 +22,26 @@ body {
     box-sizing: border-box;
 }
 
+/* Ana ölçeklendirme kapsayıcısı */
+#oyun-kapsayici {
+    position: absolute;
+    width: 1920px;
+    height: 1080px;
+    left: 50%;
+    top: 50%;
+    transform-origin: center center;
+}
+
+/* ------------------------------------------------------------------ */
+/* --- SENİN ORİJİNAL CSS KODUN BAŞLIYOR --- */
+/* ------------------------------------------------------------------ */
+
 /* Ana Oyun Alanı */
 #oyun-alani {
+    position: absolute; /* Kapsayıcıya göre konumlanması için eklendi */
+    left: 50%;         /* Kapsayıcıya göre konumlanması için eklendi */
+    top: 50%;          /* Kapsayıcıya göre konumlanması için eklendi */
+    transform: translate(-50%, -50%); /* Kendi merkezine göre ortalar */
     position: relative;
     width: 380px;
     padding: 25px;
@@ -55,11 +74,10 @@ body {
     text-shadow: none;
 }
 
-/* GÜNCELLENDİ: Leaderboard konumu düzeltildi */
+/* Leaderboard konumu (DEĞİŞTİRİLDİ) */
 #leaderboard {
     position: absolute;
-    /* Skor tablosunun sağa olan uzaklığı (20px) + genişliği (yaklaşık 200px) + aradaki boşluk (10px) */
-    right: 230px; 
+    right: 240px; /* Sağa, skor tablosunun soluna taşındı */
     top: 20px;
     width: 260px;
     background-color: rgba(255, 255, 255, 0.9);
@@ -89,12 +107,12 @@ body {
     padding: 4px 0;
 }
 
-/* Skor Tablosu */
+/* Skor Tablosu (DEĞİŞTİRİLDİ) */
 #skor-tablosu {
     position: absolute;
-    right: 20px;
+    right: 0px; /* Ekranın en sağına taşındı */
     top: 20px;
-    width: 200px; /* Sabit bir genişlik verelim */
+    width: 200px;
     background-color: rgba(255, 255, 255, 0.9);
     border: 3px solid #000;
     border-radius: 15px;
@@ -109,10 +127,9 @@ body {
     font-size: 14px;
     font-weight: bold;
     text-shadow: none;
-    margin-bottom: 10px; /* Başlık ile liste arasına boşluk */
+    margin-bottom: 10px;
 }
 
-/* GÜNCELLENDİ: Seviye listesi artık görünüyor */
 #seviye-listesi {
     list-style-type: none;
     padding: 0;
@@ -126,9 +143,7 @@ body {
     margin-bottom: 5px;
 }
 
-
 /* --- Oyun Alanı İçindeki Elementler --- */
-
 #ust-panel {
     display: flex;
     justify-content: space-around;
@@ -210,6 +225,10 @@ body {
     display: none !important;
 }
 #baslangic-ekrani {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     width: 380px;
     padding: 50px 25px;
     border: 4px solid #000;
