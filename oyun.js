@@ -59,6 +59,7 @@ let zamanlayici;
 let kalanZaman;
 let baslangicZamani;
 let sonSesZamani = 0;
+let seslerHazirMi = false; // YENİ: Seslerin "uyandırılıp" uyandırılmadığını kontrol eder
 
 const YUKSEK_SKOR_KEY = 'sayiAvcisiEnYuksekSkor';
 // Duraklatma ile ilgili değişkenler
@@ -89,6 +90,26 @@ document.addEventListener('DOMContentLoaded', () => {
     enHizliZamanlariYukle();
     leaderboardGuncelle();
 });
+function sesleriHazirla() {
+    if (seslerHazirMi) return; // Eğer zaten hazırsa, tekrar çalıştırma
+
+
+    const tumSesler = [tiklamaSesi, kaybetmeSesi, baslatmaSesi, sonrakiSeviyeSesi, zamanlayiciSesi, kazanmaSesi];
+    
+    tumSesler.forEach(ses => {
+        if (ses) { // Null kontrolü
+            ses.volume = 0; // Sesi tamamen kıs
+            ses.play();
+            ses.pause();
+            ses.currentTime = 0; // Başa sar
+            ses.volume = 1; // Sesi orijinal seviyesine geri getir
+        }
+    });
+
+    seslerHazirMi = true; // Hazır olarak işaretle
+}
+// En yüksek skoru localStorage'dan yükle
+
 
 function enYuksekSkoruYukle() {
     const storedSkor = localStorage.getItem(YUKSEK_SKOR_KEY);
@@ -360,6 +381,7 @@ sonrakiSeviyeButonu.addEventListener('click', () => {
 });
 
 baslaButonu.addEventListener('click', () => {
+    sesleriHazirla();
     baslangicEkrani.classList.add('gizli');
     oyunAlani.classList.remove('gizli');
     skorTablosu.classList.remove('gizli');
