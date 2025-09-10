@@ -11,7 +11,6 @@ const seviyeListesi = document.getElementById('seviye-listesi');
 const tiklamaSesi = document.getElementById('tiklamaSesi');
 const kaybetmeSesi = document.getElementById('kaybetmeSesi');
 const baslatmaSesi = document.getElementById('baslatmaSesi');
-const sonrakiSeviyeSesi = document.getElementById('sonrakiSeviyeSesi');
 const zamanlayiciSesi = document.getElementById('zamanlayiciSesi');
 const baslangicEkrani = document.getElementById('baslangic-ekrani');
 const baslaButonu = document.getElementById('basla-butonu');
@@ -19,8 +18,18 @@ const oyunAlani = document.getElementById('oyun-alani');
 const skorTablosu = document.getElementById('skor-tablosu');
 const hedefSayiDaire = document.getElementById('hedef-sayi-daire');
 
-// Eğer kazanma sesi varsa, tanımlayın (HTML'de yoksa bu satırı kaldırabilirsiniz)
+// Hem pause/resume hem de develop özelliklerinden gelen değişkenler birleştirildi
+const duraklatButonu = document.getElementById('duraklat-butonu');
+const duraklatOverlay = document.getElementById('duraklat-overlay');
+const yuksekSkorGosterge = document.getElementById('yuksek-skor-gosterge');
+const enYuksekSkorKutusu = document.getElementById('en-yuksek-skor-kutusu'); // Yeni kutuyu seç
+const leaderboard = document.getElementById('leaderboard');
+const hizliZamanlarListesi = document.getElementById('hizli-zamanlar-listesi');
+
 const kazanmaSesi = document.getElementById('kazanmaSesi');
+// YENİ EKLENDİ: Duraklatma butonunun konteynerini de yönetmek için seçtik.
+const duraklatKonteyneri = document.getElementById('duraklat-konteyneri');
+const sonrakiSeviyeSesi = document.getElementById('sonrakiSeviyeSesi'); 
 
 // Oyun durumu değişkenleri
 let mevcutSeviye = 1;
@@ -31,6 +40,11 @@ let kalanZaman;
 let baslangicZamani;
 let sonSesZamani = 0;
 
+// Duraklatma ile ilgili değişkenler
+let duraklatildi = false;
+let duraklamaBaslangicZamani;
+let duraklatmaKilitli = false; // Spam engelleme icin kilit
+
 // Butonları devre dışı bırak
 function butonlariDevreDisiBirak() {
     butonlar.forEach(buton => {
@@ -38,12 +52,9 @@ function butonlariDevreDisiBirak() {
     });
 }
 
-// Butonları aktif yap
-function butonlariAktiflestir() {
-    butonlar.forEach(buton => {
-        buton.disabled = false;
-    });
-}
+// En yüksek skor ve localStorage anahtarı
+let enYuksekSkor = 0;
+const YUKSEK_SKOR_KEY = 'sayiAvcisiEnYuksekSkor';
 
 // Yeni seviyeyi başlat
 function seviyeyiBaslat() {
@@ -52,51 +63,85 @@ function seviyeyiBaslat() {
 
     butonlariAktiflestir();
     seviyeSonuMesaji.classList.add('gizli');
+// Leaderboard için en hızlı zamanlar ve localStorage anahtarı
+let enHizliZamanlar = [];
+const HIZLI_ZAMANLAR_KEY = 'sayiAvcisiEnHizliZamanlar';
 
-    // Rastgele rakamları butonlara ata
-    const olasiRakamlar = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    for (let i = olasiRakamlar.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [olasiRakamlar[i], olasiRakamlar[j]] = [olasiRakamlar[j], olasiRakamlar[i]];
+// Sayfa yüklendiğinde
+document.addEventListener('DOMContentLoaded', () => {
+    enYuksekSkoruYukle();
+    enHizliZamanlariYukle();
+    leaderboardGuncelle();
+});
+
+// En yüksek skoru localStorage'dan yükle
+function enYuksekSkoruYukle() {
+    const storedSkor = localStorage.getItem(YUKSEK_SKOR_KEY);
+    if (storedSkor !== null) {
+        enYuksekSkor = parseInt(storedSkor, 10);
     }
+    yuksekSkorGosterge.textContent = enYuksekSkor;
+}
 
-    const butonDegerleri = [];
-    butonlar.forEach((buton, index) => {
-        const yeniRakam = olasiRakamlar[index];
-        buton.textContent = yeniRakam;
-        buton.dataset.deger = yeniRakam;
-        butonDegerleri.push(yeniRakam);
-    });
+// En yüksek skoru localStorage'a kaydet
+function enYuksekSkoruKaydet() {
+    localStorage.setItem(YUKSEK_SKOR_KEY, enYuksekSkor.toString());
+}
 
-    // Çözülebilir hedef sayı oluştur
-    let geciciHedefSayi = 0;
-    const adimSayisi = 3 + Math.floor(mevcutSeviye / 3);
-
-    for (let i = 0; i < adimSayisi; i++) {
-        const rastgeleIndex = Math.floor(Math.random() * butonDegerleri.length);
-        geciciHedefSayi += butonDegerleri[rastgeleIndex];
+// En yüksek skoru kontrol et ve güncelle
+function enYuksekSkoruKontrolEtVeGuncelle() {
+    if (toplamPuan > enYuksekSkor) {
+        enYuksekSkor = toplamPuan;
+        yuksekSkorGosterge.textContent = enYuksekSkor;
+        enYuksekSkoruKaydet();
     }
+}
 
-    if (geciciHedefSayi < 10) {
-        geciciHedefSayi += 7;
+// Oyunu Duraklat / Devam Ettir Fonksiyonu
+function duraklatDevamEt() {
+    // Kilit aktifse veya oyun alanı görünür değilse fonksiyondan çık
+    if (duraklatmaKilitli || oyunAlani.classList.contains('gizli')) return;
+
+    duraklatildi = !duraklatildi;
+
+    if (duraklatildi) {
+        // Oyunu duraklat
+        duraklamaBaslangicZamani = Date.now();
+        clearInterval(zamanlayici);
+        zamanlayiciSesi.pause();
+        butonlariDevreDisiBirak();
+        duraklatOverlay.classList.remove('gizli');
+        duraklatButonu.textContent = "Devam Et";
+    } else {
+        // Oyuna devam et
+        const gecenDuraklamaSuresi = Date.now() - duraklamaBaslangicZamani;
+        baslangicZamani += gecenDuraklamaSuresi;
+        
+        butonlariAktiflestir();
+        duraklatOverlay.classList.add('gizli');
+        duraklatButonu.textContent = "Duraklat";
+        
+        // Zamanlayıcıyı kaldığı yerden başlat
+        zamanlayiciyiBaslat();
+
+        // Spam engelleme kilidini başlat
+        duraklatmaKilitli = true;
+        duraklatButonu.disabled = true;
+        setTimeout(() => {
+            duraklatmaKilitli = false;
+            if (!duraklatildi) {
+                duraklatButonu.disabled = false;
+            }
+        }, 1000); // 1 saniye sonra kilidi aç
     }
-    mevcutHedefSayi = geciciHedefSayi;
+}
 
-    // Zaman ayarı
-    kalanZaman = 15 - mevcutSeviye;
-    if (kalanZaman < 4) kalanZaman = 4;
-
-    // Arayüz güncelle
-    hedefSayiElementi.textContent = mevcutHedefSayi;
-    seviyeGosterge.textContent = mevcutSeviye;
-
-    zamanCubugu.style.width = '100%';
-    zamanCubugu.style.backgroundColor = '#4CAF50';
-
-    baslangicZamani = Date.now();
-
+// Zamanlayıcıyı başlatan fonksiyon
+function zamanlayiciyiBaslat() {
     clearInterval(zamanlayici);
     zamanlayici = setInterval(() => {
+        if (duraklatildi) return;
+
         const gecenSure = (Date.now() - baslangicZamani) / 1000;
         
         // Yüzdeyi hesapla ve 0-100 arasına sıkıştır (clamp)
@@ -133,31 +178,99 @@ function seviyeyiBaslat() {
     }, 100);
 }
 
-// Butonlara tıklama olayları ekle
+// En hızlı zamanları localStorage'dan yükle
+function enHizliZamanlariYukle() {
+    const storedZamanlar = localStorage.getItem(HIZLI_ZAMANLAR_KEY);
+    if (storedZamanlar) {
+        enHizliZamanlar = JSON.parse(storedZamanlar);
+    }
+}
+
+// En hızlı zamanları localStorage'a kaydet
+function enHizliZamanlariKaydet() {
+    localStorage.setItem(HIZLI_ZAMANLAR_KEY, JSON.stringify(enHizliZamanlar));
+}
+
+// Leaderboard'u güncelle
+function leaderboardGuncelle() {
+    hizliZamanlarListesi.innerHTML = '';
+    enHizliZamanlar.sort((a, b) => a.zaman - b.zaman);
+
+    for (let i = 0; i < Math.min(enHizliZamanlar.length, 5); i++) {
+        const item = enHizliZamanlar[i];
+        const listItem = document.createElement('li');
+        listItem.textContent = `${item.zaman.toFixed(2)} sn - ${item.seviye}. Sv`;
+        hizliZamanlarListesi.appendChild(listItem);
+    }
+}
+
+// Butonları devre dışı bırak/aktif yap
+function butonlariDevreDisiBirak() { butonlar.forEach(b => b.disabled = true); }
+function butonlariAktiflestir() { butonlar.forEach(b => b.disabled = false); }
+
+// Yeni seviyeyi başlat
+function seviyeyiBaslat() {
+    // DEĞİŞİKLİK: Oyunun aktif olduğunu ve duraklatma butonunun görünür olması gerektiğini belirttik.
+    duraklatKonteyneri.classList.remove('gizli');
+    
+    // Overlay'in başlangıçta gizli olduğundan emin olundu.
+    duraklatOverlay.classList.add('gizli'); 
+    
+    duraklatildi = false;
+    duraklatmaKilitli = false;
+    duraklatButonu.disabled = false;
+    duraklatButonu.textContent = "Duraklat";
+    
+    butonlariAktiflestir();
+    seviyeSonuMesaji.classList.add('gizli');
+
+    const olasiRakamlar = [1, 2, 3, 4, 5, 6, 7, 8, 9].sort(() => 0.5 - Math.random());
+    const butonDegerleri = [];
+    butonlar.forEach((buton, index) => {
+        const yeniRakam = olasiRakamlar[index];
+        buton.textContent = yeniRakam;
+        buton.dataset.deger = yeniRakam;
+        butonDegerleri.push(yeniRakam);
+    });
+
+    let geciciHedefSayi = 0;
+    const adimSayisi = 3 + Math.floor(mevcutSeviye / 3);
+    for (let i = 0; i < adimSayisi; i++) {
+        geciciHedefSayi += butonDegerleri[Math.floor(Math.random() * butonDegerleri.length)];
+    }
+    if (geciciHedefSayi < 10) geciciHedefSayi += 7;
+    mevcutHedefSayi = geciciHedefSayi;
+
+    kalanZaman = Math.max(5, 15 - Math.floor(mevcutSeviye / 2));
+
+    hedefSayiElementi.textContent = mevcutHedefSayi;
+    seviyeGosterge.textContent = mevcutSeviye;
+    zamanCubugu.style.width = '100%';
+    zamanCubugu.style.backgroundColor = '#4CAF50';
+    baslangicZamani = Date.now();
+    
+    zamanlayiciyiBaslat();
+}
+
+// Buton tıklama olayları
 butonlar.forEach(buton => {
     buton.addEventListener('click', () => {
-        buton.classList.add('tiklandi');
 
+        if (duraklatildi) return;
+
+        buton.classList.add('tiklandi');
         const cikarilacakDeger = parseInt(buton.dataset.deger);
         mevcutHedefSayi -= cikarilacakDeger;
         hedefSayiElementi.textContent = mevcutHedefSayi;
-
         tiklamaSesi.currentTime = 0;
         tiklamaSesi.play();
-
-        if (mevcutHedefSayi === 0) {
-            oyunuKazan();
-        } else if (mevcutHedefSayi < 0) {
-            oyunuKaybet("Sıfırın altına düştün!");
-        }
+        if (mevcutHedefSayi === 0) oyunuKazan();
+        else if (mevcutHedefSayi < 0) oyunuKaybet("Sıfırın altına düştün!");
     });
-
-    buton.addEventListener('animationend', () => {
-        buton.classList.remove('tiklandi');
-    });
+    buton.addEventListener('animationend', () => buton.classList.remove('tiklandi'));
 });
 
-// Oyuncu kazandığında
+// Oyunu kazanma
 function oyunuKazan() {
     // DÜZELTME: Kazanma anında yanıp sönmeyi durdurur.
     hedefSayiDaire.classList.remove('kritik-zaman');
@@ -165,6 +278,10 @@ function oyunuKazan() {
     if (kazanmaSesi) {
         kazanmaSesi.play();
     }
+    // DEĞİŞİKLİK: Oyun bittiği için duraklatma butonunu gizledik.
+    duraklatKonteyneri.classList.add('gizli');
+
+    if (kazanmaSesi) kazanmaSesi.play();
     zamanlayiciSesi.pause();
     clearInterval(zamanlayici);
     butonlariDevreDisiBirak();
@@ -180,38 +297,56 @@ function oyunuKazan() {
     puanGosterge.textContent = toplamPuan;
 
     const gecenSureSaniye = gecenSure.toFixed(2);
+    // feature/pause-resume branch'inden gelen okunabilir kod yapısı
+    const seviyePuani = mevcutSeviye * 10;
+    const zamanBonusu = Math.max(0, kalanSaniye) * 5;
+    const kazanilanPuan = Math.round(seviyePuani + zamanBonusu);
+    toplamPuan += kazanilanPuan;
+    puanGosterge.textContent = toplamPuan;
+
+// develop branch'inden gelen kritik fonksiyon çağrısı
+enYuksekSkoruKontrolEtVeGuncelle();
+
+// feature/pause-resume branch'inden gelen ek değişken
+const gecenSureSaniye = gecenSure.toFixed(2);
     const yeniSkorSatiri = document.createElement('li');
-    yeniSkorSatiri.innerHTML = `Seviye ${mevcutSeviye}: <strong>${gecenSureSaniye} sn</strong> (+${kazanilanPuan} Puan)`;
+    yeniSkorSatiri.innerHTML = `Seviye ${mevcutSeviye}: <strong>${gecenSure.toFixed(2)} sn</strong> (+${kazanilanPuan} Puan)`;
     seviyeListesi.appendChild(yeniSkorSatiri);
+
+    enHizliZamanlar.push({ zaman: gecenSure, seviye: mevcutSeviye });
+    enHizliZamanlariKaydet();
+    leaderboardGuncelle();
 
     mesajMetni.textContent = `Tebrikler! +${kazanilanPuan} puan kazandın.`;
     sonrakiSeviyeButonu.textContent = "Sonraki Seviye";
     sonrakiSeviyeButonu.disabled = false;
     seviyeSonuMesaji.classList.remove('gizli');
-
     mevcutSeviye++;
 }
 
-// Oyuncu kaybettiğinde
+// Oyunu kaybetme
 function oyunuKaybet(sebep) {
+    // DEĞİŞİKLİK: Oyun bittiği için duraklatma butonunu gizledik.
+    duraklatKonteyneri.classList.add('gizli');
+
     zamanlayiciSesi.pause();
     kaybetmeSesi.play();
     clearInterval(zamanlayici);
     butonlariDevreDisiBirak();
 
     hedefSayiDaire.classList.remove('kritik-zaman');
-
-    mesajMetni.textContent = `Kaybettin! Sebep: ${sebep}`;
+    mesajMetni.textContent = `Kaybettin! Sebep: ${sebep}. Puanın: ${toplamPuan}`;
     sonrakiSeviyeButonu.textContent = "Yeniden Başla";
     sonrakiSeviyeButonu.disabled = false;
     seviyeSonuMesaji.classList.remove('gizli');
-
+    enYuksekSkoruKontrolEtVeGuncelle();
     seviyeListesi.innerHTML = '';
     mevcutSeviye = 1;
     toplamPuan = 0;
+    puanGosterge.textContent = toplamPuan;
 }
 
-// "Sonraki Seviye" veya "Yeniden Başla" butonuna tıklama
+// Sonraki seviye / Yeniden başla butonu
 sonrakiSeviyeButonu.addEventListener('click', () => {
     if (sonrakiSeviyeButonu.textContent === "Yeniden Başla") {
         baslatmaSesi.play();
@@ -221,14 +356,27 @@ sonrakiSeviyeButonu.addEventListener('click', () => {
         }
     }
     
+    } else if (sonrakiSeviyeSesi) {
+        sonrakiSeviyeSesi.play();
+    }
     puanGosterge.textContent = toplamPuan;
     seviyeyiBaslat();
 });
 
-// "Başla" butonuna tıklanınca oyunu başlat
+// "Başla" butonu
 baslaButonu.addEventListener('click', () => {
     baslangicEkrani.classList.add('gizli');
     oyunAlani.classList.remove('gizli');
     skorTablosu.classList.remove('gizli');
+    leaderboard.classList.remove('gizli');
+    enYuksekSkorKutusu.classList.remove('gizli'); // En yüksek skor kutusunu görünür yap
     seviyeyiBaslat();
+});
+
+// Olay dinleyicileri
+duraklatButonu.addEventListener('click', duraklatDevamEt);
+window.addEventListener('keydown', (e) => {
+    if (seviyeSonuMesaji.classList.contains('gizli') && e.key.toLowerCase() === 'p') {
+        duraklatDevamEt();
+    }
 });

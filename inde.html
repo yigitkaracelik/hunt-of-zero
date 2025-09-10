@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sayı Avcısı</title>
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.png" type="image/png">
+    <!-- Meta Açıklaması -->
+    <meta name="description" content="Sayı Avcısı oyunu ile hızlı düşün ve doğru sayıları toplayarak hedefe ulaş! Zeka ve hız oyununda rekorlarını kır.">
     <!-- Pixel Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,17 +23,29 @@
         <button id="basla-butonu">Başla</button>
     </div>
 
-    <!-- Başlangıçta GİZLİ olan skor tablosu -->
+    <!-- YENİ: En Yüksek Skor için ayrı bir kutu -->
+    <div id="en-yuksek-skor-kutusu" class="gizli">
+        En Yüksek Skor: <span id="yuksek-skor-gosterge">0</span>
+    </div>
+
+    <!-- Leaderboard Alanı -->
+    <div id="leaderboard" class="gizli">
+        <h3>En Hızlı Zamanlar</h3>
+        <ol id="hizli-zamanlar-listesi"></ol>
+    </div>
+
+    <!-- Skor tablosu -->
     <div id="skor-tablosu" class="gizli">
         <h3>Seviye Geçmişi</h3>
         <ol id="seviye-listesi"></ol>
     </div>
 
-    <!-- Başlangıçta GİZLİ olan ana oyun alanı -->
+    <!-- Ana oyun alanı -->
     <div id="oyun-alani" class="gizli">
         <div id="ust-panel">
             <span>Seviye: <span id="seviye-gosterge">1</span></span>
             <span>Puan: <span id="puan-gosterge">0</span></span>
+            <!-- En Yüksek Skor buradan kaldırıldı -->
         </div>
         <div id="zaman-cubugu-dis">
             <div id="zaman-cubugu-ic"></div>
@@ -42,10 +58,21 @@
             <button class="islem-butonu" data-deger="3">3</button>
             <button class="islem-butonu" data-deger="7">7</button>
         </div>
+        
         <div id="seviye-sonu-mesaji" class="gizli">
              <p id="mesaj-metni"></p>
              <button id="sonraki-seviye-butonu">Yeniden Başla</button>
         </div>
+        
+        <div id="duraklat-overlay" class="gizli">
+            <p>DURAKLATILDI</p>
+        </div>
+    </div>
+
+    <!-- Duraklatma butonu oyun alanının dışında ve başlangıçta gizli -->
+    <!-- DEĞİŞİKLİK: "gizli" sınıfı eklendi -->
+    <div id="duraklat-konteyneri" class="gizli">
+        <button id="duraklat-butonu">Duraklat</button>
     </div>
 
     <!-- Ses Dosyaları -->
