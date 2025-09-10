@@ -62,7 +62,7 @@ body {
 /* Leaderboard konumu (DEĞİŞTİRİLDİ) */
 #leaderboard {
     position: absolute;
-    right: 90px; /* Sağa, skor tablosunun soluna taşındı */
+    right: 240px; /* Sağa, skor tablosunun soluna taşındı */
     top: 20px;
     width: 260px;
     background-color: rgba(255, 255, 255, 0.9);
@@ -95,7 +95,7 @@ body {
 /* Skor Tablosu (DEĞİŞTİRİLDİ) */
 #skor-tablosu {
     position: absolute;
-    right: -150px; /* Ekranın en sağına taşındı */
+    right: 0px; /* Ekranın en sağına taşındı */
     top: 20px;
     width: 200px;
     background-color: rgba(255, 255, 255, 0.9);
