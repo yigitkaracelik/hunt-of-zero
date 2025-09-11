@@ -1,11 +1,22 @@
 # Sayı Avcısı Oyunu
 
-Sayı Avcısı, hız ve dikkat gerektiren eğlenceli bir tarayıcı oyunudur. Oyuncular, verilen hedef sayıya ulaşmak için doğru işlem butonlarına zamanında basmalıdır. Her seviyede zorluk artar ve zaman kısalır.
+**[>> OYUNU OYNAMAK İÇİN TIKLAYIN <<](https://Koc-Staj.github.io/Sayi_Oyunu_Projesi/)**
 
-Bu proje, `Vanilla JavaScript`, `HTML` ve `CSS` kullanılarak oluşturulmuştur ve herhangi bir kütüphane veya framework bağımlılığı yoktur.
+Sayı Avcısı, hız ve dikkat gerektiren eğlenceli bir tarayıcı oyunudur. Oyuncular, verilen hedef sayıya ulaşmak için doğru işlem butonlarına zamanında basmalıdır. Her seviyede zorluk artar ve zaman kısalır.
 
 ![Sayı Avcısı Ekran Görüntüsü](ekran-goruntusu1.png)
 ![Sayı Avcısı Ekran Görüntüsü](ekran-goruntusu2.png)
+
+## Nasıl Oynanır?
+
+1.  **Amaç:** Ekranın ortasındaki dairede yazan **Hedef Sayı**'yı, altındaki butonları kullanarak **tam olarak 0'a** düşürmektir.
+2.  **Oynanış:** Her butona bastığınızda, butonun üzerindeki değer Hedef Sayı'dan çıkarılır.
+3.  **Zaman:** Her seviyede size belirli bir süre verilir. Bu süre, ekranın üstündeki **yeşil zaman çubuğu** ile gösterilir. Süre dolmadan hedefi sıfırlamanız gerekir.
+4.  **Kazanma:** Hedef Sayı'yı tam olarak **0** yaparsanız seviyeyi geçersiniz. Kalan süreniz ve mevcut seviyeniz size ekstra puan kazandırır.
+5.  **Kaybetme:**
+    *   Süreniz biterse,
+    *   Hedef Sayı'yı sıfırın altına düşürürseniz (`-1`, `-3` gibi),
+    oyunu kaybedersiniz ve baştan başlarsınız.
 
 ## Özellikler
 
@@ -13,75 +24,77 @@ Bu proje, `Vanilla JavaScript`, `HTML` ve `CSS` kullanılarak oluşturulmuştur 
 -   **Dinamik Zamanlayıcı:** Seviye ilerledikçe azalan süre, oyunu daha heyecanlı hale getirir.
 -   **Puanlama ve Yüksek Skor:** Oyuncuların en yüksek skorları tarayıcı hafızasında saklanır.
 -   **En Hızlı Zamanlar Listesi:** Her seviye için en hızlı bitirme süreleri kaydedilir ve bir lider tablosunda gösterilir.
--   **Ses Ayarları:** Oyun içi sesleri açıp kapatma ve ses seviyesini ayarlama imkanı.
--   **Klavye Desteği:** Rakam tuşları ve Boşluk tuşu ile oynanabilirlik.
+-   **Klavye Desteği:** Fare kullanmadan, klavye ile hızlıca oynanabilir.
+-   **Ayarlar Menüsü:** Ses seviyesi, zorluk ve sesin açık/kapalı olması gibi ayarlar sunar.
 -   **Duraklatma Özelliği:** Oyun sırasında 'P' tuşu veya buton ile oyunu duraklatma.
 
-## Gerekli Dosya Yapısı
+## Ayarlar ve Kontroller
+
+### Klavye Kısayolları
+
+| Tuş           | İşlev                                          |
+|---------------|------------------------------------------------|
+| **1**'den **9**'a | Ekranda görünen ilgili sayı butonuna basar.    |
+| **Boşluk (Space)** | Oyunu başlatır veya seviye sonu ekranında bir sonraki seviyeye geçer. |
+| **P**           | Oyunu duraklatır veya devam ettirir.           |
+
+### Oyun Ayarları
+
+Oyunun sol üst köşesindeki dişli ikonuna tıklayarak ayarlar menüsünü açabilirsiniz.
+
+-   **Ses:** Oyundaki tüm ses efektlerini açar veya kapatır.
+-   **Ses Düzeyi:** Ses efektlerinin yüksekliğini ayarlar.
+-   **Zorluk:**
+    -   **Kolay:** Daha uzun süre, daha yavaş zorluk artışı ve daha düşük puan çarpanı sunar. Yeni başlayanlar için idealdir.
+    -   **Normal:** Dengeli bir oynanış sunar. Standart zaman ve puanlama.
+    -   **Zor:** Daha kısa süre, daha hızlı zorluk artışı ve daha yüksek puan çarpanı sunar. Rekor kırmak isteyenler için idealdir.
+
+## Kurulum ve Çalıştırma
+
+Bu proje, herhangi bir kütüphane veya framework bağımlılığı olmadan saf `JavaScript`, `HTML` ve `CSS` ile yazılmıştır.
+
+### Gerekli Dosya Yapısı
 
 Projenin düzgün çalışması için tüm dosyaların aşağıdaki gibi aynı dizinde olması gerekmektedir:
-
 ```
 /sayi-avcisi-projesi
 ├── index.html
 ├── stil.css
 ├── oyun.js
-├── arkaplan.jpg
-├── favicon.png
-├── ayarlar-ikonu.png
-├── ayarlar-kapatma-ikonu.png
-├── kolay-mod.png
-├── normal-mod.png
-├── zor-mod.png
-├── click.mp3
-├── kaybetme.mp3
-├── baslatma.mp3
-├── tick.mp3
-├── kazanma.mp3
-└── sonrakiseviye.mp3
+├── (tüm .png, .jpg, .mp3 dosyaları)
+└── README.md
 ```
 
-## Lokal (Yerel Makinede) Çalıştırma
+### Lokal (Yerel Makinede) Çalıştırma
 
-Projeyi bilgisayarınızda denemek için iki basit yöntem vardır:
-
-### Yöntem 1: VS Code Live Server Eklentisi (Önerilen)
-
-1.  Visual Studio Code editörünü açın.
-2.  Eğer yüklü değilse, Eklentiler (Extensions) sekmesinden **Live Server** eklentisini kurun.
-3.  Proje klasörünü VS Code ile açın.
-4.  `index.html` dosyasına sağ tıklayın ve **"Open with Live Server"** seçeneğine tıklayın.
-5.  Oyun, varsayılan tarayıcınızda otomatik olarak açılacaktır.
-
-### Yöntem 2: Python ile Basit Sunucu
-
-Bilgisayarınızda Python yüklüyse, aşağıdaki komutlarla hızlıca bir yerel sunucu başlatabilirsiniz:
-
-1.  Terminali veya Komut İstemi'ni açın.
-2.  `cd` komutu ile proje dosyalarının bulunduğu klasöre gidin.
-3.  Aşağıdaki komutu çalıştırın (Python versiyonunuza göre):
-    -   **Python 3.x için:** `python -m http.server`
-    -   **Python 2.x için:** `python -m SimpleHTTPServer`
-4.  Tarayıcınızı açın ve adres çubuğuna `http://localhost:8000` yazın.
+1.  Bu repoyu bilgisayarınıza klonlayın veya indirin.
+2.  Proje klasörünü **VS Code** ile açın.
+3.  **Live Server** eklentisini kurun.
+4.  `index.html` dosyasına sağ tıklayıp **"Open with Live Server"** seçeneğine tıklayın.
 
 ## GitHub Pages ile Yayına Alma
 
-Projenizi internet üzerinden herkesin erişebileceği bir adreste yayınlamak için aşağıdaki adımları izleyin:
+Projenizi internet üzerinden yayınlamak için:
 
-1.  **Projenizi GitHub'a Yükleyin:** Proje dosyalarınızı yeni bir GitHub repositorisine `git push` komutu ile gönderin.
+1.  Projenizi bir GitHub repositorisine yükleyin.
+2.  Ana HTML dosyanızın adının `index.html` olduğundan emin olun.
+3.  Reponuzun **Settings > Pages** bölümüne gidin.
+4.  Kaynak (Source) olarak **"Deploy from a branch"** seçin.
+5.  Branch olarak `main` dalını seçip **Save** butonuna tıklayın.
+6.  Birkaç dakika içinde siteniz `https://<kullanici-adiniz>.github.io/<repo-adiniz>/` adresinde yayında olacaktır.
 
-2.  **Dosya Adını Kontrol Edin:** Ana HTML dosyanızın adının `index.html` olduğundan emin olun. Bu, GitHub Pages'in sitenizi tanıması için zorunludur.
+## Katkıda Bulunma (Contributing)
 
-3.  **GitHub Pages'i Etkinleştirin:**
-    -   Projenizin GitHub repositorisine gidin.
-    -   **Settings** (Ayarlar) sekmesine tıklayın.
-    -   Sol menüden **Pages** sekmesine tıklayın.
-    -   "Build and deployment" başlığı altında, **Source** (Kaynak) olarak **"Deploy from a branch"** seçeneğini seçin.
-    -   **Branch** (Dal) olarak `main` (veya hangi dalı kullanıyorsanız onu) seçin ve klasör olarak `/(root)` seçili kalsın.
-    -   **Save** (Kaydet) butonuna tıklayın.
+Bu projeye katkıda bulunmak isterseniz, lütfen çekinmeyin!
 
-4.  **Sitenizi Ziyaret Edin:**
-    -   Birkaç dakika sonra sayfanın en üstünde "Your site is live at..." şeklinde bir bildirim belirecektir.
-    -   Sitenizin adresi şu formatta olacaktır: `https://<kullanici-adiniz>.github.io/<repo-adiniz>/`
+1.  Projeyi **fork**'layın.
+2.  Yeni bir özellik veya düzeltme için kendi **branch**'inizi oluşturun (`git checkout -b ozellik/yeni-menu`).
+3.  Değişikliklerinizi **commit**'leyin (`git commit -m 'Yeni menü eklendi'`).
+4.  Oluşturduğunuz branch'i kendi fork'unuza **push**'layın (`git push origin ozellik/yeni-menu`).
+5.  Ana projeye bir **Pull Request (Çekme İsteği)** açın.
 
-Artık oyununuz yayında!
+## Bakım Notları
+
+-   Oyunun tüm temel mantığı `oyun.js` dosyası içerisinde yer almaktadır.
+-   Zorluk seviyeleri, zamanlama ve puanlama gibi denge ayarları `oyun.js` dosyasının en üstündeki `zorlukAyarlari` objesinden kolayca değiştirilebilir.
+-   Tüm görsel stiller `stil.css` dosyasında bulunmaktadır.
