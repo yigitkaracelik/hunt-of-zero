@@ -326,17 +326,20 @@
 
         // -------------------- OYUN SIFIRLA VE BAŞA DÖN --------------------
         function oyunuSifirlaVeBasaDon() {
-            clearInterval(zamanlayici);
-            mevcutSeviye = 1;
-            toplamPuan = 0;
-            if (puanGosterge) puanGosterge.textContent = toplamPuan;
-            seviyeListesi && (seviyeListesi.innerHTML = '');
-            oyunAlani && oyunAlani.classList.add('gizli');
-            skorTablosu && skorTablosu.classList.add('gizli');
-            seviyeSonuMesaji && seviyeSonuMesaji.classList.add('gizli');
-            baslangicEkrani && baslangicEkrani.classList.remove('gizli');
-            ayarlarPaneli && ayarlarPaneli.classList.add('gizli');
-        }
+    clearInterval(zamanlayici);
+    mevcutSeviye = 1;
+    toplamPuan = 0;
+    if (puanGosterge) puanGosterge.textContent = toplamPuan;
+    seviyeListesi && (seviyeListesi.innerHTML = '');
+    oyunAlani && oyunAlani.classList.add('gizli');
+    skorTablosu && skorTablosu.classList.add('gizli');
+    seviyeSonuMesaji && seviyeSonuMesaji.classList.add('gizli');
+    baslangicEkrani && baslangicEkrani.classList.remove('gizli');
+    ayarlarPaneli && ayarlarPaneli.classList.add('gizli');
+    enYuksekSkorKutusu && enYuksekSkorKutusu.classList.add('gizli'); // Ekle!
+    leaderboard && leaderboard.classList.add('gizli'); // Ekle!
+    duraklatKonteyneri && duraklatKonteyneri.classList.add('gizli'); // Ekle!
+}
 
         // -------------------- DURAKLAT / DEVAM --------------------
         function duraklatDevamEt() {
