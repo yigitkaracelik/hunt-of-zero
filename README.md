@@ -7,7 +7,7 @@ Sayı Avcısı, hız ve dikkat gerektiren eğlenceli bir tarayıcı oyunudur. Oy
 ![Sayı Avcısı Ekran Görüntüsü](ekran-goruntusu1.png)
 ![Sayı Avcısı Ekran Görüntüsü](ekran-goruntusu2.png)
 
-## 🕹️ Nasıl Oynanır?
+## Nasıl Oynanır?
 
 1.  **Amaç:** Ekranın ortasındaki dairede yazan **Hedef Sayı**'yı, altındaki butonları kullanarak **tam olarak 0'a** düşürmektir.
 2.  **Oynanış:** Her butona bastığınızda, butonun üzerindeki değer Hedef Sayı'dan çıkarılır.
@@ -18,7 +18,7 @@ Sayı Avcısı, hız ve dikkat gerektiren eğlenceli bir tarayıcı oyunudur. Oy
     *   Hedef Sayı'yı sıfırın altına düşürürseniz (`-1`, `-3` gibi),
     oyunu kaybedersiniz ve baştan başlarsınız.
 
-## ✨ Özellikler
+## Özellikler
 
 -   **Üç Farklı Zorluk Seviyesi:** Kolay, Normal ve Zor seçenekleriyle her seviyeden oyuncuya hitap eder.
 -   **Dinamik Zamanlayıcı:** Seviye ilerledikçe azalan süre, oyunu daha heyecanlı hale getirir.
@@ -28,9 +28,9 @@ Sayı Avcısı, hız ve dikkat gerektiren eğlenceli bir tarayıcı oyunudur. Oy
 -   **Ayarlar Menüsü:** Ses seviyesi, zorluk ve sesin açık/kapalı olması gibi ayarlar sunar.
 -   **Duraklatma Özelliği:** Oyun sırasında 'P' tuşu veya buton ile oyunu duraklatma.
 
-## 🛠️ Ayarlar ve Kontroller
+## Ayarlar ve Kontroller
 
-### ⌨️ Klavye Kısayolları
+### Klavye Kısayolları
 
 | Tuş           | İşlev                                          |
 |---------------|------------------------------------------------|
@@ -38,7 +38,7 @@ Sayı Avcısı, hız ve dikkat gerektiren eğlenceli bir tarayıcı oyunudur. Oy
 | **Boşluk (Space)** | Oyunu başlatır veya seviye sonu ekranında bir sonraki seviyeye geçer. |
 | **P**           | Oyunu duraklatır veya devam ettirir.           |
 
-### ⚙️ Oyun Ayarları
+### Oyun Ayarları
 
 Oyunun sol üst köşesindeki dişli ikonuna tıklayarak ayarlar menüsünü açabilirsiniz.
 
@@ -49,7 +49,7 @@ Oyunun sol üst köşesindeki dişli ikonuna tıklayarak ayarlar menüsünü aç
     -   **Normal:** Dengeli bir oynanış sunar. Standart zaman ve puanlama.
     -   **Zor:** Daha kısa süre, daha hızlı zorluk artışı ve daha yüksek puan çarpanı sunar. Rekor kırmak isteyenler için idealdir.
 
-## 🚀 Kurulum ve Çalıştırma
+## Kurulum ve Çalıştırma
 
 Bu proje, herhangi bir kütüphane veya framework bağımlılığı olmadan saf `JavaScript`, `HTML` ve `CSS` ile yazılmıştır.
 
@@ -72,7 +72,7 @@ Projenin düzgün çalışması için tüm dosyaların aşağıdaki gibi aynı d
 3.  **Live Server** eklentisini kurun.
 4.  `index.html` dosyasına sağ tıklayıp **"Open with Live Server"** seçeneğine tıklayın.
 
-## 🌐 GitHub Pages ile Yayına Alma
+## GitHub Pages ile Yayına Alma
 
 Projenizi internet üzerinden yayınlamak için:
 
@@ -83,7 +83,7 @@ Projenizi internet üzerinden yayınlamak için:
 5.  Branch olarak `main` dalını seçip **Save** butonuna tıklayın.
 6.  Birkaç dakika içinde siteniz `https://<kullanici-adiniz>.github.io/<repo-adiniz>/` adresinde yayında olacaktır.
 
-## 🤝 Katkıda Bulunma (Contributing)
+## Katkıda Bulunma (Contributing)
 
 Bu projeye katkıda bulunmak isterseniz, lütfen çekinmeyin!
 
@@ -93,7 +93,7 @@ Bu projeye katkıda bulunmak isterseniz, lütfen çekinmeyin!
 4.  Oluşturduğunuz branch'i kendi fork'unuza **push**'layın (`git push origin ozellik/yeni-menu`).
 5.  Ana projeye bir **Pull Request (Çekme İsteği)** açın.
 
-## 📝 Bakım Notları
+## Bakım Notları
 
 -   Oyunun tüm temel mantığı `oyun.js` dosyası içerisinde yer almaktadır.
 -   Zorluk seviyeleri, zamanlama ve puanlama gibi denge ayarları `oyun.js` dosyasının en üstündeki `zorlukAyarlari` objesinden kolayca değiştirilebilir.
