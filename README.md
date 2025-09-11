@@ -1,66 +1,87 @@
 # Sayı Avcısı Oyunu
 
-Hızlı tempolu, retro piksel sanat estetiğine sahip bir matematik ve refleks oyunu. Amaç, süre dolmadan hedef sayıyı doğru butonlara basarak sıfırlamaktır.
+Sayı Avcısı, hız ve dikkat gerektiren eğlenceli bir tarayıcı oyunudur. Oyuncular, verilen hedef sayıya ulaşmak için doğru işlem butonlarına zamanında basmalıdır. Her seviyede zorluk artar ve zaman kısalır.
 
-## Ekran Görüntüsü
+Bu proje, `Vanilla JavaScript`, `HTML` ve `CSS` kullanılarak oluşturulmuştur ve herhangi bir kütüphane veya framework bağımlılığı yoktur.
 
-![Oyun Görüntüsü](ekran_goruntusu1.png)
-![Oyun Görüntüsü](ekran_goruntusu2.png)
+![Sayı Avcısı Ekran Görüntüsü](ekran-goruntusu1.png)
+![Sayı Avcısı Ekran Görüntüsü](ekran-goruntusu2.png)
 
 ## Özellikler
 
--   **Artan Zorluk:** Her seviyede zaman kısalır ve hedef sayılar büyür.
--   **Dinamik Puanlama:** Seviye ve kalan süreye göre puan kazanın.
--   **Retro Tasarım:** "Press Start 2P" fontu ve piksel tabanlı arayüz ile nostaljik bir deneyim.
--   **Ayarlar Menüsü:**
-    -   Ses açma/kapatma
-    -   Ses seviyesi ayarı
-    -   Kolay, Normal, Zor zorluk seviyeleri
--   **Seviye Geçmişi:** Tamamladığınız seviyeleri ve sürelerinizi takip edin.
--   **Etkileşimli Sesler:** Oyuna derinlik katan tıklama, kazanma, kaybetme ve zamanlayıcı sesleri.
+-   **Üç Farklı Zorluk Seviyesi:** Kolay, Normal ve Zor seçenekleriyle her seviyeden oyuncuya hitap eder.
+-   **Dinamik Zamanlayıcı:** Seviye ilerledikçe azalan süre, oyunu daha heyecanlı hale getirir.
+-   **Puanlama ve Yüksek Skor:** Oyuncuların en yüksek skorları tarayıcı hafızasında saklanır.
+-   **En Hızlı Zamanlar Listesi:** Her seviye için en hızlı bitirme süreleri kaydedilir ve bir lider tablosunda gösterilir.
+-   **Ses Ayarları:** Oyun içi sesleri açıp kapatma ve ses seviyesini ayarlama imkanı.
+-   **Klavye Desteği:** Rakam tuşları ve Boşluk tuşu ile oynanabilirlik.
+-   **Duraklatma Özelliği:** Oyun sırasında 'P' tuşu veya buton ile oyunu duraklatma.
 
-## Kullanılan Teknolojiler
+## Gerekli Dosya Yapısı
 
--   HTML5
--   CSS3
--   Vanilla JavaScript (Hiçbir kütüphane veya framework kullanılmamıştır.)
+Projenin düzgün çalışması için tüm dosyaların aşağıdaki gibi aynı dizinde olması gerekmektedir:
 
-## Nasıl Çalıştırılır ve Yayınlanır?
+```
+/sayi-avcisi-projesi
+├── index.html
+├── stil.css
+├── oyun.js
+├── arkaplan.jpg
+├── favicon.png
+├── ayarlar-ikonu.png
+├── ayarlar-kapatma-ikonu.png
+├── kolay-mod.png
+├── normal-mod.png
+├── zor-mod.png
+├── click.mp3
+├── kaybetme.mp3
+├── baslatma.mp3
+├── tick.mp3
+├── kazanma.mp3
+└── sonrakiseviye.mp3
+```
 
-Bu proje hem yerel bilgisayarınızda direkt olarak çalıştırılabilir hem de GitHub Pages üzerinden kolayca canlıya alınabilir.
+## Lokal (Yerel Makinede) Çalıştırma
 
-### Lokal Çalıştırma
+Projeyi bilgisayarınızda denemek için iki basit yöntem vardır:
 
-1.  **Repoyu Klonlayın:** Bu projeyi `git clone` komutuyla veya ZIP olarak bilgisayarınıza indirin.
-2.  **Klasöre Gidin:** Proje dosyalarının bulunduğu klasörü açın.
-3.  **`index.html` Dosyasını Açın:** `index.html` dosyasına çift tıklayarak favori web tarayıcınızda (Google Chrome, Firefox, Safari vb.) açın.
+### Yöntem 1: VS Code Live Server Eklentisi (Önerilen)
 
-### GitHub Pages ile Yayına Alma
+1.  Visual Studio Code editörünü açın.
+2.  Eğer yüklü değilse, Eklentiler (Extensions) sekmesinden **Live Server** eklentisini kurun.
+3.  Proje klasörünü VS Code ile açın.
+4.  `index.html` dosyasına sağ tıklayın ve **"Open with Live Server"** seçeneğine tıklayın.
+5.  Oyun, varsayılan tarayıcınızda otomatik olarak açılacaktır.
 
-Bu projeyi internet üzerinden herkesin erişebileceği bir adreste yayınlamak için:
+### Yöntem 2: Python ile Basit Sunucu
 
-1.  Projenin GitHub deposunda **Settings (Ayarlar)** sekmesine gidin.
-2.  Sol menüden **Pages** sekmesini seçin.
-3.  "Build and deployment" başlığı altında, **Source** olarak **"Deploy from a branch"** seçeneğini belirleyin.
-4.  Açılan menülerden yayın yapmak istediğiniz dalı (**Branch**) seçin (genellikle `main` veya `develop`).
-5.  **Save (Kaydet)** butonuna basın.
-6.  Birkaç dakika içinde, sayfanın üst kısmında beliren `https://kullaniciadiniz.github.io/proje-adi/` formatındaki adresten oyununuza canlı olarak erişebilirsiniz.
+Bilgisayarınızda Python yüklüyse, aşağıdaki komutlarla hızlıca bir yerel sunucu başlatabilirsiniz:
 
-## Oyun Kuralları
+1.  Terminali veya Komut İstemi'ni açın.
+2.  `cd` komutu ile proje dosyalarının bulunduğu klasöre gidin.
+3.  Aşağıdaki komutu çalıştırın (Python versiyonunuza göre):
+    -   **Python 3.x için:** `python -m http.server`
+    -   **Python 2.x için:** `python -m SimpleHTTPServer`
+4.  Tarayıcınızı açın ve adres çubuğuna `http://localhost:8000` yazın.
 
--   **Amaç:** Ekranın ortasındaki **hedef sayıyı**, alttaki butonları kullanarak **tam olarak 0'a** indirmektir.
--   **Kazanma:** Hedef sayı tam olarak 0 olursa seviyeyi kazanırsınız. Kalan süreniz ve mevcut seviyeniz puanınızı belirler.
--   **Kaybetme:**
-    -   Üstteki zaman çubuğu tamamen biterse,
-    -   Hedef sayı 0'ın altına düşerse kaybedersiniz ve oyun yeniden başlar.
+## GitHub Pages ile Yayına Alma
 
-## Dosya Yapısı
-Sayı Avcısı/
-├── index.html # Oyunun ana HTML yapısı
-├── stil.css # Tüm görsel stiller
-├── oyun.js # Oyunun tüm mantığı ve işlevselliği
-├── arkaplan.jpg # Arka plan görseli
-├── click.mp3 # Tıklama sesi
-├── kaybetme.mp3 # Kaybetme sesi
-├── baslatma.mp3 # Oyun başlangıç sesi
-└── README.md # Proje açıklaması
+Projenizi internet üzerinden herkesin erişebileceği bir adreste yayınlamak için aşağıdaki adımları izleyin:
+
+1.  **Projenizi GitHub'a Yükleyin:** Proje dosyalarınızı yeni bir GitHub repositorisine `git push` komutu ile gönderin.
+
+2.  **Dosya Adını Kontrol Edin:** Ana HTML dosyanızın adının `index.html` olduğundan emin olun. Bu, GitHub Pages'in sitenizi tanıması için zorunludur.
+
+3.  **GitHub Pages'i Etkinleştirin:**
+    -   Projenizin GitHub repositorisine gidin.
+    -   **Settings** (Ayarlar) sekmesine tıklayın.
+    -   Sol menüden **Pages** sekmesine tıklayın.
+    -   "Build and deployment" başlığı altında, **Source** (Kaynak) olarak **"Deploy from a branch"** seçeneğini seçin.
+    -   **Branch** (Dal) olarak `main` (veya hangi dalı kullanıyorsanız onu) seçin ve klasör olarak `/(root)` seçili kalsın.
+    -   **Save** (Kaydet) butonuna tıklayın.
+
+4.  **Sitenizi Ziyaret Edin:**
+    -   Birkaç dakika sonra sayfanın en üstünde "Your site is live at..." şeklinde bir bildirim belirecektir.
+    -   Sitenizin adresi şu formatta olacaktır: `https://<kullanici-adiniz>.github.io/<repo-adiniz>/`
+
+Artık oyununuz yayında!
