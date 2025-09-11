@@ -4,8 +4,8 @@
 
 Sayı Avcısı, hız ve dikkat gerektiren eğlenceli bir tarayıcı oyunudur. Oyuncular, verilen hedef sayıya ulaşmak için doğru işlem butonlarına zamanında basmalıdır. Her seviyede zorluk artar ve zaman kısalır.
 
-![Sayı Avcısı Ekran Görüntüsü](ekran-goruntusu2.png)
 ![Sayı Avcısı Ekran Görüntüsü](ekran-goruntusu1.png)
+![Sayı Avcısı Ekran Görüntüsü](ekran-goruntusu2.png)
 
 ## 🕹️ Nasıl Oynanır?
 
