@@ -16,6 +16,41 @@
     <link rel="stylesheet" href="stil.css">
 </head>
 <body>
+    <!-- YENİ EKLENECEK AYARLAR BÖLÜMÜ -->
+<div id="sol-ust-kose">
+    <button id="ayarlar-butonu">
+        <img src="ayarlar-ikonu.png" alt="Ayarlar">
+    </button>
+    <!-- YENİ: Zorluk seviyesini gösteren ikon kutusu -->
+    <div id="zorluk-gosterge-ikonu">
+        <img id="zorluk-ikon-resmi" src="normal-mod.png" alt="Mevcut Zorluk">
+    </div>
+</div>
+<div id="ayarlar-paneli" class="gizli">
+    <h3>Ayarlar</h3>
+    <label>
+        Ses
+        <input type="checkbox" id="ses-acik" checked>
+    </label>
+        <br>
+    <label for="ses-seviye">Ses Düzeyi</label>
+    <input type="range" id="ses-seviye" min="0" max="1" step="0.1" value="1">
+
+    <br>
+    <label for="zorluk">Zorluk</label>
+<div class="select-wrapper">
+    <select id="zorluk">
+        <option value="kolay">Kolay</option>
+        <option value="normal" selected>Normal</option>
+        <option value="zor">Zor</option>
+    </select>
+</div>
+    <br>
+    <button id="ayarlar-kapat">
+        <img src="ayarlar-kapatma-ikonu.png" alt="Kapat">
+    </button>
+</div>
+<!-- YENİ KOD BURADA BİTİYOR -->
 
     <!-- Bütün arayüzü saran ve ölçeklenecek ana kapsayıcı -->
     <div id="oyun-kapsayici">

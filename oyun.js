@@ -1,449 +1,470 @@
-// Arayüzü çözünürlüğe göre dinamik olarak ölçeklendiren fonksiyon
-function ekraniOlceklendir() {
-    const oyunKapsayici = document.getElementById('oyun-kapsayici');
-    if (!oyunKapsayici) return;
-
-    const referansGenislik = 1920;
-    const referansYukseklik = 1080;
-    const mevcutGenislik = window.innerWidth;
-    const mevcutYukseklik = window.innerHeight;
-
-    const olcek = Math.min(mevcutGenislik / referansGenislik, mevcutYukseklik / referansYukseklik);
-
-    // Kapsayıcıyı hem ortalar hem de ölçeklendirir
-    oyunKapsayici.style.transform = `translate(-50%, -50%) scale(${olcek})`;
-}
-
-// -------------------------------------------------------------------------------- //
-// --- SENİN ORİJİNAL KODUN BAŞLIYOR (DEĞİŞİKLİK YOK) ---
-// -------------------------------------------------------------------------------- //
-
-// HTML elemanlarını değişkenlere atama
-const hedefSayiElementi = document.getElementById('hedef-sayi');
-const butonlar = document.querySelectorAll('.islem-butonu');
-const seviyeGosterge = document.getElementById('seviye-gosterge');
-const puanGosterge = document.getElementById('puan-gosterge');
-const zamanCubugu = document.getElementById('zaman-cubugu-ic');
-const seviyeSonuMesaji = document.getElementById('seviye-sonu-mesaji');
-const mesajMetni = document.getElementById('mesaj-metni');
-const sonrakiSeviyeButonu = document.getElementById('sonraki-seviye-butonu');
-const seviyeListesi = document.getElementById('seviye-listesi');
-const tiklamaSesi = document.getElementById('tiklamaSesi');
-const kaybetmeSesi = document.getElementById('kaybetmeSesi');
-const baslatmaSesi = document.getElementById('baslatmaSesi');
-const zamanlayiciSesi = document.getElementById('zamanlayiciSesi');
-const baslangicEkrani = document.getElementById('baslangic-ekrani');
-const baslaButonu = document.getElementById('basla-butonu');
-const oyunAlani = document.getElementById('oyun-alani');
-const skorTablosu = document.getElementById('skor-tablosu');
-const hedefSayiDaire = document.getElementById('hedef-sayi-daire');
-
-// Hem pause/resume hem de develop özelliklerinden gelen değişkenler birleştirildi
-const duraklatButonu = document.getElementById('duraklat-butonu');
-const duraklatOverlay = document.getElementById('duraklat-overlay');
-const yuksekSkorGosterge = document.getElementById('yuksek-skor-gosterge');
-const enYuksekSkorKutusu = document.getElementById('en-yuksek-skor-kutusu');
-const leaderboard = document.getElementById('leaderboard');
-const hizliZamanlarListesi = document.getElementById('hizli-zamanlar-listesi');
-
-const kazanmaSesi = document.getElementById('kazanmaSesi');
-// YENİ EKLENDİ: Duraklatma butonunun konteynerini de yönetmek için seçtik.
-const duraklatKonteyneri = document.getElementById('duraklat-konteyneri');
-const sonrakiSeviyeSesi = document.getElementById('sonrakiSeviyeSesi'); 
-
-// Oyun durumu değişkenleri
-let mevcutSeviye = 1;
-let toplamPuan = 0;
-let mevcutHedefSayi = 0;
-let zamanlayici;
-let kalanZaman;
-let baslangicZamani;
-let sonSesZamani = 0;
-let seslerHazirMi = false; // YENİ: Seslerin "uyandırılıp" uyandırılmadığını kontrol eder
-
-const YUKSEK_SKOR_KEY = 'sayiAvcisiEnYuksekSkor';
-// Duraklatma ile ilgili değişkenler
-let duraklatildi = false;
-let duraklamaBaslangicZamani;
-let duraklatmaKilitli = false; // Spam engelleme icin kilit
-
-// Butonları devre dışı bırak
-// (Bu fonksiyonun tekrarı aşağıda var, bu tanımı kaldırıldı)
-
-// En yüksek skor ve localStorage anahtarı
-let enYuksekSkor = 0;
-
-// Yeni seviyeyi başlat
-// (Bu fonksiyonun tekrarı aşağıda var, bu tanımı kaldırıldı)
-// Leaderboard için en hızlı zamanlar ve localStorage anahtarı
-let enHizliZamanlar = [];
-const HIZLI_ZAMANLAR_KEY = 'sayiAvcisiEnHizliZamanlar';
-
-// Sayfa yüklendiğinde
-document.addEventListener('DOMContentLoaded', () => {
-    // ÖNCE ÖLÇEKLENDİRME YAPILIR
-    ekraniOlceklendir();
-    window.addEventListener('resize', ekraniOlceklendir);
-
-    // SONRA SENİN KODUN ÇALIŞIR
-    enYuksekSkoruYukle();
-    enHizliZamanlariYukle();
-    leaderboardGuncelle();
-});
-function sesleriHazirla() {
-    if (seslerHazirMi) return; // Eğer zaten hazırsa, tekrar çalıştırma
-
-
-    const tumSesler = [tiklamaSesi, kaybetmeSesi, baslatmaSesi, sonrakiSeviyeSesi, zamanlayiciSesi, kazanmaSesi];
-    
-    tumSesler.forEach(ses => {
-        if (ses) { // Null kontrolü
-            ses.volume = 0; // Sesi tamamen kıs
-            ses.play();
-            ses.pause();
-            ses.currentTime = 0; // Başa sar
-            ses.volume = 1; // Sesi orijinal seviyesine geri getir
+(function () {
+    // -------------------- EKRANI ÖLÇEKLENDİR --------------------
+    function ekraniOlceklendir() {
+        const oyunKapsayici = document.getElementById('oyun-kapsayici');
+        if (!oyunKapsayici) return;
+        const referansGenislik = 1920;
+        const referansYukseklik = 1080;
+        const mevcutGenislik = window.innerWidth;
+        const mevcutYukseklik = window.innerHeight;
+        const olcek = Math.min(mevcutGenislik / referansGenislik, mevcutYukseklik / referansYukseklik);
+        const computed = window.getComputedStyle(oyunKapsayici);
+        if (computed.position === 'static') {
+            oyunKapsayici.style.position = 'absolute';
+            oyunKapsayici.style.left = '50%';
+            oyunKapsayici.style.top = '50%';
         }
-    });
-
-    seslerHazirMi = true; // Hazır olarak işaretle
-}
-// En yüksek skoru localStorage'dan yükle
-
-
-function enYuksekSkoruYukle() {
-    const storedSkor = localStorage.getItem(YUKSEK_SKOR_KEY);
-    if (storedSkor !== null) { enYuksekSkor = parseInt(storedSkor, 10); }
-    yuksekSkorGosterge.textContent = enYuksekSkor;
-}
-
-function enYuksekSkoruKaydet() {
-    localStorage.setItem(YUKSEK_SKOR_KEY, enYuksekSkor.toString());
-}
-
-function enYuksekSkoruKontrolEtVeGuncelle() {
-    if (toplamPuan > enYuksekSkor) {
-        enYuksekSkor = toplamPuan;
-        yuksekSkorGosterge.textContent = enYuksekSkor;
-        enYuksekSkoruKaydet();
+        oyunKapsayici.style.transformOrigin = '50% 50%';
+        oyunKapsayici.style.transform = `translate(-50%, -50%) scale(${olcek})`;
     }
-}
 
+    // -------------------- GLOBAL DEĞİŞKENLER --------------------
+    const zorlukAyarlari = {
+        kolay: { baslangicZamani: 20, zamanAzalmasi: 0.5, minZaman: 8, adimArtisOrani: 5, puanCarpani: 0.8 },
+        normal: { baslangicZamani: 15, zamanAzalmasi: 1, minZaman: 4, adimArtisOrani: 3, puanCarpani: 1 },
+        zor: { baslangicZamani: 10, zamanAzalmasi: 1, minZaman: 3, adimArtisOrani: 2, puanCarpani: 1.5 }
+    };
+    const zorlukIkonlari = {
+        kolay: 'kolay-mod.png',
+        normal: 'normal-mod.png',
+        zor: 'zor-mod.png'
+    };
+    let mevcutSeviye = 1;
+    let toplamPuan = 0;
+    let mevcutHedefSayi = 0;
+    let zamanlayici = null;
+    let kalanZaman = 0;
+    let baslangicZamani = 0;
+    let sonSesZamani = 0;
+    let seslerHazirMi = false;
+    let butonDegerleri = [];
+    let duraklatildi = false;
+    let duraklamaBaslangicZamani = 0;
+    let duraklatmaKilitli = false;
+    let enYuksekSkor = 0;
+    let enHizliZamanlar = [];
+    const YUKSEK_SKOR_KEY = 'sayiAvcisiEnYuksekSkor';
+    const HIZLI_ZAMANLAR_KEY = 'sayiAvcisiEnHizliZamanlar';
 
-// Oyunu Duraklat / Devam Ettir Fonksiyonu
-function duraklatDevamEt() {
-    // Kilit aktifse veya oyun alanı görünür değilse fonksiyondan çık
-    if (duraklatmaKilitli || oyunAlani.classList.contains('gizli')) return;
+    // -------------------- DOM YÜKLENDİKTEN SONRA --------------------
+    document.addEventListener('DOMContentLoaded', function () {
+        // Element seçimleri
+        const get = id => document.getElementById(id);
+        const hedefSayiElementi = get('hedef-sayi');
+        const butonlar = document.querySelectorAll('.islem-butonu');
+        const seviyeGosterge = get('seviye-gosterge');
+        const puanGosterge = get('puan-gosterge');
+        const zamanCubugu = get('zaman-cubugu-ic');
+        const seviyeSonuMesaji = get('seviye-sonu-mesaji');
+        const mesajMetni = get('mesaj-metni');
+        const sonrakiSeviyeButonu = get('sonraki-seviye-butonu');
+        const seviyeListesi = get('seviye-listesi');
+        const tiklamaSesi = get('tiklamaSesi');
+        const kaybetmeSesi = get('kaybetmeSesi');
+        const baslatmaSesi = get('baslatmaSesi');
+        const zamanlayiciSesi = get('zamanlayiciSesi');
+        const baslangicEkrani = get('baslangic-ekrani');
+        const baslaButonu = get('basla-butonu');
+        const oyunAlani = get('oyun-alani');
+        const skorTablosu = get('skor-tablosu');
+        const ayarlarButonu = get('ayarlar-butonu');
+        const ayarlarPaneli = get('ayarlar-paneli');
+        const ayarlarKapat = get('ayarlar-kapat');
+        const sesAcikCheck = get('ses-acik');
+        const sesSeviye = get('ses-seviye');
+        const zorlukSecim = get('zorluk');
+        const kazanmaSesi = get('kazanmaSesi');
+        const zorlukIkonResmi = get('zorluk-ikon-resmi');
+        const hedefSayiDaire = get('hedef-sayi-daire');
+        const duraklatButonu = get('duraklat-butonu');
+        const duraklatOverlay = get('duraklat-overlay');
+        const yuksekSkorGosterge = get('yuksek-skor-gosterge');
+        const enYuksekSkorKutusu = get('en-yuksek-skor-kutusu');
+        const leaderboard = get('leaderboard');
+        const hizliZamanlarListesi = get('hizli-zamanlar-listesi');
+        const duraklatKonteyneri = get('duraklat-konteyneri');
+        const sonrakiSeviyeSesi = get('sonrakiSeviyeSesi');
 
-    duraklatildi = !duraklatildi;
+        // Ekranı ölçeklendir
+        ekraniOlceklendir();
+        window.addEventListener('resize', ekraniOlceklendir);
 
-    if (duraklatildi) {
-        // Oyunu duraklat
-        duraklamaBaslangicZamani = Date.now();
-        clearInterval(zamanlayici);
-        zamanlayiciSesi.pause();
-        butonlariDevreDisiBirak();
-        duraklatOverlay.classList.remove('gizli');
-        duraklatButonu.textContent = "Devam Et";
-    } else {
-        // Oyuna devam et
-        const gecenDuraklamaSuresi = Date.now() - duraklamaBaslangicZamani;
-        baslangicZamani += gecenDuraklamaSuresi;
-        
-        butonlariAktiflestir();
-        duraklatOverlay.classList.add('gizli');
-        duraklatButonu.textContent = "Duraklat";
-        
-        // Zamanlayıcıyı kaldığı yerden başlat
-        zamanlayiciyiBaslat();
+        // -------------------- SES ÇALMA --------------------
+        function sesCal(ses) {
+            if (!ses || !sesAcikCheck) return;
+            if (!sesAcikCheck.checked) return;
+            try {
+                ses.volume = parseFloat(sesSeviye ? sesSeviye.value : 1);
+                ses.currentTime = 0;
+                const playPromise = ses.play();
+                if (playPromise && typeof playPromise.then === 'function') {
+                    playPromise.catch(() => {});
+                }
+            } catch (e) {}
+        }
 
-        // Spam engelleme kilidini başlat
-        duraklatmaKilitli = true;
-        duraklatButonu.disabled = true;
-        setTimeout(() => {
-            duraklatmaKilitli = false;
-            if (!duraklatildi) {
-                duraklatButonu.disabled = false;
+        // -------------------- AYARLARI YÜKLE / KAYDET --------------------
+        function ayarlariYukle() {
+            if (sesAcikCheck) {
+                const kayitliSesAcik = localStorage.getItem('sesAcik');
+                if (kayitliSesAcik !== null) sesAcikCheck.checked = (kayitliSesAcik === 'true');
             }
-        }, 1000); // 1 saniye sonra kilidi aç
-    }
-}
-
-// Zamanlayıcıyı başlatan fonksiyon
-function zamanlayiciyiBaslat() {
-    clearInterval(zamanlayici);
-    zamanlayici = setInterval(() => {
-        if (duraklatildi) return;
-
-        const gecenSure = (Date.now() - baslangicZamani) / 1000;
-        
-        // Yüzdeyi hesapla ve 0-100 arasına sıkıştır (clamp)
-        let yuzde = ((kalanZaman - gecenSure) / kalanZaman) * 100;
-        yuzde = Math.max(0, Math.min(100, yuzde));
-
-        zamanCubugu.style.width = yuzde + '%';
-
-        // Kritik eşik kontrolü ile yanıp sönme sınıfını yönet
-        if (yuzde < 10) {
-            hedefSayiDaire.classList.add('kritik-zaman');
-        } else {
-            hedefSayiDaire.classList.remove('kritik-zaman');
+            if (sesSeviye) {
+                const kayitliSesSeviye = localStorage.getItem('sesSeviye');
+                if (kayitliSesSeviye !== null) sesSeviye.value = kayitliSesSeviye;
+            }
+            if (zorlukSecim) {
+                const kayitliZorluk = localStorage.getItem('zorluk');
+                if (kayitliZorluk && zorlukAyarlari[kayitliZorluk]) zorlukSecim.value = kayitliZorluk;
+                zorlukIkonResmi && (zorlukIkonResmi.src = zorlukIkonlari[zorlukSecim.value] || '');
+            }
         }
 
-        // Ses hızını ayarla
-        const maxAralik = 1200;
-        const minAralik = 400;
-        const suAnkiAralik = minAralik + (yuzde / 100) * (maxAralik - minAralik);
-
-        if (Date.now() - sonSesZamani > suAnkiAralik) {
-            zamanlayiciSesi.currentTime = 0;
-            zamanlayiciSesi.play();
-            sonSesZamani = Date.now();
+        if (sesAcikCheck) {
+            sesAcikCheck.addEventListener('change', () => {
+                localStorage.setItem('sesAcik', sesAcikCheck.checked);
+                if (!sesAcikCheck.checked && zamanlayiciSesi) {
+                    zamanlayiciSesi.pause();
+                    zamanlayiciSesi.currentTime = 0;
+                }
+            });
         }
 
-        if (yuzde < 50) zamanCubugu.style.backgroundColor = 'orange';
-        if (yuzde < 25) zamanCubugu.style.backgroundColor = 'red';
-
-        if (gecenSure >= kalanZaman) {
-            hedefSayiDaire.classList.remove('kritik-zaman');
-            oyunuKaybet("Süre doldu!");
+        if (sesSeviye) {
+            sesSeviye.addEventListener('input', () => localStorage.setItem('sesSeviye', sesSeviye.value));
         }
-    }, 100);
-}
 
-// En hızlı zamanları localStorage'dan yükle
-function enHizliZamanlariYukle() {
-    const storedZamanlar = localStorage.getItem(HIZLI_ZAMANLAR_KEY);
-    if (storedZamanlar) { enHizliZamanlar = JSON.parse(storedZamanlar); }
-}
-
-function enHizliZamanlariKaydet() {
-    localStorage.setItem(HIZLI_ZAMANLAR_KEY, JSON.stringify(enHizliZamanlar));
-}
-
-function leaderboardGuncelle() {
-    hizliZamanlarListesi.innerHTML = '';
-    enHizliZamanlar.sort((a, b) => a.zaman - b.zaman);
-    for (let i = 0; i < Math.min(enHizliZamanlar.length, 5); i++) {
-        const item = enHizliZamanlar[i];
-        const listItem = document.createElement('li');
-        listItem.textContent = `${item.zaman.toFixed(2)} sn - ${item.seviye}. Sv`;
-        hizliZamanlarListesi.appendChild(listItem);
-    }
-}
-
-function butonlariDevreDisiBirak() { butonlar.forEach(b => b.disabled = true); }
-function butonlariAktiflestir() { butonlar.forEach(b => b.disabled = false); }
-
-function seviyeyiBaslat() {
-    // DEĞİŞİKLİK: Oyunun aktif olduğunu ve duraklatma butonunun görünür olması gerektiğini belirttik.
-    duraklatKonteyneri.classList.remove('gizli');
-    
-    // Overlay'in başlangıçta gizli olduğundan emin olundu.
-    duraklatOverlay.classList.add('gizli'); 
-    
-    duraklatildi = false;
-    duraklatmaKilitli = false;
-    duraklatButonu.disabled = false;
-    duraklatButonu.textContent = "Duraklat";
-    
-    butonlariAktiflestir();
-    seviyeSonuMesaji.classList.add('gizli');
-    const olasiRakamlar = [1, 2, 3, 4, 5, 6, 7, 8, 9].sort(() => 0.5 - Math.random());
-    const butonDegerleri = [];
-    butonlar.forEach((buton, index) => {
-        const yeniRakam = olasiRakamlar[index];
-        buton.textContent = yeniRakam;
-        buton.dataset.deger = yeniRakam;
-        butonDegerleri.push(yeniRakam);
-    });
-    let geciciHedefSayi = 0;
-    const adimSayisi = 3 + Math.floor(mevcutSeviye / 3);
-    for (let i = 0; i < adimSayisi; i++) {
-        geciciHedefSayi += butonDegerleri[Math.floor(Math.random() * butonDegerleri.length)];
-    }
-    if (geciciHedefSayi < 10) geciciHedefSayi += 7;
-    mevcutHedefSayi = geciciHedefSayi;
-    kalanZaman = Math.max(5, 15 - Math.floor(mevcutSeviye / 2));
-    hedefSayiElementi.textContent = mevcutHedefSayi;
-    seviyeGosterge.textContent = mevcutSeviye;
-    zamanCubugu.style.width = '100%';
-    zamanCubugu.style.backgroundColor = '#4CAF50';
-    baslangicZamani = Date.now();
-    clearInterval(zamanlayici);
-    zamanlayici = setInterval(() => {
-        const gecenSure = (Date.now() - baslangicZamani) / 1000;
-        const yuzde = ((kalanZaman - gecenSure) / kalanZaman) * 100;
-        zamanCubugu.style.width = yuzde + '%';
-        const suAnkiAralik = 400 + (yuzde / 100) * 800;
-        if (Date.now() - sonSesZamani > suAnkiAralik) {
-            zamanlayiciSesi.currentTime = 0;
-            zamanlayiciSesi.play();
-            sonSesZamani = Date.now();
+        if (zorlukSecim) {
+            zorlukSecim.addEventListener('change', () => {
+                localStorage.setItem('zorluk', zorlukSecim.value);
+                if (zorlukIkonResmi) zorlukIkonResmi.src = zorlukIkonlari[zorlukSecim.value] || '';
+                oyunuSifirlaVeBasaDon();
+            });
         }
-        if (yuzde < 50) zamanCubugu.style.backgroundColor = 'orange';
-        if (yuzde < 25) zamanCubugu.style.backgroundColor = 'red';
-        if (gecenSure >= kalanZaman) oyunuKaybet("Süre doldu!");
-    }, 100);
-    zamanlayiciyiBaslat();
-}
 
-butonlar.forEach(buton => {
-    buton.addEventListener('click', () => {
+        // -------------------- SESLERİ HAZIRLA --------------------
+        function sesleriHazirla() {
+            if (seslerHazirMi) return;
+            const tumSesler = [tiklamaSesi, kaybetmeSesi, baslatmaSesi, sonrakiSeviyeSesi, zamanlayiciSesi, kazanmaSesi];
+            tumSesler.forEach(ses => {
+                if (!ses) return;
+                try {
+                    ses.volume = 0;
+                    const p = ses.play();
+                    if (p && typeof p.then === 'function') {
+                        p.then(() => {
+                            ses.pause();
+                            ses.currentTime = 0;
+                            ses.volume = 1;
+                        }).catch(() => {
+                            ses.pause();
+                            ses.currentTime = 0;
+                            ses.volume = 1;
+                        });
+                    } else {
+                        ses.pause();
+                        ses.currentTime = 0;
+                        ses.volume = 1;
+                    }
+                } catch (e) {}
+            });
+            seslerHazirMi = true;
+        }
 
-        if (duraklatildi) return;
+        // -------------------- SKOR & LEADERBOARD --------------------
+        function enYuksekSkoruYukle() {
+            const stored = localStorage.getItem(YUKSEK_SKOR_KEY);
+            if (stored !== null) enYuksekSkor = parseInt(stored, 10) || 0;
+            if (yuksekSkorGosterge) yuksekSkorGosterge.textContent = enYuksekSkor;
+        }
+        function enYuksekSkoruKaydet() {
+            localStorage.setItem(YUKSEK_SKOR_KEY, enYuksekSkor.toString());
+        }
+        function enYuksekSkoruKontrolEtVeGuncelle() {
+            if (toplamPuan > enYuksekSkor) {
+                enYuksekSkor = toplamPuan;
+                if (yuksekSkorGosterge) yuksekSkorGosterge.textContent = enYuksekSkor;
+                enYuksekSkoruKaydet();
+            }
+        }
+        function enHizliZamanlariYukle() {
+            const stored = localStorage.getItem(HIZLI_ZAMANLAR_KEY);
+            if (stored) enHizliZamanlar = JSON.parse(stored);
+        }
+        function enHizliZamanlariKaydet() {
+            localStorage.setItem(HIZLI_ZAMANLAR_KEY, JSON.stringify(enHizliZamanlar));
+        }
+        function leaderboardGuncelle() {
+            if (!hizliZamanlarListesi) return;
+            hizliZamanlarListesi.innerHTML = '';
+            enHizliZamanlar.sort((a, b) => a.zaman - b.zaman);
+            for (let i = 0; i < Math.min(enHizliZamanlar.length, 5); i++) {
+                const item = enHizliZamanlar[i];
+                const li = document.createElement('li');
+                li.textContent = `${item.zaman.toFixed(2)} sn - ${item.seviye}. Sv`;
+                hizliZamanlarListesi.appendChild(li);
+            }
+        }
 
-        buton.classList.add('tiklandi');
-        const cikarilacakDeger = parseInt(buton.dataset.deger);
-        mevcutHedefSayi -= cikarilacakDeger;
-        hedefSayiElementi.textContent = mevcutHedefSayi;
-        tiklamaSesi.currentTime = 0;
-        tiklamaSesi.play();
-        if (mevcutHedefSayi === 0) oyunuKazan();
-        else if (mevcutHedefSayi < 0) oyunuKaybet("Sıfırın altına düştün!");
-    });
-    buton.addEventListener('animationend', () => buton.classList.remove('tiklandi'));
-});
+        // -------------------- BUTONLARI DEVRE DIŞI / AKTİF --------------------
+        function butonlariDevreDisiBirak() { butonlar.forEach(b => b.disabled = true); }
+        function butonlariAktiflestir() { butonlar.forEach(b => b.disabled = false); }
 
-function oyunuKazan() {
-    // DÜZELTME: Kazanma anında yanıp sönmeyi durdurur.
-    hedefSayiDaire.classList.remove('kritik-zaman');
+        // -------------------- ZAMANLAYICI --------------------
+        function zamanlayiciyiBaslat() {
+            clearInterval(zamanlayici);
+            zamanlayici = setInterval(() => {
+                if (duraklatildi) return;
+                const gecenSure = (Date.now() - baslangicZamani) / 1000;
+                let yuzde = ((kalanZaman - gecenSure) / kalanZaman) * 100;
+                yuzde = Math.max(0, Math.min(100, yuzde));
+                if (zamanCubugu) zamanCubugu.style.width = yuzde + '%';
+                if (hedefSayiDaire) {
+                    if (yuzde < 10) hedefSayiDaire.classList.add('kritik-zaman');
+                    else hedefSayiDaire.classList.remove('kritik-zaman');
+                }
+                const maxAralik = 1200;
+                const minAralik = 400;
+                const suAnkiAralik = minAralik + (yuzde / 100) * (maxAralik - minAralik);
+                if (Date.now() - sonSesZamani > suAnkiAralik) {
+                    sesCal(zamanlayiciSesi);
+                    sonSesZamani = Date.now();
+                }
+                if (yuzde < 50 && zamanCubugu) zamanCubugu.style.backgroundColor = 'orange';
+                if (yuzde < 25 && zamanCubugu) zamanCubugu.style.backgroundColor = 'red';
+                if (gecenSure >= kalanZaman) {
+                    hedefSayiDaire && hedefSayiDaire.classList.remove('kritik-zaman');
+                    oyunuKaybet("Süre doldu!");
+                }
+            }, 100);
+        }
 
-    if (kazanmaSesi) {
-        kazanmaSesi.play();
-    }
-    // DEĞİŞİKLİK: Oyun bittiği için duraklatma butonunu gizledik.
-    duraklatKonteyneri.classList.add('gizli');
+        // -------------------- OYUNU BAŞLAT / SEVİYE --------------------
+        function seviyeyiBaslat() {
+            duraklatKonteyneri && duraklatKonteyneri.classList.remove('gizli');
+            duraklatOverlay && duraklatOverlay.classList.add('gizli');
+            duraklatildi = false;
+            duraklatmaKilitli = false;
+            if (duraklatButonu) { duraklatButonu.disabled = false; duraklatButonu.textContent = "Duraklat"; }
+            butonlariAktiflestir();
+            seviyeSonuMesaji && seviyeSonuMesaji.classList.add('gizli');
+            const olasiRakamlar = [1,2,3,4,5,6,7,8,9].sort(() => 0.5 - Math.random());
+            butonDegerleri = [];
+            butonlar.forEach((buton, index) => {
+                const yeniRakam = olasiRakamlar[index] || (index+1);
+                buton.textContent = yeniRakam;
+                buton.dataset.deger = yeniRakam;
+                butonDegerleri.push(yeniRakam);
+            });
+            const seciliZorluk = zorlukAyarlari[(zorlukSecim && zorlukSecim.value) || 'normal'];
+            let geciciHedefSayi = 0;
+            const adimSayisi = 3 + Math.floor(mevcutSeviye / seciliZorluk.adimArtisOrani);
+            for (let i = 0; i < adimSayisi; i++) {
+                const rastgeleIndex = Math.floor(Math.random() * butonDegerleri.length);
+                geciciHedefSayi += butonDegerleri[rastgeleIndex];
+            }
+            if (geciciHedefSayi < 10) geciciHedefSayi += 7;
+            mevcutHedefSayi = geciciHedefSayi;
+            kalanZaman = seciliZorluk.baslangicZamani - (mevcutSeviye - 1) * seciliZorluk.zamanAzalmasi;
+            if (kalanZaman < seciliZorluk.minZaman) kalanZaman = seciliZorluk.minZaman;
+            if (hedefSayiElementi) hedefSayiElementi.textContent = mevcutHedefSayi;
+            if (seviyeGosterge) seviyeGosterge.textContent = mevcutSeviye;
+            if (zamanCubugu) {
+                zamanCubugu.style.width = '100%';
+                zamanCubugu.style.backgroundColor = '#4CAF50';
+            }
+            baslangicZamani = Date.now();
+            clearInterval(zamanlayici);
+            zamanlayiciyiBaslat();
+        }
 
-    if (kazanmaSesi) kazanmaSesi.play();
-    zamanlayiciSesi.pause();
+        // -------------------- OYUN KAZANMA / KAYBETME --------------------
+        function oyunuKazan() {
+            hedefSayiDaire && hedefSayiDaire.classList.remove('kritik-zaman');
+            sesCal(kazanmaSesi);
+            duraklatKonteyneri && duraklatKonteyneri.classList.add('gizli');
+            zamanlayiciSesi && zamanlayiciSesi.pause();
+            clearInterval(zamanlayici);
+            butonlariDevreDisiBirak();
+            const gecenSure = (Date.now() - baslangicZamani) / 1000;
+            const kalanSaniye = Math.max(0, kalanZaman - gecenSure);
+            const seciliZorluk = zorlukAyarlari[(zorlukSecim && zorlukSecim.value) || 'normal'];
+            const seviyePuani = mevcutSeviye * 10;
+            const zamanBonusu = Math.max(0, kalanSaniye) * 5;
+            const kazanilanPuan = Math.round((seviyePuani + zamanBonusu) * seciliZorluk.puanCarpani);
+            toplamPuan += kazanilanPuan;
+            if (puanGosterge) puanGosterge.textContent = toplamPuan;
+            enYuksekSkoruKontrolEtVeGuncelle();
+            const yeniSkorSatiri = document.createElement('li');
+            yeniSkorSatiri.innerHTML = `Seviye ${mevcutSeviye}: <strong>${gecenSure.toFixed(2)} sn</strong> (+${kazanilanPuan} Puan)`;
+            seviyeListesi && seviyeListesi.appendChild(yeniSkorSatiri);
+            enHizliZamanlar.push({ zaman: gecenSure, seviye: mevcutSeviye });
+            enHizliZamanlariKaydet();
+            leaderboardGuncelle();
+            if (mesajMetni) mesajMetni.textContent = `Tebrikler! +${kazanilanPuan} puan kazandın.`;
+            if (sonrakiSeviyeButonu) { sonrakiSeviyeButonu.textContent = "Sonraki Seviye"; sonrakiSeviyeButonu.disabled = false; }
+            seviyeSonuMesaji && seviyeSonuMesaji.classList.remove('gizli');
+            mevcutSeviye++;
+        }
+
+        function oyunuKaybet(sebep) {
+            duraklatKonteyneri && duraklatKonteyneri.classList.add('gizli');
+            zamanlayiciSesi && zamanlayiciSesi.pause();
+            sesCal(kaybetmeSesi);
+            clearInterval(zamanlayici);
+            butonlariDevreDisiBirak();
+            hedefSayiDaire && hedefSayiDaire.classList.remove('kritik-zaman');
+            if (mesajMetni) mesajMetni.textContent = `Kaybettin! Sebep: ${sebep}. Puanın: ${toplamPuan}`;
+            if (sonrakiSeviyeButonu) { sonrakiSeviyeButonu.textContent = "Yeniden Başla"; sonrakiSeviyeButonu.disabled = false; }
+            seviyeSonuMesaji && seviyeSonuMesaji.classList.remove('gizli');
+            enYuksekSkoruKontrolEtVeGuncelle();
+            seviyeListesi && (seviyeListesi.innerHTML = '');
+            mevcutSeviye = 1;
+            toplamPuan = 0;
+            if (puanGosterge) puanGosterge.textContent = toplamPuan;
+        }
+
+        // -------------------- OYUN SIFIRLA VE BAŞA DÖN --------------------
+        function oyunuSifirlaVeBasaDon() {
     clearInterval(zamanlayici);
-    butonlariDevreDisiBirak();
-    const gecenSure = (Date.now() - baslangicZamani) / 1000;
-    const kalanSaniye = kalanZaman - gecenSure;
-    
-    const seviyePuani = mevcutSeviye * 10;
-    const zamanBonusu = Math.max(0, kalanSaniye) * 5;
-    const kazanilanPuan = Math.round(seviyePuani + zamanBonusu);
-
-    toplamPuan += kazanilanPuan;
-    puanGosterge.textContent = toplamPuan;
-    enYuksekSkoruKontrolEtVeGuncelle();
-
-    const gecenSureSaniye = gecenSure.toFixed(2);
-
-// develop branch'inden gelen kritik fonksiyon çağrısı
-enYuksekSkoruKontrolEtVeGuncelle();
-    const yeniSkorSatiri = document.createElement('li');
-    yeniSkorSatiri.innerHTML = `Seviye ${mevcutSeviye}: <strong>${gecenSure.toFixed(2)} sn</strong> (+${kazanilanPuan} Puan)`;
-    seviyeListesi.appendChild(yeniSkorSatiri);
-    enHizliZamanlar.push({ zaman: gecenSure, seviye: mevcutSeviye });
-    enHizliZamanlariKaydet();
-    leaderboardGuncelle();
-    mesajMetni.textContent = `Tebrikler! +${kazanilanPuan} puan kazandın.`;
-    sonrakiSeviyeButonu.textContent = "Sonraki Seviye";
-    sonrakiSeviyeButonu.disabled = false;
-    seviyeSonuMesaji.classList.remove('gizli');
-    mevcutSeviye++;
-}
-
-function oyunuKaybet(sebep) {
-    // DEĞİŞİKLİK: Oyun bittiği için duraklatma butonunu gizledik.
-    duraklatKonteyneri.classList.add('gizli');
-
-    zamanlayiciSesi.pause();
-    kaybetmeSesi.play();
-    clearInterval(zamanlayici);
-    butonlariDevreDisiBirak();
-
-    hedefSayiDaire.classList.remove('kritik-zaman');
-    mesajMetni.textContent = `Kaybettin! Sebep: ${sebep}. Puanın: ${toplamPuan}`;
-    sonrakiSeviyeButonu.textContent = "Yeniden Başla";
-    sonrakiSeviyeButonu.disabled = false;
-    seviyeSonuMesaji.classList.remove('gizli');
-    enYuksekSkoruKontrolEtVeGuncelle();
-    seviyeListesi.innerHTML = '';
     mevcutSeviye = 1;
     toplamPuan = 0;
-    puanGosterge.textContent = toplamPuan;
+    if (puanGosterge) puanGosterge.textContent = toplamPuan;
+    seviyeListesi && (seviyeListesi.innerHTML = '');
+    oyunAlani && oyunAlani.classList.add('gizli');
+    skorTablosu && skorTablosu.classList.add('gizli');
+    seviyeSonuMesaji && seviyeSonuMesaji.classList.add('gizli');
+    baslangicEkrani && baslangicEkrani.classList.remove('gizli');
+    ayarlarPaneli && ayarlarPaneli.classList.add('gizli');
+    enYuksekSkorKutusu && enYuksekSkorKutusu.classList.add('gizli'); // Ekle!
+    leaderboard && leaderboard.classList.add('gizli'); // Ekle!
+    duraklatKonteyneri && duraklatKonteyneri.classList.add('gizli'); // Ekle!
 }
 
-sonrakiSeviyeButonu.addEventListener('click', () => {
-    if (sonrakiSeviyeButonu.textContent === "Yeniden Başla") {
-        baslatmaSesi.play();
-    } else {
-        if (sonrakiSeviyeSesi) {
-            sonrakiSeviyeSesi.play();
-        }
-    }
-    puanGosterge.textContent = toplamPuan;
-    seviyeyiBaslat();
-});
-
-baslaButonu.addEventListener('click', () => {
-    sesleriHazirla();
-    baslangicEkrani.classList.add('gizli');
-    oyunAlani.classList.remove('gizli');
-    skorTablosu.classList.remove('gizli');
-    leaderboard.classList.remove('gizli');
-    enYuksekSkorKutusu.classList.remove('gizli');
-    seviyeyiBaslat();
-});
-
-// =================================================================
-// 5. KLAVYE KONTROLLERİ
-// =================================================================
-
-document.addEventListener('keydown', (event) => {
-    // --- YENİ: Boşluk Tuşu Kontrolü ---
-    if (event.key === ' ') {
-        // Boşluk tuşunun varsayılan tarayıcı eylemini (örn: sayfayı kaydırma) engelle
-        event.preventDefault();
-
-        // 1. Başlangıç ekranı aktifse "Başla" butonuna tıkla
-        if (!baslangicEkrani.classList.contains('gizli')) {
-            baslaButonu.click();
-            return; // İşlem yapıldı, fonksiyonu sonlandır
-        }
-        
-        // 2. Seviye sonu mesajı aktifse "Sonraki Seviye" / "Yeniden Başla" butonuna tıkla
-        if (!seviyeSonuMesaji.classList.contains('gizli') && !sonrakiSeviyeButonu.disabled) {
-            sonrakiSeviyeButonu.click();
-            return; // İşlem yapıldı, fonksiyonu sonlandır
-        }
-    }
-
-    // --- Mevcut Rakam Tuşları Kontrolü ---
-    const basilanTus = event.key;
-    if (basilanTus >= '1' && basilanTus <= '9') {
-        // Oyun alanı aktif değilse veya seviye sonu mesajı varsa rakam tuşlarını devre dışı bırak
-        if (oyunAlani.classList.contains('gizli') || !seviyeSonuMesaji.classList.contains('gizli')) {
-            return;
-        }
-
-        let eslesenButon = null;
-        for (const buton of butonlar) {
-            if (buton.dataset.deger === basilanTus) {
-                eslesenButon = buton;
-                break;
+        // -------------------- DURAKLAT / DEVAM --------------------
+        function duraklatDevamEt() {
+            if (duraklatmaKilitli || (oyunAlani && oyunAlani.classList.contains('gizli'))) return;
+            duraklatildi = !duraklatildi;
+            if (duraklatildi) {
+                duraklamaBaslangicZamani = Date.now();
+                clearInterval(zamanlayici);
+                zamanlayiciSesi && zamanlayiciSesi.pause();
+                butonlariDevreDisiBirak();
+                duraklatOverlay && duraklatOverlay.classList.remove('gizli');
+                if (duraklatButonu) duraklatButonu.textContent = "Devam Et";
+            } else {
+                const gecenDuraklamaSuresi = Date.now() - duraklamaBaslangicZamani;
+                baslangicZamani += gecenDuraklamaSuresi;
+                butonlariAktiflestir();
+                duraklatOverlay && duraklatOverlay.classList.add('gizli');
+                if (duraklatButonu) duraklatButonu.textContent = "Duraklat";
+                zamanlayiciyiBaslat();
+                duraklatmaKilitli = true;
+                if (duraklatButonu) duraklatButonu.disabled = true;
+                setTimeout(() => {
+                    duraklatmaKilitli = false;
+                    if (!duraklatildi && duraklatButonu) duraklatButonu.disabled = false;
+                }, 1000);
             }
         }
 
-        if (eslesenButon && !eslesenButon.disabled) {
-            eslesenButon.click();
-            eslesenButon.classList.add('klavye-vurgu');
-            setTimeout(() => {
-                eslesenButon.classList.remove('klavye-vurgu');
-            }, 200);
+        // -------------------- BUTONLARIN OLAYLARI --------------------
+        butonlar.forEach(buton => {
+            buton.addEventListener('click', () => {
+                if (duraklatildi) return;
+                buton.classList.add('tiklandi');
+                const cikarilacakDeger = parseInt(buton.dataset.deger, 10);
+                if (Number.isNaN(cikarilacakDeger)) return;
+                mevcutHedefSayi -= cikarilacakDeger;
+                if (hedefSayiElementi) hedefSayiElementi.textContent = mevcutHedefSayi;
+                tiklamaSesi && sesCal(tiklamaSesi);
+                if (mevcutHedefSayi === 0) oyunuKazan();
+                else if (mevcutHedefSayi < 0) oyunuKaybet("Sıfırın altına düştün!");
+            });
+            buton.addEventListener('animationend', () => {
+                buton.classList.remove('tiklandi');
+            });
+        });
+
+        // -------------------- KLAVYE KONTROLLERİ --------------------
+        document.addEventListener('keydown', (event) => {
+            if (event.key === ' ') {
+                event.preventDefault();
+                if (baslangicEkrani && !baslangicEkrani.classList.contains('gizli')) {
+                    baslaButonu && baslaButonu.click();
+                    return;
+                }
+                if (seviyeSonuMesaji && !seviyeSonuMesaji.classList.contains('gizli') && sonrakiSeviyeButonu && !sonrakiSeviyeButonu.disabled) {
+                    sonrakiSeviyeButonu.click();
+                    return;
+                }
+            }
+            const basilanTus = event.key;
+            if (basilanTus >= '1' && basilanTus <= '9') {
+                if (oyunAlani && oyunAlani.classList.contains('gizli')) return;
+                if (seviyeSonuMesaji && !seviyeSonuMesaji.classList.contains('gizli')) return;
+                let eslesenButon = null;
+                for (const buton of butonlar) {
+                    if (buton.dataset.deger === basilanTus) { eslesenButon = buton; break; }
+                }
+                if (eslesenButon && !eslesenButon.disabled) {
+                    eslesenButon.click();
+                    eslesenButon.classList.add('klavye-vurgu');
+                    setTimeout(() => eslesenButon.classList.remove('klavye-vurgu'), 200);
+                }
+            }
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() === 'p' && seviyeSonuMesaji && seviyeSonuMesaji.classList.contains('gizli')) {
+                duraklatDevamEt();
+            }
+        });
+
+        // -------------------- AYARLAR PANELİ OLAYLARI VE ANİMASYON --------------------
+        if (ayarlarButonu && ayarlarPaneli) {
+            ayarlarButonu.addEventListener('click', function() {
+                ayarlarPaneli.classList.toggle('gizli');
+                ayarlarButonu.classList.add('tiklandi');
+            });
+            ayarlarButonu.addEventListener('animationend', function() {
+                ayarlarButonu.classList.remove('tiklandi');
+            });
         }
-    }
-})
+        if (ayarlarKapat && ayarlarPaneli) {
+            ayarlarKapat.addEventListener('click', function() {
+                ayarlarPaneli.classList.add('gizli');
+            });
+        }
 
-// Olay dinleyicileri
-duraklatButonu.addEventListener('click', duraklatDevamEt);
-window.addEventListener('keydown', (e) => {
-    if (seviyeSonuMesaji.classList.contains('gizli') && e.key.toLowerCase() === 'p') {
-        duraklatDevamEt();
+        // -------------------- SEVİYE GEÇİŞ VE BAŞLATMA --------------------
+        sonrakiSeviyeButonu && sonrakiSeviyeButonu.addEventListener('click', () => {
+            if (!sonrakiSeviyeButonu) return;
+            if (sonrakiSeviyeButonu.textContent === "Yeniden Başla") {
+                sesCal(baslatmaSesi);
+            } else {
+                sesCal(sonrakiSeviyeSesi);
+            }
+            if (puanGosterge) puanGosterge.textContent = toplamPuan;
+            seviyeyiBaslat();
+        });
 
-    }
-});
+        baslaButonu && baslaButonu.addEventListener('click', () => {
+            sesleriHazirla();
+            baslangicEkrani && baslangicEkrani.classList.add('gizli');
+            oyunAlani && oyunAlani.classList.remove('gizli');
+            skorTablosu && skorTablosu.classList.remove('gizli');
+            leaderboard && leaderboard.classList.remove('gizli');
+            enYuksekSkorKutusu && enYuksekSkorKutusu.classList.remove('gizli');
+            seviyeyiBaslat();
+        });
+
+        duraklatButonu && duraklatButonu.addEventListener('click', duraklatDevamEt);
+
+        // -------------------- BAŞLANGIÇTA YAPILACAKLAR --------------------
+        ayarlariYukle();
+        enYuksekSkoruYukle();
+        enHizliZamanlariYukle();
+        leaderboardGuncelle();
+    });
+})();
