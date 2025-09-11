@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sayı Avcısı</title>
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.png" type="image/png">
+    <!-- Meta Açıklaması -->
+    <meta name="description" content="Sayı Avcısı oyunu ile hızlı düşün ve doğru sayıları toplayarak hedefe ulaş! Zeka ve hız oyununda rekorlarını kır.">
+    <!-- Pixel Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- Stil Dosyası -->
+    <link rel="stylesheet" href="stil.css">
+</head>
+<body>
+    <!-- YENİ EKLENECEK AYARLAR BÖLÜMÜ -->
+<div id="sol-ust-kose">
+    <button id="ayarlar-butonu">
+        <img src="ayarlar-ikonu.png" alt="Ayarlar">
+    </button>
+    <!-- YENİ: Zorluk seviyesini gösteren ikon kutusu -->
+    <div id="zorluk-gosterge-ikonu">
+        <img id="zorluk-ikon-resmi" src="normal-mod.png" alt="Mevcut Zorluk">
+    </div>
+</div>
+<div id="ayarlar-paneli" class="gizli">
+    <h3>Ayarlar</h3>
+    <label>
+        Ses
+        <input type="checkbox" id="ses-acik" checked>
+    </label>
+        <br>
+    <label for="ses-seviye">Ses Düzeyi</label>
+    <input type="range" id="ses-seviye" min="0" max="1" step="0.1" value="1">
+
+    <br>
+    <label for="zorluk">Zorluk</label>
+<div class="select-wrapper">
+    <select id="zorluk">
+        <option value="kolay">Kolay</option>
+        <option value="normal" selected>Normal</option>
+        <option value="zor">Zor</option>
+    </select>
+</div>
+    <br>
+    <button id="ayarlar-kapat">
+        <img src="ayarlar-kapatma-ikonu.png" alt="Kapat">
+    </button>
+</div>
+<!-- YENİ KOD BURADA BİTİYOR -->
+
+    <!-- Bütün arayüzü saran ve ölçeklenecek ana kapsayıcı -->
+    <div id="oyun-kapsayici">
+
+        <!-- Başlangıçta GÖRÜNEN tek ekran -->
+        <div id="baslangic-ekrani">
+            <h2>Sayı Avcısı</h2>
+            <button id="basla-butonu">Başla</button>
+        </div>
+
+        <!-- En Yüksek Skor için ayrı bir kutu -->
+        <div id="en-yuksek-skor-kutusu" class="gizli">
+            En Yüksek Skor: <span id="yuksek-skor-gosterge">0</span>
+        </div>
+
+        <!-- Leaderboard Alanı -->
+        <div id="leaderboard" class="gizli">
+            <h3>En Hızlı Zamanlar</h3>
+            <ol id="hizli-zamanlar-listesi"></ol>
+        </div>
+
+        <!-- Skor tablosu -->
+        <div id="skor-tablosu" class="gizli">
+            <h3>Seviye Geçmişi</h3>
+            <ol id="seviye-listesi"></ol>
+        </div>
+
+        <!-- Ana oyun alanı -->
+        <div id="oyun-alani" class="gizli">
+            <div id="ust-panel">
+                <span>Seviye: <span id="seviye-gosterge">1</span></span>
+                <span>Puan: <span id="puan-gosterge">0</span></span>
+            </div>
+            <div id="zaman-cubugu-dis">
+                <div id="zaman-cubugu-ic"></div>
+            </div>
+            <div id="hedef-sayi-daire">
+                <span id="hedef-sayi">0</span>
+            </div>
+            <div id="buton-kutusu">
+                <button class="islem-butonu" data-deger="1">1</button>
+                <button class="islem-butonu" data-deger="3">3</button>
+                <button class="islem-butonu" data-deger="7">7</button>
+            </div>
+            <div id="seviye-sonu-mesaji" class="gizli">
+                 <p id="mesaj-metni"></p>
+                 <button id="sonraki-seviye-butonu">Yeniden Başla</button>
+            </div>
+
+            <!-- DÜZELTME: Duraklat overlay'i, kaplaması istenen oyun alanının içine taşındı. -->
+            <div id="duraklat-overlay" class="gizli">
+                <p>DURAKLATILDI</p>
+            </div>
+        </div> <!-- oyun-alani sonu -->
+
+        <!-- DÜZELTME: Duraklatma butonu, ölçeklenmesi için ana kapsayıcının içine alındı. -->
+        <div id="duraklat-konteyneri" class="gizli">
+            <button id="duraklat-butonu">Duraklat</button>
+        </div>
+
+    </div> <!-- oyun-kapsayici sonu -->
+    
+    <!-- Ses Dosyaları -->
+    <audio id="tiklamaSesi" src="click.mp3"></audio>
+    <audio id="kaybetmeSesi" src="kaybetme.mp3"></audio>
+    <audio id="baslatmaSesi" src="baslatma.mp3"></audio>
+    <audio id="zamanlayiciSesi" src="tick.mp3"></audio>
+    <audio id="kazanmaSesi" src="kazanma.mp3"></audio>
+    <audio id="sonrakiSeviyeSesi" src="sonrakiseviye.mp3"></audio>
+    
+    <!-- JavaScript Dosyası -->
+    <script src="oyun.js"></script>
+</body>
+</html>
