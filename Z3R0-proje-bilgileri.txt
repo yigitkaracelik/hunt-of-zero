@@ -1,0 +1,11 @@
+PROJE BİLGİLERİ
+
+Firebase Proje ID (projectId):
+
+z3r0-a0e25
+
+Hosting Site Adı (siteId):
+
+https://z3r0-a0e25.web.app/
+
+https://z3r0-a0e25.firebaseapp.com/
