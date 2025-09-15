@@ -1,87 +1,81 @@
 # Sayı Avcısı Oyunu
 
-**[>> OYUNU OYNAMAK İÇİN TIKLAYIN <<](https://Koc-Staj.github.io/Sayi_Oyunu_Projesi/)**
-
 Sayı Avcısı, hız ve dikkat gerektiren eğlenceli bir tarayıcı oyunudur. Oyuncular, verilen hedef sayıya ulaşmak için doğru işlem butonlarına zamanında basmalıdır. Her seviyede zorluk artar ve zaman kısalır.
 
-![Sayı Avcısı Ekran Görüntüsü](ekran-goruntusu1.png)
-![Sayı Avcısı Ekran Görüntüsü](ekran-goruntusu2.png)
+**[>> OYUNU OYNAMAK İÇİN TIKLAYIN <<](https://z3r0-a0e25.web.app)**
+
+![Sayı Avcısı Ekran Görüntüsü](public/ekran-goruntusu1.png)
+![Sayı Avcısı Ekran Görüntüsü](public/ekran-goruntusu2.png)
 
 ## Nasıl Oynanır?
 
 1.  **Amaç:** Ekranın ortasındaki dairede yazan **Hedef Sayı**'yı, altındaki butonları kullanarak **tam olarak 0'a** düşürmektir.
 2.  **Oynanış:** Her butona bastığınızda, butonun üzerindeki değer Hedef Sayı'dan çıkarılır.
-3.  **Zaman:** Her seviyede size belirli bir süre verilir. Bu süre, ekranın üstündeki **yeşil zaman çubuğu** ile gösterilir. Süre dolmadan hedefi sıfırlamanız gerekir.
-4.  **Kazanma:** Hedef Sayı'yı tam olarak **0** yaparsanız seviyeyi geçersiniz. Kalan süreniz ve mevcut seviyeniz size ekstra puan kazandırır.
-5.  **Kaybetme:**
-    *   Süreniz biterse,
-    *   Hedef Sayı'yı sıfırın altına düşürürseniz (`-1`, `-3` gibi),
-    oyunu kaybedersiniz ve baştan başlarsınız.
+3.  **Zaman:** Her seviyede size belirli bir süre verilir. Bu süre, ekranın üstündeki **yeşil zaman çubuğu** ile gösterilir.
+4.  **Kazanma:** Hedef Sayı'yı tam olarak **0** yaparsanız seviyeyi geçersiniz.
+5.  **Kaybetme:** Süreniz biterse veya hedefi sıfırın altına düşürürseniz oyunu kaybedersiniz.
 
 ## Özellikler
 
--   **Üç Farklı Zorluk Seviyesi:** Kolay, Normal ve Zor seçenekleriyle her seviyeden oyuncuya hitap eder.
--   **Dinamik Zamanlayıcı:** Seviye ilerledikçe azalan süre, oyunu daha heyecanlı hale getirir.
--   **Puanlama ve Yüksek Skor:** Oyuncuların en yüksek skorları tarayıcı hafızasında saklanır.
--   **En Hızlı Zamanlar Listesi:** Her seviye için en hızlı bitirme süreleri kaydedilir ve bir lider tablosunda gösterilir.
--   **Klavye Desteği:** Fare kullanmadan, klavye ile hızlıca oynanabilir.
--   **Ayarlar Menüsü:** Ses seviyesi, zorluk ve sesin açık/kapalı olması gibi ayarlar sunar.
--   **Duraklatma Özelliği:** Oyun sırasında 'P' tuşu veya buton ile oyunu duraklatma.
+-   Üç farklı zorluk seviyesi: Kolay, Normal ve Zor.
+-   Dinamik zamanlayıcı ve artan zorluk.
+-   Yüksek skor ve en hızlı bitirme süreleri takibi.
+-   Klavye desteği, ses ayarları ve duraklatma özelliği.
 
-## Ayarlar ve Kontroller
+---
 
-### Klavye Kısayolları
+## Geliştirme ve Teknik Detaylar
 
-| Tuş           | İşlev                                          |
-|---------------|------------------------------------------------|
-| **1**'den **9**'a | Ekranda görünen ilgili sayı butonuna basar.    |
-| **Boşluk (Space)** | Oyunu başlatır veya seviye sonu ekranında bir sonraki seviyeye geçer. |
-| **P**           | Oyunu duraklatır veya devam ettirir.           |
+Bu bölüm, projeye katkıda bulunmak veya projeyi kendi bilgisayarında çalıştırmak isteyen geliştiriciler içindir.
 
-### Oyun Ayarları
+### Yerel Geliştirme (Local Development)
 
-Oyunun sol üst köşesindeki dişli ikonuna tıklayarak ayarlar menüsünü açabilirsiniz.
+Projeyi kendi bilgisayarınızda çalıştırmak için:
 
--   **Ses:** Oyundaki tüm ses efektlerini açar veya kapatır.
--   **Ses Düzeyi:** Ses efektlerinin yüksekliğini ayarlar.
--   **Zorluk:**
-    -   **Kolay:** Daha uzun süre, daha yavaş zorluk artışı ve daha düşük puan çarpanı sunar. Yeni başlayanlar için idealdir.
-    -   **Normal:** Dengeli bir oynanış sunar. Standart zaman ve puanlama.
-    -   **Zor:** Daha kısa süre, daha hızlı zorluk artışı ve daha yüksek puan çarpanı sunar. Rekor kırmak isteyenler için idealdir.
+1.  Depoyu klonlayın ve proje klasörüne gidin.
+2.  Projeyi bir web sunucusu üzerinden çalıştırmanız gerekir.
+    *   **Yöntem 1 (VS Code Live Server):** VS Code'da "Live Server" eklentisini kurun. `public/index.html` dosyasına sağ tıklayıp "Open with Live Server" seçeneğini seçin.
+    *   **Yöntem 2 (Basit HTTP Sunucusu):** Terminalde `public` klasörünün içine girin (`cd public`) ve aşağıdaki komutlardan birini çalıştırın:
+        ```bash
+        # Python 3+ yüklüyse:
+        python -m http.server
+        
+        # Node.js ve npm yüklüyse:
+        npx http-server
+        ```
 
-## Kurulum ve Çalıştırma
+### Firebase Konfigürasyonu
 
-Bu proje, herhangi bir kütüphane veya framework bağımlılığı olmadan saf `JavaScript`, `HTML` ve `CSS` ile yazılmıştır.
+Proje, Firebase Hosting ile entegredir.
 
-### Gerekli Dosya Yapısı
+*   `.firebaserc`: Yerel proje klasörünü doğru Firebase projesine bağlar.
+*   `firebase.json`: Hosting kurallarını (public dizini, ignore kuralları, performans için cache ayarları vb.) içerir.
 
-Projenin düzgün çalışması için tüm dosyaların aşağıdaki gibi aynı dizinde olması gerekmektedir:
-```
-/sayi-avcisi-projesi
-├── index.html
-├── stil.css
-├── oyun.js
-├── (tüm .png, .jpg, .mp3 dosyaları)
-└── README.md
-```
+**Proje Bilgileri:**
+*   **Proje ID:** `z3r0-a0e25`
+*   **Site ID:** `z3r0-a0e25`
 
-### Lokal (Yerel Makinede) Çalıştırma
+### Otomatik Deployment (CI/CD)
 
-1.  Bu repoyu bilgisayarınıza klonlayın veya indirin.
-2.  Proje klasörünü **VS Code** ile açın.
-3.  **Live Server** eklentisini kurun.
-4.  `index.html` dosyasına sağ tıklayıp **"Open with Live Server"** seçeneğine tıklayın.
+Proje, GitHub Actions kullanılarak otomatik olarak deploy edilmektedir.
 
-## GitHub Pages ile Yayına Alma
+#### Önizleme (Preview) Ortamı
 
-Projenizi internet üzerinden yayınlamak için:
+*   **Tetikleyici:** `develop` dalına açılan her **Pull Request (PR)**.
+*   **Davranış:** GitHub Actions, PR'daki değişiklikler için otomatik olarak geçici bir önizleme sitesi oluşturur.
+*   **Sonuç:** Oluşturulan önizleme URL'si, ilgili PR sayfasına bir bot tarafından yorum olarak eklenir.
 
-1.  Projenizi bir GitHub repositorisine yükleyin.
-2.  Ana HTML dosyanızın adının `index.html` olduğundan emin olun.
-3.  Reponuzun **Settings > Pages** bölümüne gidin.
-4.  Kaynak (Source) olarak **"Deploy from a branch"** seçin.
-5.  Branch olarak `main` dalını seçip **Save** butonuna tıklayın.
-6.  Birkaç dakika içinde siteniz `https://<kullanici-adiniz>.github.io/<repo-adiniz>/` adresinde yayında olacaktır.
+#### Canlı (Live) Ortam
+
+*   **Tetikleyici:** Bir PR, `develop` dalı ile **birleştirildiğinde (merge edildiğinde)**.
+*   **Davranış:** GitHub Actions, `develop` dalındaki en son kodu alarak projeyi otomatik olarak canlı ortama deploy eder.
+*   **Sonuç:** `https://z3r0-a0e25.web.app` adresindeki site güncellenir.
+
+#### Gerekli Secrets
+
+Otomatik deploy işleminin çalışabilmesi için depoda aşağıdaki secret'ın tanımlı olması gerekmektedir:
+
+*   **`FIREBASE_SERVICE_ACCOUNT_Z3R0_A0E25`**: Bu secret, GitHub Actions'ın Firebase projesine sizin adınıza deploy yapabilmesi için gerekli olan servis hesabı anahtarını içerir ve `firebase init hosting:github` komutu tarafından otomatik olarak oluşturulmuştur.
 
 ## Katkıda Bulunma (Contributing)
 
@@ -92,9 +86,3 @@ Bu projeye katkıda bulunmak isterseniz, lütfen çekinmeyin!
 3.  Değişikliklerinizi **commit**'leyin (`git commit -m 'Yeni menü eklendi'`).
 4.  Oluşturduğunuz branch'i kendi fork'unuza **push**'layın (`git push origin ozellik/yeni-menu`).
 5.  Ana projeye bir **Pull Request (Çekme İsteği)** açın.
-
-## Bakım Notları
-
--   Oyunun tüm temel mantığı `oyun.js` dosyası içerisinde yer almaktadır.
--   Zorluk seviyeleri, zamanlama ve puanlama gibi denge ayarları `oyun.js` dosyasının en üstündeki `zorlukAyarlari` objesinden kolayca değiştirilebilir.
--   Tüm görsel stiller `stil.css` dosyasında bulunmaktadır.
