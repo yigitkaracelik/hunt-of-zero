@@ -22,7 +22,7 @@ body { font-family: 'Press Start 2P', cursive; background: url('arkaplan.jpg') c
 #ayarlar-kapat { position: absolute; top: -10px; right: 5px; width: 25px; height: 25px; background: transparent; border: none; box-shadow: none; display: flex; align-items: center; justify-content: center; padding: 0; }
 #ayarlar-kapat img { width: 18px; height: 18px; }
 #skor-tablosu, #leaderboard, #en-yuksek-skor-kutusu { position: absolute; z-index: 50; background: rgba(255,255,255,0.9); border: 3px solid #000; box-shadow: 4px 4px 0 rgba(0,0,0,0.5); border-radius: 8px; text-align: center; text-shadow: none; }
-#duraklat-konteyneri { position: absolute; top: 75%; left: 50%; transform: translateX(-50%); text-align: center; }
+#duraklat-konteyneri { position: absolute; left: 50%; transform: translateX(-50%); text-align: center; }
 #duraklat-butonu { font-family: 'Press Start 2P', cursive; cursor: pointer; background: rgba(255,255,255,0.7); border: 3px solid #000; box-shadow: 4px 4px 0 #555; border-radius: 0; transition: transform 0.05s, box-shadow 0.05s, background 0.2s; }
 #duraklat-butonu:active { box-shadow: 0 0 0 #555; transform: translate(4px,4px); }
 #zaman-cubugu-dis { width: 100%; height: 25px; background: #ddd; border: 3px solid #000; margin-bottom: 20px; }
@@ -50,7 +50,11 @@ body { font-family: 'Press Start 2P', cursive; background: url('arkaplan.jpg') c
     #ust-panel { font-size: 28px; font-weight: bold; margin-bottom: 20px; }
     #hedef-sayi-daire { width: 220px; height: 220px; }
     #hedef-sayi { font-size: 90px; font-weight: bold; }
-    .islem-butonu { width: 120px; height: 120px; font-size: 48px; }
+    .islem-butonu {
+        width: 150px; /* <-- DEĞİŞİKLİK BURADA */
+        height: 150px; /* <-- DEĞİŞİKLİK BURADA */
+        font-size: 64px; /* <-- DEĞİŞİKLİK BURADA */
+    }
     #seviye-sonu-mesaji { font-size: 28px; }
     #sonraki-seviye-butonu { font-size: 24px; padding: 20px 30px; }
     #duraklat-overlay p { font-size: 48px; padding: 40px 60px; }
@@ -60,46 +64,21 @@ body { font-family: 'Press Start 2P', cursive; background: url('arkaplan.jpg') c
     #ayarlar-butonu img, #zorluk-ikon-resmi { width: 32px; height: 32px; }
     #ayarlar-paneli { top: 75px; left: 15px; }
     
-    #skor-tablosu {
-        top: 75px;
-        left: 15px;
-        transform: none;
-        width: auto; /* <-- DEĞİŞİKLİK BURADA: Sabit genişliği kaldırdık */
-        padding: 8px 12px;
-        font-size: 12px;
-    }
-    #en-yuksek-skor-kutusu {
-        bottom: 180px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: auto;
-        padding: 8px 18px;
-        font-size: 14px;
-    }
-    #leaderboard {
-        bottom: 15px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 90%;
-        max-width: 320px;
-        padding: 8px 12px;
-        font-size: 12px;
-    }
+    #skor-tablosu { top: 75px; left: 15px; transform: none; width: 220px; padding: 8px 12px; font-size: 12px; }
+    #en-yuksek-skor-kutusu { bottom: 180px; left: 50%; transform: translateX(-50%); width: auto; padding: 8px 18px; font-size: 14px; }
+    #leaderboard { bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; padding: 8px 12px; font-size: 12px; }
     #skor-tablosu h3, #leaderboard h3 { font-size: 13px; }
-    #seviye-listesi { 
-        padding-left: 0; 
-        margin: 0; 
-        list-style: none; 
-        text-align: left; /* <-- DEĞİŞİKLİK BURADA: Yazıları sola hizaladık */
-    }
-    #hizli-zamanlar-listesi { padding-left: 0; margin: 0; list-style: none; text-align: center; }
+    #seviye-listesi, #hizli-zamanlar-listesi { padding-left: 0; margin: 0; list-style: none; text-align: center; }
     #hizli-zamanlar-listesi { list-style: decimal; padding-left: 30px; }
-    #seviye-listesi li { 
-        margin-bottom: 5px;
-        font-size: 10px;
-        white-space: nowrap;
+    #seviye-listesi li { margin-bottom: 5px; font-size: 10px; white-space: nowrap; }
+    
+    #duraklat-konteyneri {
+        top: 90%; /* <-- DEĞİŞİKLİK BURADA */
     }
-    #duraklat-butonu { font-size: 18px; padding: 15px 25px; }
+    #duraklat-butonu {
+        font-size: 24px; /* <-- DEĞİŞİKLİK BURADA */
+        padding: 20px 40px; /* <-- DEĞİŞİKLİK BURADA */
+    }
 }
 
 /* ==========================================================================
@@ -132,11 +111,14 @@ body { font-family: 'Press Start 2P', cursive; background: url('arkaplan.jpg') c
     #leaderboard { top: 20px; right: 220px; width: 220px; padding: 15px; font-size: 14px; border-radius: 15px; box-shadow: 6px 6px 0 rgba(0,0,0,0.5); }
     #skor-tablosu h3, #leaderboard h3 { font-size: 16px; }
     #seviye-listesi { text-align: left; }
-    #seviye-listesi li {
-        font-size: 12px;
-        white-space: normal;
-    }
+    #seviye-listesi li { font-size: 12px; white-space: normal; }
     #hizli-zamanlar-listesi { font-size: 14px; text-align: initial; }
     
-    #duraklat-butonu { font-size: 12px; padding: 12px 18px; }
+    #duraklat-konteyneri {
+        top: 75%; /* Masaüstünde orijinal konumunda */
+    }
+    #duraklat-butonu {
+        font-size: 12px;
+        padding: 12px 18px;
+    }
 }
