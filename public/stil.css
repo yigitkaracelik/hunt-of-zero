@@ -1,492 +1,111 @@
-/* Genel Sayfa Stili */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Press Start 2P', cursive;
-    background: url('arkaplan.jpg') center/cover no-repeat;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
-    image-rendering: pixelated;
-}
-
-* {
-    box-sizing: border-box;
-    text-shadow: 1px 1px 0 #333;
-}
-
-/* Ana Kapsayıcı */
-#oyun-kapsayici {
-    position: absolute;
-    width: 1920px;
-    height: 1080px;
-    left: 50%;
-    top: 50%;
-    transform-origin: center center;
-}
-
-/* Sol Üst Köşe */
-#sol-ust-kose {
-    position: absolute;
-    top: 30px;
-    left: 30px;
-    display: flex;
-    gap: 15px;
-    z-index: 100;
-}
-
-/* Ayarlar Butonu */
-#ayarlar-butonu {
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #ddd;
-    border: 3px solid #000;
-    box-shadow: 4px 4px 0 #555;
-    border-radius: 0;
-    cursor: pointer;
-    transition: transform 0.05s, box-shadow 0.05s;
-    padding: 0;
-}
-#ayarlar-butonu:active {
-    box-shadow: 0 0 0 #555;
-    transform: translate(4px,4px);
-}
-#ayarlar-butonu img {
-    width: 32px;
-    height: 32px;
-}
-
-/* Zorluk İkonu */
-#zorluk-gosterge-ikonu {
-    width: 46px;
-    height: 46px;
-    background: #ddd;
-    border: 3px solid #000;
-    box-shadow: 4px 4px 0 #555;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-#zorluk-ikon-resmi {
-    width: 32px;
-    height: 32px;
-}
-
-/* Ayarlar Paneli */
-#ayarlar-paneli {
-    position: absolute;
-    top: 90px;
-    left: 30px;
-    width: 220px;
-    background: rgba(255,255,255,0.95);
-    border: 3px solid #000;
-    box-shadow: 6px 6px 0 #333;
-    font-size: 12px;
-    border-radius: 0;
-    padding: 40px 15px 15px 15px;
-    z-index: 101;
-}
-#ayarlar-paneli.gizli { display: none !important; }
-#ayarlar-paneli h3 {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    text-align: center;
-    margin-bottom: 20px;
-    text-shadow: none;
-}
-#ayarlar-paneli button {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 12px;
-    margin-top: 15px;
-    padding: 8px;
-    cursor: pointer;
-    background: #ddd;
-    border: 3px solid #000;
-    border-radius: 0;
-    box-shadow: 4px 4px 0 #555;
-}
-#ayarlar-paneli button:active {
-    box-shadow: 0 0 0 #555;
-    transform: translate(4px,4px);
-}
-#ayarlar-kapat {
-    position: absolute;
-    top: -10px;
-    right: 5px;
-    width: 25px;
-    height: 25px;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-}
-#ayarlar-kapat img {
-    width: 18px;
-    height: 18px;
-}
-
-/* Ayarlar Paneli Form Elemanları */
-#ayarlar-paneli input[type="checkbox"] {
-    appearance: none;
-    background: #a2ff9a;
-    width: 20px;
-    height: 20px;
-    border: 3px solid #000;
-    border-radius: 0;
-    position: relative;
-    vertical-align: middle;
-    cursor: pointer;
-    margin-right: 8px;
-}
-#ayarlar-paneli input[type="checkbox"]:checked {
-    background: #a2ff9a;
-}
-#ayarlar-paneli input[type="checkbox"]:checked::before,
-#ayarlar-paneli input[type="checkbox"]:checked::after {
-    content: '';
-    position: absolute;
-    top: 1px;
-    left: 5px;
-    width: 4px;
-    height: 12px;
-    background: #000;
-}
-#ayarlar-paneli input[type="checkbox"]:checked::before { transform: rotate(45deg); }
-#ayarlar-paneli input[type="checkbox"]:checked::after { transform: rotate(-45deg); }
-
-#ayarlar-paneli input[type="range"] {
-    appearance: none;
-    width: 100%;
-    height: 20px;
-    background: transparent;
-    cursor: pointer;
-    margin: 5px 0 10px 0;
-}
-#ayarlar-paneli input[type="range"]::-webkit-slider-runnable-track,
-#ayarlar-paneli input[type="range"]::-moz-range-track {
-    width: 100%;
-    height: 14px;
-    background: #ddd;
-    border: 3px solid #000;
-    border-radius: 0;
-}
-#ayarlar-paneli input[type="range"]::-webkit-slider-thumb,
-#ayarlar-paneli input[type="range"]::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
-    background: #a2ff9a;
-    border: 3px solid #000;
-    border-radius: 0;
-    margin-top: -8px;
-    appearance: none;
-}
-
-.select-wrapper {
-    display: inline-block;
-    position: relative;
-}
-#ayarlar-paneli select {
-    appearance: none;
-    background: #a2ff9a;
-    border: 3px solid #000;
-    border-radius: 0;
-    padding: 5px 25px 5px 8px;
-    font-family: 'Press Start 2P', cursive;
-    font-size: 10px;
-    cursor: pointer;
-}
-.select-wrapper::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    right: 8px;
-    margin-top: -3px;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 8px 6px 0 6px;
-    border-color: #000 transparent transparent transparent;
-    pointer-events: none;
-}
-
-/* Oyun Alanı */
-#oyun-alani {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 380px;
-    padding: 25px;
-    border: 4px solid #000;
-    background: rgba(255,255,255,0.85);
-    box-shadow: 8px 8px 0 rgba(0,0,0,0.7);
-    text-shadow: none;
-}
-
-/* Başlangıç Ekranı */
-#baslangic-ekrani {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 380px;
-    padding: 50px 25px;
-    border: 4px solid #000;
-    background: rgba(255,255,255,0.85);
-    text-align: center;
-    box-shadow: 8px 8px 0 rgba(0,0,0,0.7);
-}
-#baslangic-ekrani h2 { font-size: 24px; margin-bottom: 30px; }
-#basla-butonu {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 16px;
-    padding: 15px 30px;
-    background: #a2ff9a;
-    border: 3px solid #000;
-    box-shadow: 6px 6px 0 #555;
-    border-radius: 0;
-    cursor: pointer;
-    transition: transform 0.05s, box-shadow 0.05s;
-}
-#basla-butonu:active {
-    box-shadow: 0 0 0 #555;
-    transform: translate(6px,6px);
-}
-
-/* Oyun Paneli */
-#ust-panel {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-    font-weight: bold;
-    font-size: 14px;
-}
-#hedef-sayi-daire {
-    width: 150px;
-    height: 150px;
-    border: 5px solid #000;
-    background: #a2ff9a;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px auto;
-}
-#hedef-sayi {
-    font-size: 48px;
-    font-weight: bold;
-}
-
-/* Buton Kutusu */
-#buton-kutusu {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
-}
-.islem-butonu {
-    font-family: 'Press Start 2P', cursive;
-    width: 70px;
-    height: 70px;
-    font-size: 22px;
-    cursor: pointer;
-    background: #f0f0f0;
-    border: 3px solid #000;
-    box-shadow: 6px 6px 0 #555;
-    border-radius: 0;
-    transition: transform 0.05s, box-shadow 0.05s, background 0.1s;
-}
-.islem-butonu:active {
-    box-shadow: 0 0 0 #555;
-    transform: translate(5px,5px);
-}
-.islem-butonu.tiklandi {
-    animation: butonTiklamaAnim 0.2s;
-}
-@keyframes butonTiklamaAnim {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.15); }
-    100% { transform: scale(1); }
-}
-.klavye-vurgu {
-    background: #a2ff9a;
-    transform: scale(1.05);
-}
-
-/* Zaman Çubuğu */
-#zaman-cubugu-dis {
-    width: 100%;
-    height: 25px;
-    background: #ddd;
-    border: 3px solid #000;
-    margin-bottom: 20px;
-}
-#zaman-cubugu-ic {
-    height: 100%;
-    width: 100%;
-    background: #4CAF50;
-    transition: width 0.1s linear, background 0.5s;
-}
-
-/* Kritik Zaman Animasyonu */
-.kritik-zaman {
-    animation: yanip-sonme 0.5s infinite;
-}
-@keyframes yanip-sonme {
-    50% { background: #ff6b6b; transform: scale(1.05); }
-}
-
-/* Duraklatma */
-#duraklat-konteyneri {
-    position: absolute;
-    top: 75%;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-}
-#duraklat-butonu {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 12px;
-    padding: 12px 18px;
-    cursor: pointer;
-    background: rgba(255,255,255,0.7);
-    border: 3px solid #000;
-    box-shadow: 4px 4px 0 #555;
-    border-radius: 0;
-    transition: transform 0.05s, box-shadow 0.05s, background 0.2s;
-}
-#duraklat-butonu:active {
-    box-shadow: 0 0 0 #555;
-    transform: translate(4px,4px);
-}
-#duraklat-butonu:disabled {
-    background: #999;
-    box-shadow: 4px 4px 0 #333;
-    cursor: not-allowed;
-    color: #ccc;
-}
-#duraklat-overlay {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.75);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-}
-#duraklat-overlay p {
-    background: rgba(255,255,255,0.9);
-    color: #333;
-    padding: 40px 60px;
-    border: 4px solid #000;
-    box-shadow: 8px 8px 0 rgba(0,0,0,0.8);
-    font-size: 24px;
-}
-
-/* Seviye Sonu Mesajı */
-#seviye-sonu-mesaji {
-    font-size: 12px;
-    margin-top: 20px;
-    text-align: center;
-}
-#sonraki-seviye-butonu {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 12px;
-    padding: 12px 18px;
-    margin-top: 15px;
-    background: #ddd;
-    border: 3px solid #000;
-    box-shadow: 4px 4px 0 #555;
-    border-radius: 0;
-    cursor: pointer;
-    transition: transform 0.05s, box-shadow 0.05s;
-}
-#sonraki-seviye-butonu:active {
-    box-shadow: 0 0 0 #555;
-    transform: translate(4px,4px);
-}
-
-/* Skor Tablosu */
-#skor-tablosu {
-    position: absolute;
-    right: 0;
-    top: 20px;
-    width: 200px;
-    background: rgba(255,255,255,0.9);
-    border: 3px solid #000;
-    box-shadow: 6px 6px 0 rgba(0,0,0,0.5);
-    border-radius: 15px;
-    padding: 15px 15px 10px 15px;
-    text-align: center;
-    z-index: 8;
-}
-#seviye-gecmisi-baslik {
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    text-shadow: none;
-}
-#seviye-listesi {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    font-size: 12px;
-    text-align: left;
-}
-#seviye-listesi li { margin-bottom: 5px; }
-
-/* En Yüksek Skor Kutusu */
-#en-yuksek-skor-kutusu {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255,255,255,0.9);
-    color: #000;
-    padding: 8px 18px;
-    border: 3px solid #000;
-    border-radius: 10px;
-    z-index: 100;
-    font-size: 14px;
-    text-shadow: none;
-}
-
-/* Leaderboard */
-#leaderboard {
-    position: absolute;
-    right: 240px;
-    top: 20px;
-    width: 260px;
-    background: rgba(255,255,255,0.9);
-    border: 3px solid #000;
-    border-radius: 15px;
-    padding: 15px;
-    box-shadow: 6px 6px 0 rgba(0,0,0,0.5);
-    z-index: 9;
-}
-#leaderboard h3 {
-    margin: 0 0 15px 0;
-    text-align: center;
-    font-size: 16px;
-    text-shadow: none;
-}
-#hizli-zamanlar-listesi {
-    list-style: decimal;
-    padding-left: 35px;
-    margin: 0;
-    font-size: 14px;
-    text-shadow: none;
-}
-#hizli-zamanlar-listesi li { padding: 4px 0; }
-
-/* Gizli Sınıf */
+/* ======================================================
+   TEMEL SAYFA SIFIRLAMASI VE GENEL STİLLER
+   ====================================================== */
+html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+body { font-family: 'Press Start 2P', cursive; background: url('arkaplan.jpg') center/cover no-repeat; display: flex; justify-content: center; align-items: center; image-rendering: pixelated; }
+* { box-sizing: border-box; text-shadow: 1px 1px 0 #333; }
 .gizli { display: none !important; }
+
+/* ==========================================================================
+   1. GENEL YAPI VE KONUMLANDIRMA (Tüm ekranlar için ortak)
+   ========================================================================== */
+#oyun-kapsayici { position: absolute; width: 1920px; height: 1080px; left: 50%; top: 50%; transform-origin: center center; }
+#baslangic-ekrani, #oyun-alani { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 4px solid #000; background: rgba(255, 255, 255, 0.85); box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.7); text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+#sol-ust-kose { position: absolute; top: 30px; left: 30px; display: flex; gap: 15px; z-index: 100; }
+#ayarlar-butonu { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; background: #ddd; border: 3px solid #000; box-shadow: 4px 4px 0 #555; border-radius: 0; cursor: pointer; transition: transform 0.05s, box-shadow 0.05s; padding: 0; }
+#ayarlar-butonu:active { box-shadow: 0 0 0 #555; transform: translate(4px,4px); }
+#ayarlar-butonu img { width: 32px; height: 32px; }
+#zorluk-gosterge-ikonu { width: 46px; height: 46px; background: #ddd; border: 3px solid #000; box-shadow: 4px 4px 0 #555; display: flex; align-items: center; justify-content: center; }
+#zorluk-ikon-resmi { width: 32px; height: 32px; }
+#ayarlar-paneli { position: absolute; top: 90px; left: 30px; width: 220px; background: rgba(255,255,255,0.95); border: 3px solid #000; box-shadow: 6px 6px 0 #333; font-size: 12px; border-radius: 0; padding: 40px 15px 15px 15px; z-index: 101; }
+#ayarlar-paneli h3 { position: absolute; top: 0; left: 0; right: 0; text-align: center; margin-bottom: 20px; text-shadow: none; }
+#ayarlar-kapat { position: absolute; top: -10px; right: 5px; width: 25px; height: 25px; background: transparent; border: none; box-shadow: none; display: flex; align-items: center; justify-content: center; padding: 0; }
+#ayarlar-kapat img { width: 18px; height: 18px; }
+#skor-tablosu, #leaderboard, #en-yuksek-skor-kutusu { position: absolute; z-index: 50; background: rgba(255,255,255,0.9); border: 3px solid #000; box-shadow: 4px 4px 0 rgba(0,0,0,0.5); border-radius: 8px; text-align: center; text-shadow: none; }
+#duraklat-konteyneri { position: absolute; left: 50%; transform: translateX(-50%); text-align: center; }
+#duraklat-butonu { font-family: 'Press Start 2P', cursive; cursor: pointer; background: rgba(255,255,255,0.7); border: 3px solid #000; box-shadow: 4px 4px 0 #555; border-radius: 0; transition: transform 0.05s, box-shadow 0.05s, background 0.2s; }
+#duraklat-butonu:active { box-shadow: 0 0 0 #555; transform: translate(4px,4px); }
+#zaman-cubugu-dis { width: 100%; height: 25px; background: #ddd; border: 3px solid #000; margin-bottom: 20px; }
+#zaman-cubugu-ic { height: 100%; width: 100%; background: #4CAF50; transition: width 0.1s linear, background 0.5s; }
+#buton-kutusu { display: flex; justify-content: space-around; margin-top: 20px; width: 100%; }
+#hedef-sayi-daire { border: 5px solid #000; background: #a2ff9a; display: flex; justify-content: center; align-items: center; margin: 20px auto; }
+.islem-butonu { font-family: 'Press Start 2P', cursive; cursor: pointer; background: #f0f0f0; border: 3px solid #000; box-shadow: 6px 6px 0 #555; border-radius: 0; transition: transform 0.05s, box-shadow 0.05s, background 0.1s; }
+.islem-butonu:active { box-shadow: 0 0 0 #555; transform: translate(5px, 5px); }
+#seviye-sonu-mesaji { text-align: center; margin-top: 20px; }
+#sonraki-seviye-butonu { font-family: 'Press Start 2P', cursive; background: #ddd; border: 3px solid #000; box-shadow: 4px 4px 0 #555; border-radius: 0; cursor: pointer; transition: transform 0.05s, box-shadow 0.05s; margin-top: 15px; }
+#sonraki-seviye-butonu:active { box-shadow: 0 0 0 #555; transform: translate(4px,4px); }
+#duraklat-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); display: flex; justify-content: center; align-items: center; z-index: 10; }
+#duraklat-overlay p { background: rgba(255,255,255,0.9); color: #333; border: 4px solid #000; box-shadow: 8px 8px 0 rgba(0,0,0,0.8); }
+
+/* ==========================================================================
+   MOBİL GÖRÜNÜM (768px ve altı)
+   ========================================================================== */
+@media (max-width: 768px) {
+    #baslangic-ekrani { width: 1400px; height: 750px; padding: 25px; }
+    #oyun-alani { width: 1400px; height: 750px; padding: 25px; }
+
+    #baslangic-ekrani h2 { font-size: 48px; margin-bottom: 30px; }
+    #basla-butonu { font-size: 32px; padding: 25px 50px; }
+
+    #ust-panel { font-size: 28px; font-weight: bold; margin-bottom: 20px; }
+    #hedef-sayi-daire { width: 220px; height: 220px; }
+    #hedef-sayi { font-size: 90px; font-weight: bold; }
+    .islem-butonu { width: 150px; height: 150px; font-size: 64px; }
+    #seviye-sonu-mesaji { font-size: 28px; }
+    #sonraki-seviye-butonu { font-size: 24px; padding: 20px 30px; }
+    #duraklat-overlay p { font-size: 48px; padding: 40px 60px; }
+    
+    #sol-ust-kose { top: 15px; left: 15px; }
+    #ayarlar-butonu, #zorluk-gosterge-ikonu { width: 50px; height: 50px; }
+    #ayarlar-butonu img, #zorluk-ikon-resmi { width: 32px; height: 32px; }
+    #ayarlar-paneli { top: 75px; left: 15px; }
+    
+    #skor-tablosu { top: 75px; left: 15px; transform: none; width: auto; padding: 8px 12px; font-size: 12px; }
+    #en-yuksek-skor-kutusu { bottom: 180px; left: 50%; transform: translateX(-50%); width: auto; padding: 8px 18px; font-size: 14px; }
+    #leaderboard { bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; padding: 8px 12px; font-size: 12px; }
+    #skor-tablosu h3, #leaderboard h3 { font-size: 13px; }
+    #seviye-listesi { padding-left: 0; margin: 0; list-style: none; text-align: left; }
+    #hizli-zamanlar-listesi { padding-left: 0; margin: 0; list-style: none; text-align: center; }
+    #hizli-zamanlar-listesi { list-style: decimal; padding-left: 30px; }
+    #seviye-listesi li { margin-bottom: 5px; font-size: 10px; white-space: nowrap; }
+    
+    #duraklat-konteyneri { top: 90%; }
+    #duraklat-butonu { font-size: 24px; padding: 20px 40px; }
+}
+
+/* ==========================================================================
+   MASAÜSTÜ GÖRÜNÜMÜ (769px ve üstü) - HAM TASARIMA DÖNÜŞ
+   ========================================================================== */
+@media (min-width: 769px) {
+    #baslangic-ekrani { width: 380px; padding: 50px 25px; }
+    #oyun-alani { width: 380px; padding: 25px; text-shadow: none; }
+
+    #baslangic-ekrani h2 { font-size: 24px; margin-bottom: 30px; }
+    #basla-butonu { font-size: 16px; padding: 15px 30px; background: #a2ff9a; transition: transform 0.05s, box-shadow 0.05s; }
+    
+    #ust-panel { font-size: 14px; font-weight: bold; margin-bottom: 20px; }
+    #hedef-sayi-daire { width: 150px; height: 150px; }
+    #hedef-sayi { font-size: 48px; font-weight: bold; }
+    .islem-butonu { width: 70px; height: 70px; font-size: 22px; }
+    #seviye-sonu-mesaji { font-size: 12px; }
+    #sonraki-seviye-butonu { font-size: 12px; padding: 12px 18px; }
+    #duraklat-overlay p { font-size: 24px; padding: 40px 60px; }
+    
+    #sol-ust-kose { top: 30px; left: 30px; }
+    #ayarlar-butonu, #zorluk-gosterge-ikonu { width: 50px; height: 50px; padding: 0; }
+    #ayarlar-butonu img { width: 32px; height: 32px; }
+    #zorluk-gosterge-ikonu { width: 46px; height: 46px; }
+    #zorluk-ikon-resmi { width: 32px; height: 32px; }
+    #ayarlar-paneli { top: 90px; left: 30px; }
+
+    #skor-tablosu { top: 20px; right: 20px; width: 180px; padding: 15px; font-size: 12px; border-radius: 15px; box-shadow: 6px 6px 0 rgba(0,0,0,0.5); }
+    #en-yuksek-skor-kutusu { top: 20px; left: 50%; transform: translateX(-50%); padding: 8px 18px; font-size: 14px; border-radius: 10px; }
+    #leaderboard { top: 20px; right: 220px; width: 220px; padding: 15px; font-size: 14px; border-radius: 15px; box-shadow: 6px 6px 0 rgba(0,0,0,0.5); }
+    #skor-tablosu h3, #leaderboard h3 { font-size: 16px; }
+    #seviye-listesi { text-align: left; }
+    #seviye-listesi li { font-size: 12px; white-space: normal; }
+    #hizli-zamanlar-listesi { font-size: 14px; text-align: initial; }
+    
+    #duraklat-konteyneri { top: 75%; }
+    #duraklat-butonu { font-size: 12px; padding: 12px 18px; }
+}
